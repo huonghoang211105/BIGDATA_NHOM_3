@@ -189,34 +189,13 @@ def find_default_source():
 
 
 def ingest(source, dataset="paysim", raw_root=None, logger=None):
-    """
-    Hàm thực thi Ingestion:
-    - Tạo run folder theo ngày và timestamp.
-    - Copy binary nguyên bản không chỉnh sửa.
-    - Tính SHA256 và kích thước bytes.
-    - Xuất file manifest.json tại cả run folder và thư mục metadata/.
-    """
-    copy_source(source, temp_destination, logger)
-
-    file_size = temp_destination.stat().st_size
-    if file_size == 0:
-        raise ValueError("File tải về rỗng (0 bytes).")
-
-    # Validate nội dung cho MỌI loại nguồn (URL/local) trước khi công bố
-    validate_csv_source(temp_destination, PAYSIM_COLUMNS)
-
-    temp_destination.replace(destination_path)
-    if raw_root is None:
-        raw_root = PROJECT_ROOT / "data" / "raw"
-    else:
-        raw_root = Path(raw_root).resolve()
+    """Nạp dữ liệu vào raw storage, sinh manifest (SUCCESS/FAILED)."""
+    raw_root = Path(raw_root).resolve() if raw_root else PROJECT_ROOT / "data" / "raw"
 
     now = datetime.now(timezone.utc)
-    timestamp = now.strftime("%Y%m%dT%H%M%SZ")
-    run_id = f"{timestamp}_{uuid.uuid4().hex[:8]}"
+    run_id = f"{now.strftime('%Y%m%dT%H%M%SZ')}_{uuid.uuid4().hex[:8]}"
     date_str = now.strftime("%Y-%m-%d")
 
-    # Đường dẫn thư mục đích theo quy ước phân cấp chuẩn
     destination_dir = raw_root / dataset / f"ingest_date={date_str}" / f"run_{run_id}"
     filename = extract_filename(source)
     destination_path = destination_dir / filename
@@ -246,51 +225,41 @@ def ingest(source, dataset="paysim", raw_root=None, logger=None):
     logger.info("=" * 60)
 
     try:
-        # Nếu nguồn là file local, kiểm tra tính hợp lệ trước khi copy
-        if not urlparse(source).scheme in ("http", "https"):
+        # Fail-fast với nguồn local trước khi tạo thư mục
+        if urlparse(source).scheme not in ("http", "https"):
             validate_csv_source(Path(source).expanduser().resolve(), PAYSIM_COLUMNS)
 
-        # Tạo thư mục đích
         destination_dir.mkdir(parents=True, exist_ok=False)
 
-        # Thực hiện copy vào file tạm .part
         copy_source(source, temp_destination, logger)
 
-        # Kiểm tra kích thước file tải về
         file_size = temp_destination.stat().st_size
         if file_size == 0:
             raise ValueError("File tải về rỗng (0 bytes).")
 
-        # Đổi tên file tạm thành file chính thức (atomic move)
+        # Validate nội dung cho MỌI loại nguồn (URL/local) trước khi công bố
+        validate_csv_source(temp_destination, PAYSIM_COLUMNS)
+
         temp_destination.replace(destination_path)
         logger.info(f"Đã lưu file raw thành công ({file_size:,} bytes).")
 
-        # Tính mã băm SHA-256 trên file đã lưu
-        logger.info("Đang tính mã băm SHA-256 để kiểm tra tính toàn vẹn...")
+        logger.info("Đang tính mã băm SHA-256...")
         file_hash = compute_sha256(destination_path)
         logger.info(f"Mã SHA-256: {file_hash}")
 
-        # Cập nhật thông tin manifest
-        manifest["bytes"] = file_size
-        manifest["hash"] = file_hash
-        manifest["sha256"] = file_hash
-        manifest["status"] = "SUCCESS"
+        manifest.update(bytes=file_size, hash=file_hash, sha256=file_hash, status="SUCCESS")
 
-        # Ghi manifest tại thư mục run và metadata/
         write_manifest(manifest_run, manifest)
         write_manifest(manifest_central, manifest)
 
         logger.info(f"Đã lưu Manifest tại: {manifest_run}")
         logger.info(f"Đã cập nhật Manifest tổng: {manifest_central}")
-        logger.info("=" * 60)
         logger.info(f"INGESTION SUCCESS: {destination_path}")
-        logger.info("=" * 60)
         return manifest
 
     except Exception as e:
         logger.exception(f"LỖI INGESTION: {e}")
 
-        # Dọn file tạm và thư mục run rỗng
         if temp_destination.exists():
             temp_destination.unlink(missing_ok=True)
         try:
@@ -307,7 +276,6 @@ def ingest(source, dataset="paysim", raw_root=None, logger=None):
         except Exception:
             pass
         raise
-
 
 def parse_args():
     parser = argparse.ArgumentParser(
