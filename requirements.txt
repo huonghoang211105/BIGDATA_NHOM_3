@@ -1,0 +1,2 @@
+# Big Data Nhóm 3 - Dependencies Checkpoint 2
+pyspark>=3.5.0

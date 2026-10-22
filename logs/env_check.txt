@@ -1,0 +1,28 @@
+============================================================
+SMOKE TEST KIEM TRA MOI TRUONG PYSPARK
+Thoi gian kiem tra: 2026-10-22T04:33:22.139248+00:00
+============================================================
+[1] Python Version: 3.12.10
+[2] He dieu hanh: Windows 11 (AMD64)
+[3] Java Version: java version "17.0.12" 2024-07-16 LTS
+[4] Khoi tao SparkSession voi Master: 'local[*]'...
+[5] Spark Version: 4.2.0
+    - App Name: env-check
+    - Master  : local[*]
+[6] Thuc hien phep tinh phan tan tren DataFrame 1,000,000 dong...
+    - So partition: 12
+    - Count : 1,000,000 dong [THANH CONG]
+    - Filter (chan): 500,000 dong [THANH CONG]
+KET QUA SMOKE TEST: ENV PASS
+
+============================================================
+NGUON DU LIEU PAYSIM (DATA PROVENANCE)
+============================================================
+Ten dataset    : PaySim - Synthetic Financial Datasets For Fraud Detection
+Nguon          : Kaggle - https://www.kaggle.com/datasets/ealaxi/paysim1
+Phien ban      : paysim1 - dien version/ngay tai ve tu trang Kaggle
+Giay phep      : CC BY-SA 4.0
+Duong dan local: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\PS_20174392719_1491204439457_log.csv
+Dung luong     : 470.67 MB (493534783 bytes)
+SHA-256        : 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+Metadata luu tai: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\logs\data_source.json
