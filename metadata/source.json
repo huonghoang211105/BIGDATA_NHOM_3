@@ -1,0 +1,13 @@
+{
+  "dataset": "paysim",
+  "source_url": "https://www.kaggle.com/datasets/ealaxi/paysim1",
+  "publisher": "Edgar Lopez-Rojas (ealaxi)",
+  "dataset_title": "Synthetic Financial Datasets For Fraud Detection",
+  "license": "CC BY-SA 4.0",
+  "file_name": "PS_20174392719_1491204439457_log.csv",
+  "bytes": 493534783,
+  "snapshot_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+  "total_records": 6362620,
+  "accessed_at_utc": "2026-10-21T19:12:48Z",
+  "note": "Bộ dữ liệu giao dịch tài chính mô phỏng cho bài toán phát hiện gian lận tài chính thời gian thực."
+}

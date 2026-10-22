@@ -1,0 +1,14 @@
+{
+  "name": "PaySim - Synthetic Financial Datasets For Fraud Detection",
+  "source_type": "Kaggle",
+  "source_url": "https://www.kaggle.com/datasets/ealaxi/paysim1",
+  "original_filename": "PS_20174392719_1491204439457_log.csv",
+  "version_snapshot": "paysim1 - dien version/ngay tai ve tu trang Kaggle",
+  "local_path": "C:\\learning\\4th year\\big data\\project\\BIGDATA_NHOM_3\\data\\raw\\PS_20174392719_1491204439457_log.csv",
+  "license": "CC BY-SA 4.0",
+  "checked_at": "2026-10-22T04:33:57.219360+00:00",
+  "file_exists": true,
+  "file_size_bytes": 493534783,
+  "file_size_human": "470.67 MB",
+  "sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b"
+}

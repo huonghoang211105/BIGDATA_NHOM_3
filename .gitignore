@@ -218,3 +218,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# Bỏ qua toàn bộ file dữ liệu lớn trong data/raw/
+data/raw/*
+!data/raw/.gitkeep
+fixtures/
+
+# Giữ lại các file evidence trong thư mục logs/
+!logs/*.txt
+!logs/*.log
+!logs/.gitkeep

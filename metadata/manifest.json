@@ -1,0 +1,12 @@
+{
+  "source": "C:\\learning\\4th year\\big data\\project\\BIGDATA_NHOM_3\\data\\raw\\PS_20174392719_1491204439457_log.csv",
+  "dataset": "paysim",
+  "run_id": "20261021T191427Z_966d2531",
+  "ingest_time": "2026-10-21T19:14:27.327403+00:00",
+  "bytes": 493534783,
+  "hash": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+  "sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+  "destination": "C:\\learning\\4th year\\big data\\project\\BIGDATA_NHOM_3\\data\\raw\\paysim\\ingest_date=2026-10-21\\run_20261021T191427Z_966d2531\\PS_20174392719_1491204439457_log.csv",
+  "status": "SUCCESS",
+  "rerun_policy": "Tạo run_id mới theo timestamp mỗi lần chạy; cùng snapshot cho ra cùng mã hash."
+}

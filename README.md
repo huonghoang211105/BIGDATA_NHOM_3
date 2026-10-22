@@ -68,8 +68,18 @@ PASS khi có Spark version, count bằng `1000000` và tiến trình kết thúc
 Ingest dữ liệu:
 
 ```bash
-python src/ingest_file.py --source "<CSV_nguon>" --dataset paysim --raw-root data/raw
+# Lệnh đơn (tự động phát hiện file nguồn có sẵn trong repo):
+python src/ingest_paysim.py
+
+# Hoặc chỉ định rõ file nguồn / URL:
+python src/ingest_paysim.py --source "<CSV_nguon_hoac_URL>" --dataset paysim --raw-root data/raw
 ```
+
+Nguồn `--source` có thể là đường dẫn file local hoặc URL HTTP(S). Mỗi lần chạy tạo
+một thư mục run mới trong `data/raw/`, cập nhật manifest mới nhất tại
+`metadata/manifest.json` và ghi log tại `logs/ingest_<timestamp>_<run_id>.log`.
+Manifest chứa `source`, `ingest_time`, `bytes`, `hash` (SHA-256), `destination` và `status` (`SUCCESS`
+hoặc `FAILED`), cùng thông tin dataset và run ID.
 
 Kiểm tra manifest và đọc raw bằng Spark:
 
@@ -98,13 +108,13 @@ Manifest ghi nguồn, run ID, thời gian ingest UTC, dung lượng, SHA-256, đ
 
 | Nội dung | Kết quả hoặc vị trí bằng chứng |
 |---|---|
-| Python / Java / Spark version | [Điền từ metadata/environment.json] |
-| Smoke test | [PASS/FAIL và logs/env_check.txt] |
+| Python / Java / Spark version | Python 3.12.10 / Java 17.0.12 / Spark 4.2.0 |
+| Smoke test | PASS (Minh chứng: `logs/env_check.txt`) |
 | Nguồn và snapshot | metadata/source.json |
-| Số dòng raw | [Điền từ kết quả Spark đọc full] |
-| Raw location | [Điền destination trong manifest] |
-| Manifest location | [Điền đường dẫn manifest của run được chọn] |
-| Ingestion log | [Điền logs/ingest_<run_id>.txt] |
+| Số dòng raw | 6,362,620 dòng (xem `metadata/source.json`) |
+| Raw location | `data/raw/paysim/ingest_date=YYYY-MM-DD/run_<timestamp>_<id>/` (chi tiết tại `metadata/manifest.json`) |
+| Manifest location | `metadata/manifest.json` (và bản sao trong thư mục run raw) |
+| Ingestion log | `logs/ingest_<timestamp>_<run_id>.log` |
 | Spark count/schema/sample | [Điền logs/spark_full_<run_id>.txt] |
 | Kiểm chạy lại 3 lần | [Điền kết quả và đường dẫn bằng chứng] |
 | Kaggle Notebook version | [Điền URL version đã chạy thành công] |
