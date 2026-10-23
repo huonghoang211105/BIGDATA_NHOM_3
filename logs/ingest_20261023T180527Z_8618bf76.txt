@@ -1,0 +1,41 @@
+2026-10-24 01:05:27,510 [INFO] ============================================================
+2026-10-24 01:05:27,510 [INFO] KIỂM TRA RAW DATA BẰNG PYSPARK (SPARK RAW INSPECTION)
+2026-10-24 01:05:27,514 [INFO] Đường dẫn file raw: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim\ingest_date=2026-10-22\run_20261022T122337Z_ec39637e\paysim_data.csv
+2026-10-24 01:05:27,514 [INFO] ============================================================
+2026-10-24 01:05:39,653 [INFO] Spark Version   : 4.2.0 (Master: local[*])
+2026-10-24 01:05:39,653 [INFO] Đang đọc raw CSV với chế độ FAILFAST...
+2026-10-24 01:05:43,710 [INFO] Cấu trúc cột    : 11 cột [KHỚP CHUẨN PAYSIM]
+2026-10-24 01:05:43,803 [INFO] Số partition    : 12
+2026-10-24 01:05:43,803 [INFO] Đang đếm tổng số dòng (count)...
+2026-10-24 01:05:45,738 [INFO] Tổng số dòng    : 6,362,620 dòng [THANH CONG]
+2026-10-24 01:05:45,738 [INFO] Đang kiểm tra tính toàn vẹn (mapPartitions)...
+2026-10-24 01:06:31,855 [INFO] Parsed rows     : 6,362,620 dòng [THANH CONG]
+2026-10-24 01:06:32,212 [INFO] 
+--- SCHEMA DỮ LIỆU ---
+2026-10-24 01:06:32,212 [INFO] root
+2026-10-24 01:06:32,213 [INFO]  |-- step: string (nullable = true)
+2026-10-24 01:06:32,213 [INFO]  |-- type: string (nullable = true)
+2026-10-24 01:06:32,213 [INFO]  |-- amount: string (nullable = true)
+2026-10-24 01:06:32,213 [INFO]  |-- nameOrig: string (nullable = true)
+2026-10-24 01:06:32,213 [INFO]  |-- oldbalanceOrg: string (nullable = true)
+2026-10-24 01:06:32,213 [INFO]  |-- newbalanceOrig: string (nullable = true)
+2026-10-24 01:06:32,214 [INFO]  |-- nameDest: string (nullable = true)
+2026-10-24 01:06:32,214 [INFO]  |-- oldbalanceDest: string (nullable = true)
+2026-10-24 01:06:32,214 [INFO]  |-- newbalanceDest: string (nullable = true)
+2026-10-24 01:06:32,214 [INFO]  |-- isFraud: string (nullable = true)
+2026-10-24 01:06:32,214 [INFO]  |-- isFlaggedFraud: string (nullable = true)
+2026-10-24 01:06:32,214 [INFO] 
+--- 5 DÒNG DỮ LIỆU MẪU ---
+2026-10-24 01:06:32,214 [INFO] +----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+2026-10-24 01:06:32,214 [INFO] |step|    type|  amount|   nameOrig|oldbalanceOrg|newbalanceOrig|   nameDest|oldbalanceDest|newbalanceDest|isFraud|isFlaggedFraud|
+2026-10-24 01:06:32,214 [INFO] +----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+2026-10-24 01:06:32,214 [INFO] |   1| PAYMENT| 9839.64|C1231006815|     170136.0|     160296.36|M1979787155|           0.0|           0.0|      0|             0|
+2026-10-24 01:06:32,215 [INFO] |   1| PAYMENT| 1864.28|C1666544295|      21249.0|      19384.72|M2044282225|           0.0|           0.0|      0|             0|
+2026-10-24 01:06:32,215 [INFO] |   1|TRANSFER|   181.0|C1305486145|        181.0|           0.0| C553264065|           0.0|           0.0|      1|             0|
+2026-10-24 01:06:32,215 [INFO] |   1|CASH_OUT|   181.0| C840083671|        181.0|           0.0|  C38997010|       21182.0|           0.0|      1|             0|
+2026-10-24 01:06:32,215 [INFO] |   1| PAYMENT|11668.14|C2048537720|      41554.0|      29885.86|M1230701703|           0.0|           0.0|      0|             0|
+2026-10-24 01:06:32,215 [INFO] +----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+2026-10-24 01:06:32,215 [INFO] only showing top 5 rows
+2026-10-24 01:06:32,218 [INFO] 
+Đã lưu báo cáo Spark tại: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\metadata\spark_read_20261022T122337Z_ec39637e.json
+2026-10-24 01:06:32,218 [INFO] KẾT QUẢ SPARK RAW: PASS

@@ -1,0 +1,56 @@
+2026-10-24 01:13:54,973 [INFO] Tự động chọn nguồn dữ liệu tìm thấy: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim_data.csv
+2026-10-24 01:13:54,976 [INFO] ============================================================
+2026-10-24 01:13:54,976 [INFO] BẮT ĐẦU JOB INGESTION DỮ LIỆU PAYSIM
+2026-10-24 01:13:54,976 [INFO] Run ID: 20261023T181354Z_f09cca3e
+2026-10-24 01:13:54,976 [INFO] Nguồn: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim_data.csv
+2026-10-24 01:13:54,977 [INFO] Đích lưu trữ: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim\ingest_date=2026-10-23\run_20261023T181354Z_f09cca3e\paysim_data.csv
+2026-10-24 01:13:54,981 [INFO] ============================================================
+2026-10-24 01:13:55,032 [INFO] Đang sao chép binary từ file local: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim_data.csv
+2026-10-24 01:13:56,273 [INFO] Đã lưu file raw thành công (493,534,783 bytes).
+2026-10-24 01:13:56,273 [INFO] Đang tính mã băm SHA-256...
+2026-10-24 01:13:56,813 [INFO] Mã SHA-256: 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+2026-10-24 01:13:56,813 [INFO] 
+2026-10-24 01:13:56,816 [INFO] ============================================================
+2026-10-24 01:13:56,816 [INFO] KIỂM TRA RAW DATA BẰNG PYSPARK (SPARK RAW INSPECTION)
+2026-10-24 01:13:56,816 [INFO] Đường dẫn file raw: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim\ingest_date=2026-10-23\run_20261023T181354Z_f09cca3e\paysim_data.csv
+2026-10-24 01:13:56,816 [INFO] ============================================================
+2026-10-24 01:14:27,541 [INFO] Spark Version   : 4.2.0 (Master: local[*])
+2026-10-24 01:14:27,541 [INFO] Đang đọc raw CSV với chế độ FAILFAST...
+2026-10-24 01:14:31,664 [INFO] Cấu trúc cột    : 11 cột [KHỚP CHUẨN PAYSIM]
+2026-10-24 01:14:31,758 [INFO] Số partition    : 12
+2026-10-24 01:14:31,758 [INFO] Đang đếm tổng số dòng (count)...
+2026-10-24 01:14:33,347 [INFO] Tổng số dòng    : 6,362,620 dòng [THANH CONG]
+2026-10-24 01:14:33,348 [INFO] Đang kiểm tra tính toàn vẹn (mapPartitions)...
+2026-10-24 01:15:12,983 [INFO] Parsed rows     : 6,362,620 dòng [THANH CONG]
+2026-10-24 01:15:13,351 [INFO] 
+--- SCHEMA DỮ LIỆU ---
+2026-10-24 01:15:13,351 [INFO] root
+2026-10-24 01:15:13,351 [INFO]  |-- step: string (nullable = true)
+2026-10-24 01:15:13,351 [INFO]  |-- type: string (nullable = true)
+2026-10-24 01:15:13,351 [INFO]  |-- amount: string (nullable = true)
+2026-10-24 01:15:13,351 [INFO]  |-- nameOrig: string (nullable = true)
+2026-10-24 01:15:13,353 [INFO]  |-- oldbalanceOrg: string (nullable = true)
+2026-10-24 01:15:13,353 [INFO]  |-- newbalanceOrig: string (nullable = true)
+2026-10-24 01:15:13,353 [INFO]  |-- nameDest: string (nullable = true)
+2026-10-24 01:15:13,353 [INFO]  |-- oldbalanceDest: string (nullable = true)
+2026-10-24 01:15:13,353 [INFO]  |-- newbalanceDest: string (nullable = true)
+2026-10-24 01:15:13,353 [INFO]  |-- isFraud: string (nullable = true)
+2026-10-24 01:15:13,353 [INFO]  |-- isFlaggedFraud: string (nullable = true)
+2026-10-24 01:15:13,355 [INFO] 
+--- 5 DÒNG DỮ LIỆU MẪU ---
+2026-10-24 01:15:13,355 [INFO] +----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+2026-10-24 01:15:13,355 [INFO] |step|    type|  amount|   nameOrig|oldbalanceOrg|newbalanceOrig|   nameDest|oldbalanceDest|newbalanceDest|isFraud|isFlaggedFraud|
+2026-10-24 01:15:13,355 [INFO] +----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+2026-10-24 01:15:13,355 [INFO] |   1| PAYMENT| 9839.64|C1231006815|     170136.0|     160296.36|M1979787155|           0.0|           0.0|      0|             0|
+2026-10-24 01:15:13,355 [INFO] |   1| PAYMENT| 1864.28|C1666544295|      21249.0|      19384.72|M2044282225|           0.0|           0.0|      0|             0|
+2026-10-24 01:15:13,355 [INFO] |   1|TRANSFER|   181.0|C1305486145|        181.0|           0.0| C553264065|           0.0|           0.0|      1|             0|
+2026-10-24 01:15:13,355 [INFO] |   1|CASH_OUT|   181.0| C840083671|        181.0|           0.0|  C38997010|       21182.0|           0.0|      1|             0|
+2026-10-24 01:15:13,357 [INFO] |   1| PAYMENT|11668.14|C2048537720|      41554.0|      29885.86|M1230701703|           0.0|           0.0|      0|             0|
+2026-10-24 01:15:13,357 [INFO] +----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+2026-10-24 01:15:13,357 [INFO] only showing top 5 rows
+2026-10-24 01:15:13,359 [INFO] 
+Đã lưu báo cáo Spark tại: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\metadata\spark_read_20261023T181354Z_f09cca3e.json
+2026-10-24 01:15:13,359 [INFO] KẾT QUẢ SPARK RAW: PASS
+2026-10-24 01:15:13,979 [INFO] Đã lưu Manifest tại: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim\ingest_date=2026-10-23\run_20261023T181354Z_f09cca3e\manifest.json
+2026-10-24 01:15:13,980 [INFO] Đã cập nhật Manifest tổng: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\metadata\manifest.json
+2026-10-24 01:15:13,980 [INFO] INGESTION SUCCESS: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim\ingest_date=2026-10-23\run_20261023T181354Z_f09cca3e\paysim_data.csv

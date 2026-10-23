@@ -1,12 +1,16 @@
 {
   "source": "C:\\learning\\4th year\\big data\\project\\BIGDATA_NHOM_3\\data\\raw\\paysim_data.csv",
   "dataset": "paysim",
-  "run_id": "20261022T122337Z_ec39637e",
-  "ingest_time": "2026-10-22T12:23:37.517484+00:00",
+  "run_id": "20261023T181354Z_f09cca3e",
+  "ingest_time": "2026-10-23T18:13:54.975069+00:00",
   "bytes": 493534783,
   "hash": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
   "sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
-  "destination": "C:\\learning\\4th year\\big data\\project\\BIGDATA_NHOM_3\\data\\raw\\paysim\\ingest_date=2026-10-22\\run_20261022T122337Z_ec39637e\\paysim_data.csv",
+  "destination": "C:\\learning\\4th year\\big data\\project\\BIGDATA_NHOM_3\\data\\raw\\paysim\\ingest_date=2026-10-23\\run_20261023T181354Z_f09cca3e\\paysim_data.csv",
   "status": "SUCCESS",
-  "rerun_policy": "Tạo run_id mới theo timestamp mỗi lần chạy; cùng snapshot cho ra cùng mã hash."
+  "rerun_policy": "Tạo run_id mới theo timestamp mỗi lần chạy; cùng snapshot cho ra cùng mã hash.",
+  "spark_verified": true,
+  "spark_rows": 6362620,
+  "spark_version": "4.2.0",
+  "spark_report": "C:\\learning\\4th year\\big data\\project\\BIGDATA_NHOM_3\\data\\raw\\paysim\\ingest_date=2026-10-23\\run_20261023T181354Z_f09cca3e\\spark_read_20261023T181354Z_f09cca3e.json"
 }

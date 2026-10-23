@@ -1,6 +1,6 @@
 ============================================================
 SMOKE TEST KIEM TRA MOI TRUONG PYSPARK
-Thoi gian kiem tra: 2026-10-23T17:09:56.053164+00:00
+Thoi gian kiem tra: 2026-10-23T18:01:26.867940+00:00
 ============================================================
 [1] Python Version: 3.12.10
 [2] He dieu hanh: Windows 11 (AMD64)

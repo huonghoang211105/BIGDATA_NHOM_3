@@ -8,6 +8,7 @@ Tuân thủ đầy đủ các yêu cầu Checkpoint 2 (Buổi 6):
 3. Cơ chế Rerun (Idempotency): Mỗi lần chạy tạo một run_id và thư mục riêng biệt theo timestamp.
 4. Bắt lỗi đầy đủ: Kiểm tra file tồn tại, file rỗng, timeout mạng, header PaySim.
 5. Tạo Manifest và Log truy vết: Ghi nhận source, ingest_time, bytes, sha256 hash, destination, status.
+6. Kiểm tra Raw Data bằng PySpark: Đọc trực tiếp file raw đã nạp, kiểm tra schema, đếm số dòng (count), phân vùng (partitions), trích xuất sample và lưu báo cáo spark_read_<run_id>.json.
 """
 
 import argparse
@@ -188,8 +189,158 @@ def find_default_source():
     return None
 
 
-def ingest(source, dataset="paysim", raw_root=None, logger=None):
-    """Nạp dữ liệu vào raw storage, sinh manifest (SUCCESS/FAILED)."""
+def get_spark_session(app_name="paysim-raw-inspect", master=None):
+    """Khởi tạo hoặc lấy SparkSession hiện tại."""
+    try:
+        from pyspark.sql import SparkSession
+    except ImportError as e:
+        raise ImportError(
+            "Chưa cài đặt PySpark. Vui lòng cài đặt bằng lệnh: pip install pyspark>=3.5.0"
+        ) from e
+
+    master_mode = master or os.environ.get("SPARK_MASTER", "local[*]")
+    spark = (
+        SparkSession.builder
+        .master(master_mode)
+        .appName(app_name)
+        .config("spark.ui.showConsoleProgress", "false")
+        .config("spark.sql.execution.arrow.pyspark.enabled", "false")
+        .getOrCreate()
+    )
+    spark.sparkContext.setLogLevel("WARN")
+    return spark
+
+
+def inspect_raw_with_spark(
+    raw_path,
+    run_id=None,
+    logger=None,
+    master=None,
+    report_dir=None,
+):
+    """
+    Sử dụng PySpark để đọc, kiểm tra cấu trúc (schema), đếm số dòng (count),
+    kiểm tra tính toàn vẹn (mapPartitions) và hiển thị dữ liệu mẫu từ tệp raw data CSV.
+    """
+    raw_path = Path(raw_path).resolve()
+
+    # Nếu truyền vào file manifest.json, tự động trích xuất destination path và run_id
+    if raw_path.suffix.lower() == ".json":
+        with raw_path.open("r", encoding="utf-8") as f:
+            manifest_info = json.load(f)
+        if "destination" in manifest_info:
+            if not run_id:
+                run_id = manifest_info.get("run_id")
+            raw_path = Path(manifest_info["destination"]).resolve()
+
+    if not raw_path.is_file():
+        raise FileNotFoundError(f"File raw không tồn tại để kiểm tra Spark: {raw_path}")
+
+    log_fn = logger.info if logger else print
+
+    log_fn("=" * 60)
+    log_fn("KIỂM TRA RAW DATA BẰNG PYSPARK (SPARK RAW INSPECTION)")
+    log_fn(f"Đường dẫn file raw: {raw_path}")
+    log_fn("=" * 60)
+
+    spark = get_spark_session(
+        app_name=f"paysim-raw-inspect-{run_id or 'manual'}",
+        master=master,
+    )
+
+    try:
+        log_fn(f"Spark Version   : {spark.version} (Master: {spark.sparkContext.master})")
+        log_fn("Đang đọc raw CSV với chế độ FAILFAST...")
+
+        df = spark.read.option("header", True).option("mode", "FAILFAST").csv(str(raw_path))
+
+        # Kiểm tra cấu trúc 11 cột PaySim
+        if df.columns != PAYSIM_COLUMNS:
+            raise ValueError(
+                f"Cột trong DataFrame không khớp chuẩn PaySim 11 cột.\n"
+                f"Thực tế ({len(df.columns)}): {df.columns}\n"
+                f"Kỳ vọng ({len(PAYSIM_COLUMNS)}): {PAYSIM_COLUMNS}"
+            )
+        log_fn(f"Cấu trúc cột    : {len(df.columns)} cột [KHỚP CHUẨN PAYSIM]")
+
+        partitions = df.rdd.getNumPartitions()
+        log_fn(f"Số partition    : {partitions}")
+
+        log_fn("Đang đếm tổng số dòng (count)...")
+        rows = df.count()
+        if rows == 0:
+            raise ValueError("File raw data không có dòng dữ liệu nào theo Spark count().")
+        log_fn(f"Tổng số dòng    : {rows:,} dòng [THANH CONG]")
+
+        # Đảm bảo Spark đọc và parse đầy đủ tất cả các trường trên từng partition
+        log_fn("Đang kiểm tra tính toàn vẹn (mapPartitions)...")
+        def consume_partition(records):
+            n = 0
+            for row in records:
+                tuple(row)
+                n += 1
+            yield n
+
+        parsed_rows = df.rdd.mapPartitions(consume_partition).sum()
+        if parsed_rows != rows:
+            raise ValueError(f"Số dòng parse được ({parsed_rows:,}) không khớp với count ({rows:,}).")
+        log_fn(f"Parsed rows     : {parsed_rows:,} dòng [THANH CONG]")
+
+        # Lấy schema và dữ liệu mẫu 5 dòng
+        schema_tree = df._jdf.schema().treeString() if hasattr(df, "_jdf") else str(df.schema)
+        sample_table = df._jdf.showString(5, 20, False) if hasattr(df, "_jdf") else ""
+        sample_dicts = [row.asDict() for row in df.limit(5).collect()]
+
+        log_fn("\n--- SCHEMA DỮ LIỆU ---")
+        for line in schema_tree.strip().splitlines():
+            log_fn(line)
+
+        log_fn("\n--- 5 DÒNG DỮ LIỆU MẪU ---")
+        for line in sample_table.strip().splitlines():
+            log_fn(line)
+
+        spark_meta = {
+            "run_id": run_id,
+            "destination": str(raw_path),
+            "spark_version": spark.version,
+            "master": spark.sparkContext.master,
+            "rows": rows,
+            "parsed_rows": parsed_rows,
+            "partitions": partitions,
+            "columns": df.columns,
+            "sample_records": sample_dicts,
+            "status": "PASS",
+            "inspected_at_utc": datetime.now(timezone.utc).isoformat(),
+        }
+
+        # Lưu báo cáo JSON
+        target_report_dir = report_dir or (PROJECT_ROOT / "metadata")
+        target_report_dir.mkdir(parents=True, exist_ok=True)
+        report_filename = f"spark_read_{run_id}.json" if run_id else "spark_read_latest.json"
+        report_file = target_report_dir / report_filename
+        with report_file.open("w", encoding="utf-8") as f:
+            json.dump(spark_meta, f, ensure_ascii=False, indent=2)
+
+        log_fn(f"\nĐã lưu báo cáo Spark tại: {report_file}")
+        log_fn("KẾT QUẢ SPARK RAW: PASS")
+        return spark_meta
+
+    finally:
+        try:
+            spark.stop()
+        except Exception:
+            pass
+
+
+def ingest(
+    source,
+    dataset="paysim",
+    raw_root=None,
+    logger=None,
+    spark_check=True,
+    spark_master=None,
+):
+    """Nạp dữ liệu vào raw storage, sinh manifest và kiểm tra bằng Spark (nếu bật)."""
     raw_root = Path(raw_root).resolve() if raw_root else PROJECT_ROOT / "data" / "raw"
 
     now = datetime.now(timezone.utc)
@@ -249,6 +400,28 @@ def ingest(source, dataset="paysim", raw_root=None, logger=None):
 
         manifest.update(bytes=file_size, hash=file_hash, sha256=file_hash, status="SUCCESS")
 
+        # Kiểm tra raw data bằng PySpark (nếu được kích hoạt)
+        if spark_check:
+            logger.info("")
+            spark_meta = inspect_raw_with_spark(
+                raw_path=destination_path,
+                run_id=run_id,
+                logger=logger,
+                master=spark_master,
+                report_dir=PROJECT_ROOT / "metadata",
+            )
+            # Lưu thêm bản sao báo cáo Spark trong chính thư mục run raw
+            run_spark_report = destination_dir / f"spark_read_{run_id}.json"
+            with run_spark_report.open("w", encoding="utf-8") as f:
+                json.dump(spark_meta, f, ensure_ascii=False, indent=2)
+
+            manifest.update(
+                spark_verified=True,
+                spark_rows=spark_meta["rows"],
+                spark_version=spark_meta["spark_version"],
+                spark_report=str(run_spark_report.resolve()),
+            )
+
         write_manifest(manifest_run, manifest)
         write_manifest(manifest_central, manifest)
 
@@ -277,9 +450,10 @@ def ingest(source, dataset="paysim", raw_root=None, logger=None):
             pass
         raise
 
+
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Script nạp dữ liệu PaySim vào Raw Storage tuân thủ Checkpoint 2."
+        description="Script nạp dữ liệu PaySim vào Raw Storage và kiểm tra bằng PySpark tuân thủ Checkpoint 2."
     )
     parser.add_argument(
         "--source",
@@ -296,6 +470,29 @@ def parse_args():
         default=str(PROJECT_ROOT / "data" / "raw"),
         help="Thư mục gốc lưu trữ raw data (mặc định: data/raw).",
     )
+    parser.add_argument(
+        "--with-spark",
+        dest="with_spark",
+        action="store_true",
+        default=True,
+        help="Tự động kiểm tra raw data bằng PySpark sau khi ingest (mặc định: Bật).",
+    )
+    parser.add_argument(
+        "--no-spark",
+        dest="with_spark",
+        action="store_false",
+        help="Bỏ qua bước kiểm tra raw data bằng PySpark.",
+    )
+    parser.add_argument(
+        "--spark-master",
+        default=None,
+        help="Spark master URL (mặc định: lấy từ biến môi trường SPARK_MASTER hoặc 'local[*]').",
+    )
+    parser.add_argument(
+        "--inspect-only",
+        default=None,
+        help="Chỉ thực hiện đọc và kiểm tra file raw data hoặc manifest bằng Spark (không sao chép dữ liệu mới).",
+    )
     return parser.parse_args()
 
 
@@ -306,6 +503,21 @@ def main():
     log_file = PROJECT_ROOT / "logs" / f"ingest_{now_str}_{run_uuid}.txt"
 
     logger = setup_logger(log_file)
+
+    # Chế độ chỉ kiểm tra file raw data hoặc manifest bằng PySpark
+    if args.inspect_only:
+        try:
+            inspect_raw_with_spark(
+                raw_path=args.inspect_only,
+                logger=logger,
+                master=args.spark_master,
+            )
+            print("\nSPARK RAW INSPECTION SUCCESS.")
+            return 0
+        except Exception:
+            logger.exception("SPARK RAW INSPECTION FAILED.")
+            print("\nSPARK RAW INSPECTION FAILED. Xem chi tiết trong file log.", file=sys.stderr)
+            return 1
 
     source = args.source
     if not source:
@@ -322,6 +534,8 @@ def main():
             dataset=args.dataset,
             raw_root=args.raw_root,
             logger=logger,
+            spark_check=args.with_spark,
+            spark_master=args.spark_master,
         )
         print(f"\nSUCCESS manifest={manifest['destination']}")
         return 0
@@ -332,3 +546,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
