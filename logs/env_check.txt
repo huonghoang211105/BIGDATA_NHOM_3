@@ -1,6 +1,6 @@
 ============================================================
 SMOKE TEST KIEM TRA MOI TRUONG PYSPARK
-Thoi gian kiem tra: 2026-10-22T04:33:22.139248+00:00
+Thoi gian kiem tra: 2026-10-22T12:55:24.725367+00:00
 ============================================================
 [1] Python Version: 3.12.10
 [2] He dieu hanh: Windows 11 (AMD64)
@@ -18,11 +18,12 @@ KET QUA SMOKE TEST: ENV PASS
 ============================================================
 NGUON DU LIEU PAYSIM (DATA PROVENANCE)
 ============================================================
+[WARN] Chua tim thay file du lieu tai: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\PS_20174392719_1491204439457_log.csv
 Ten dataset    : PaySim - Synthetic Financial Datasets For Fraud Detection
 Nguon          : Kaggle - https://www.kaggle.com/datasets/ealaxi/paysim1
 Phien ban      : paysim1 - dien version/ngay tai ve tu trang Kaggle
 Giay phep      : CC BY-SA 4.0
 Duong dan local: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\PS_20174392719_1491204439457_log.csv
-Dung luong     : 470.67 MB (493534783 bytes)
-SHA-256        : 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+Dung luong     : None (None bytes)
+SHA-256        : None
 Metadata luu tai: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\logs\data_source.json
