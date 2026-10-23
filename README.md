@@ -45,18 +45,6 @@ Raw lớn được lưu ở Kaggle Notebook Outputs và bản dự phòng của 
 - Snapshot được nhận diện bằng URL nguồn, version nếu biết, dung lượng và SHA-256 trong `metadata/source.json`.
 
 ## Môi trường và cách chạy
-
-Nhóm sử dụng **Kaggle Notebook, CPU, Spark local[2]**. Notebook cấu hình PySpark 4.1.1 và JDK 17/21; version thực tế được ghi sau khi chạy.
-
-1. Import `notebooks/01_Checkpoint_Buoi6_Kaggle.ipynb` vào Kaggle.
-2. Chọn Accelerator None/CPU và bật Internet để cài dependency.
-3. Add Input dataset `ealaxi/paysim1`; không cần upload lại CSV.
-4. Chạy các ô theo thứ tự: setup → smoke test → ingest sample → ingest full → kiểm rerun → xuất hồ sơ.
-5. Chọn Save Version → Save & Run All, chờ hoàn tất và kiểm Outputs.
-6. Tải hồ sơ về, đưa script/log/metadata vào repo và ghi commit/tag thật.
-
-Các lệnh dưới đây chạy tại `/kaggle/working/nhom3_buoi6` sau khi notebook hoàn tất setup và tạo script. Thay các giá trị `<...>` bằng đường dẫn thực tế. Notebook có sẵn các bước gọi script và lưu log.
-
 Kiểm tra môi trường:
 
 ```bash
