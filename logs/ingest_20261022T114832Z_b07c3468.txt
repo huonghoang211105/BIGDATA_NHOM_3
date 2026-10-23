@@ -1,0 +1,14 @@
+2026-10-22 18:48:32,286 [INFO] Tự động chọn nguồn dữ liệu tìm thấy: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim_data.csv
+2026-10-22 18:48:32,288 [INFO] ============================================================
+2026-10-22 18:48:32,288 [INFO] BẮT ĐẦU JOB INGESTION DỮ LIỆU PAYSIM
+2026-10-22 18:48:32,288 [INFO] Run ID: 20261022T114832Z_24f02dbc
+2026-10-22 18:48:32,288 [INFO] Nguồn: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim_data.csv
+2026-10-22 18:48:32,288 [INFO] Đích lưu trữ: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim\ingest_date=2026-10-22\run_20261022T114832Z_24f02dbc\paysim_data.csv
+2026-10-22 18:48:32,288 [INFO] ============================================================
+2026-10-22 18:48:32,293 [INFO] Đang sao chép binary từ file local: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim_data.csv
+2026-10-22 18:48:34,269 [INFO] Đã lưu file raw thành công (493,534,783 bytes).
+2026-10-22 18:48:34,272 [INFO] Đang tính mã băm SHA-256...
+2026-10-22 18:48:34,811 [INFO] Mã SHA-256: 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+2026-10-22 18:48:34,819 [INFO] Đã lưu Manifest tại: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim\ingest_date=2026-10-22\run_20261022T114832Z_24f02dbc\manifest.json
+2026-10-22 18:48:34,820 [INFO] Đã cập nhật Manifest tổng: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\metadata\manifest.json
+2026-10-22 18:48:34,820 [INFO] INGESTION SUCCESS: C:\learning\4th year\big data\project\BIGDATA_NHOM_3\data\raw\paysim\ingest_date=2026-10-22\run_20261022T114832Z_24f02dbc\paysim_data.csv
