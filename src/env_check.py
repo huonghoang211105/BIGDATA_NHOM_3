@@ -27,8 +27,8 @@ PAYSIM_SOURCE = {
     "source_type": "Kaggle",
     "source_url": "https://www.kaggle.com/datasets/ealaxi/paysim1",
     "original_filename": "PS_20174392719_1491204439457_log.csv",
-    "version_snapshot": "paysim1 - dien version/ngay tai ve tu trang Kaggle",
-    "local_path": str(PROJECT_ROOT / "data" / "raw" / "PS_20174392719_1491204439457_log.csv"),
+    "version_snapshot": "paysim1 - version 2/18-10-2026",
+    "local_path": str(PROJECT_ROOT / "data" / "raw" / "paysim_data.csv"),
     "license": "CC BY-SA 4.0",
 }
 
