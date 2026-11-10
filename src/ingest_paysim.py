@@ -199,6 +199,12 @@ def get_spark_session(app_name="paysim-raw-inspect", master=None):
         ) from e
 
     master_mode = master or os.environ.get("SPARK_MASTER", "local[*]")
+    # Local workers must use the same Python as the driver. On Windows,
+    # Spark's default "python3" may resolve to a Microsoft Store alias.
+    is_local = master_mode == "local" or master_mode.startswith("local[")
+    if is_local:
+        os.environ["PYSPARK_PYTHON"] = sys.executable
+        os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
     spark = (
         SparkSession.builder
         .master(master_mode)
@@ -207,6 +213,9 @@ def get_spark_session(app_name="paysim-raw-inspect", master=None):
         .config("spark.sql.execution.arrow.pyspark.enabled", "false")
         .getOrCreate()
     )
+    if is_local:
+        # Also covers an existing SparkContext created before this function.
+        spark.sparkContext.pythonExec = sys.executable
     spark.sparkContext.setLogLevel("WARN")
     return spark
 

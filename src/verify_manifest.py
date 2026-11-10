@@ -1,6 +1,7 @@
 
 # -*- coding: utf-8 -*-
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -11,17 +12,33 @@ if str(PROJECT_ROOT / "src") not in sys.path:
 
 from ingest_paysim import compute_sha256
 
-# Đường dẫn manifest cần kiểm tra
-MANIFEST_PATH = PROJECT_ROOT / "metadata" / "manifest.json"
+DEFAULT_MANIFEST_PATH = PROJECT_ROOT / "metadata" / "manifest.json"
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Kiểm tra và xác thực manifest dữ liệu raw."
+    )
+    parser.add_argument(
+        "--manifest",
+        default=str(DEFAULT_MANIFEST_PATH),
+        help="Đường dẫn tới file manifest.json cần kiểm tra (mặc định: metadata/manifest.json).",
+    )
+    return parser.parse_args()
 
 
 def main():
-    if not MANIFEST_PATH.is_file():
-        print(f"[ERROR] Không tìm thấy manifest: {MANIFEST_PATH}")
+    args = parse_args()
+    manifest_path = Path(args.manifest)
+    if not manifest_path.is_absolute():
+        manifest_path = (PROJECT_ROOT / manifest_path).resolve()
+
+    if not manifest_path.is_file():
+        print(f"[ERROR] Không tìm thấy manifest: {manifest_path}")
         return 1
 
     try:
-        with MANIFEST_PATH.open("r", encoding="utf-8") as f:
+        with manifest_path.open("r", encoding="utf-8") as f:
             manifest = json.load(f)
     except (OSError, json.JSONDecodeError) as e:
         print(f"[ERROR] Không thể đọc manifest: {e}")
@@ -37,6 +54,21 @@ def main():
         return 1
 
     raw_path = Path(destination).resolve()
+
+    # Nếu đường dẫn trong manifest trỏ tới máy cũ không tồn tại, thử tìm tương đối trong PROJECT_ROOT
+    if not raw_path.is_file():
+        # Thử tìm phần 'data/raw/...' trong destination
+        dest_str = str(destination).replace("\\", "/")
+        idx = dest_str.find("data/raw/")
+        if idx != -1:
+            rel_candidate = PROJECT_ROOT / Path(dest_str[idx:])
+            if rel_candidate.is_file():
+                raw_path = rel_candidate
+            else:
+                # Thử kiểm tra data/raw/paysim_data.csv
+                default_raw = PROJECT_ROOT / "data" / "raw" / "paysim_data.csv"
+                if default_raw.is_file():
+                    raw_path = default_raw
 
     if not raw_path.is_file():
         print(f"[ERROR] Không tìm thấy file raw: {raw_path}")

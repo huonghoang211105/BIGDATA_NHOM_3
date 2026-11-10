@@ -11,3 +11,7 @@ venv/
 # Local raw data (keep the directory placeholder)
 data/raw/*
 !data/raw/.gitkeep
+
+# Spark pipeline output (large partitioned parquet/csv)
+output/
+

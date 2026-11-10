@@ -1,0 +1,61 @@
+== Physical Plan ==
+AdaptiveSparkPlan (10)
++- Project (9)
+   +- BroadcastHashJoin LeftOuter BuildRight (8)
+      :- Project (3)
+      :  +- Filter (2)
+      :     +- Scan csv  (1)
+      +- BroadcastExchange (7)
+         +- Project (6)
+            +- Filter (5)
+               +- Scan csv  (4)
+
+
+(1) Scan csv 
+Output [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/data/raw/paysim_data.csv]
+PushedFilters: [IsNotNull(step), IsNotNull(amount), IsNotNull(oldbalanceOrg), IsNotNull(newbalanceOrig), IsNotNull(oldbalanceDest), IsNotNull(newbalanceDest), IsNotNull(isFraud), IsNotNull(isFlaggedFraud), GreaterThanOrEqual(step,1), GreaterThanOrEqual(amount,0.00), In(isFraud, [0,1]), In(isFlaggedFraud, [0,1])]
+ReadSchema: struct<step:int,type:string,amount:decimal(20,2),nameOrig:string,oldbalanceOrg:decimal(20,2),newbalanceOrig:decimal(20,2),nameDest:string,oldbalanceDest:decimal(20,2),newbalanceDest:decimal(20,2),isFraud:int,isFlaggedFraud:int>
+
+(2) Filter
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Condition : (((((((((((((((((isnotnull(step#8) AND isnotnull(upper(trim(type#9, None)))) AND isnotnull(amount#10)) AND isnotnull(trim(nameOrig#11, None))) AND isnotnull(oldbalanceOrg#12)) AND isnotnull(newbalanceOrig#13)) AND isnotnull(trim(nameDest#14, None))) AND isnotnull(oldbalanceDest#15)) AND isnotnull(newbalanceDest#16)) AND isnotnull(isFraud#17)) AND isnotnull(isFlaggedFraud#18)) AND (step#8 >= 1)) AND (amount#10 >= 0.00)) AND isFraud#17 IN (0,1)) AND isFlaggedFraud#18 IN (0,1)) AND NOT (trim(nameOrig#11, None) = )) AND NOT (trim(nameDest#14, None) = )) AND NOT (upper(trim(type#9, None)) = ))
+
+(3) Project
+Output [14]: [step#8, upper(trim(type#9, None)) AS type#372, amount#10, trim(nameOrig#11, None) AS nameOrig#384, oldbalanceOrg#12, newbalanceOrig#13, trim(nameDest#14, None) AS nameDest#396, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, cast((FLOOR((cast((step#8 - 1) as double) / 24.0)) + 1) as int) AS day_index#513, pmod((step#8 - 1), 24) AS hour_index#526, LOG1P(cast(amount#10 as double)) AS log_amount#540]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+
+(4) Scan csv 
+Output [3]: [type#610, type_name_vi#611, flow_group#612]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/config/dim_transaction_type.csv]
+ReadSchema: struct<type:string,type_name_vi:string,flow_group:string>
+
+(5) Filter
+Input [3]: [type#610, type_name_vi#611, flow_group#612]
+Condition : (NOT (upper(trim(type#610, None)) = ) AND isnotnull(upper(trim(type#610, None))))
+
+(6) Project
+Output [3]: [upper(trim(type#610, None)) AS type#616, type_name_vi#611, flow_group#612]
+Input [3]: [type#610, type_name_vi#611, flow_group#612]
+
+(7) BroadcastExchange
+Input [3]: [type#616, type_name_vi#611, flow_group#612]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=939]
+
+(8) BroadcastHashJoin
+Left keys [1]: [type#372]
+Right keys [1]: [type#616]
+Join type: LeftOuter
+Join condition: None
+
+(9) Project
+Output [16]: [type#372, step#8, amount#10, nameOrig#384, oldbalanceOrg#12, newbalanceOrig#13, nameDest#396, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, day_index#513, hour_index#526, log_amount#540, type_name_vi#611, flow_group#612]
+Input [17]: [step#8, type#372, amount#10, nameOrig#384, oldbalanceOrg#12, newbalanceOrig#13, nameDest#396, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, day_index#513, hour_index#526, log_amount#540, type#616, type_name_vi#611, flow_group#612]
+
+(10) AdaptiveSparkPlan
+Output [16]: [type#372, step#8, amount#10, nameOrig#384, oldbalanceOrg#12, newbalanceOrig#13, nameDest#396, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, day_index#513, hour_index#526, log_amount#540, type_name_vi#611, flow_group#612]
+Arguments: isFinalPlan=false
+
+

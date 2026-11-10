@@ -1,0 +1,6 @@
+type,type_name_vi,flow_group
+CASH_IN,Nạp tiền,CASH_SERVICE
+CASH_OUT,Rút tiền,CASH_SERVICE
+DEBIT,Ghi nợ,ACCOUNT_DEBIT
+PAYMENT,Thanh toán,MERCHANT_PAYMENT
+TRANSFER,Chuyển tiền,ACCOUNT_TRANSFER
