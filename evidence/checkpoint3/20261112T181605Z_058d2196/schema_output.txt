@@ -1,0 +1,12 @@
+root
+ |-- day_index: integer (nullable = true)
+ |-- type: string (nullable = true)
+ |-- type_name_vi: string (nullable = true)
+ |-- flow_group: string (nullable = true)
+ |-- txn_count: long (nullable = true)
+ |-- total_amount: decimal(30,2) (nullable = true)
+ |-- avg_amount: decimal(21,2) (nullable = true)
+ |-- fraud_count: long (nullable = true)
+ |-- fraud_amount: decimal(30,2) (nullable = true)
+ |-- fraud_rate_pct: double (nullable = true)
+

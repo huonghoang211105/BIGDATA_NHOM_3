@@ -1,0 +1,11 @@
+{
+  "input_manifest": "metadata/manifest.json",
+  "dimension": "config/dim_transaction_type.csv",
+  "output_root": "output",
+  "master": "local[*]",
+  "expected_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+  "expected_rows": 6362620,
+  "expected_fraud_rows": 8213,
+  "expected_groups": 152,
+  "expected_total_amount": "1144392944759.77"
+}

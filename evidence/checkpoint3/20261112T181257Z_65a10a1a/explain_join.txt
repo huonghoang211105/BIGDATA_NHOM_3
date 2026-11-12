@@ -14,7 +14,7 @@ AdaptiveSparkPlan (10)
 (1) Scan csv 
 Output [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
 Batched: false
-Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/data/raw/paysim_data.csv]
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv]
 PushedFilters: [IsNotNull(step), IsNotNull(amount), IsNotNull(oldbalanceOrg), IsNotNull(newbalanceOrig), IsNotNull(oldbalanceDest), IsNotNull(newbalanceDest), IsNotNull(isFraud), IsNotNull(isFlaggedFraud), GreaterThanOrEqual(step,1), GreaterThanOrEqual(amount,0.00), In(isFraud, [0,1]), In(isFlaggedFraud, [0,1])]
 ReadSchema: struct<step:int,type:string,amount:decimal(20,2),nameOrig:string,oldbalanceOrg:decimal(20,2),newbalanceOrig:decimal(20,2),nameDest:string,oldbalanceDest:decimal(20,2),newbalanceDest:decimal(20,2),isFraud:int,isFlaggedFraud:int>
 

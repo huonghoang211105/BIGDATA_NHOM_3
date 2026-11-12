@@ -1,0 +1,4 @@
+﻿commit: eee6567533f8ad41ea1a307115db3b6e676d674f
+branch: Jake-branch
+subject: refactor(cp3): read raw via CP2 manifest, relative paths, spark conf evidence
+evidence_utc: 20261112T181247Z

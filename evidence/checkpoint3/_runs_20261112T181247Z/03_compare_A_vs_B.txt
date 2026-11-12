@@ -1,0 +1,16 @@
+$ python src/compare_runs.py output/snapshot_16910f90577b/20261112T181257Z_65a10a1a output/snapshot_16910f90577b/20261112T181605Z_058d2196
+# started_utc: 2026-11-12T18:19:06.301156+00:00
+
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+[Stage 0:>                                                          (0 + 1) / 1]                                                                                [Stage 8:>                                                          (0 + 2) / 2]                                                                                Run A: run_id=20261112T181257Z_65a10a1a dir=output/snapshot_16910f90577b/20261112T181257Z_65a10a1a
+Run B: run_id=20261112T181605Z_058d2196 dir=output/snapshot_16910f90577b/20261112T181605Z_058d2196
+input_sha256=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b dimension_sha256=e30610723992fe6fedc51a6b5886e68f7c9f46e0c3b30598828f5d0556680534 (same)
+Rows: A=152 B=152
+Rows only in A=0, only in B=0
+RERUN PASS: identical schema and business rows in both directions
+SUCCESS: The process with PID 9308 (child process of PID 24564) has been terminated.
+SUCCESS: The process with PID 24564 (child process of PID 8536) has been terminated.
+SUCCESS: The process with PID 8536 (child process of PID 32000) has been terminated.
+
+EXIT_CODE=0

@@ -1,0 +1,154 @@
+$ python C:\Users\HP\AppData\Local\Temp\claude\43c38e3534967fef\0a3bb64f-4a7c-4d18-a02a-f785aeec36b9\scratchpad\show_cp3.py
+# started_utc: 2026-11-12T18:19:46.861720+00:00
+
+=== output/latest_success.json
+{
+  "run_dir": "output/snapshot_16910f90577b/20261112T181605Z_058d2196",
+  "run_id": "20261112T181605Z_058d2196",
+  "raw_run_id": "20261112T175026Z_822219b0"
+}
+
+=== tree output/
+latest_success.json  (163 B)
+snapshot_16910f90577b/
+    20261110T095859Z_ec6b3d33/
+        _SUCCESS.json  (128 B)
+        config_used.json  (373 B)
+        daily_type_summary/
+            ._SUCCESS.crc  (8 B)
+            .part-00000-11434c71-cd69-4cb2-ba07-1ab1c7d11c3b-c000.snappy.parquet.crc  (72 B)
+            _SUCCESS  (0 B)
+            part-00000-11434c71-cd69-4cb2-ba07-1ab1c7d11c3b-c000.snappy.parquet  (8058 B)
+        explain_join.txt  (4304 B)
+        explain_summary.txt  (6106 B)
+        metrics.json  (5371 B)
+        preview_csv/
+            ._SUCCESS.crc  (8 B)
+            .part-00000-01c937ca-b767-417b-995c-24900b48ba2d-c000.csv.crc  (48 B)
+            _SUCCESS  (0 B)
+            part-00000-01c937ca-b767-417b-995c-24900b48ba2d-c000.csv  (4983 B)
+        quality_progress.json  (4948 B)
+        run.log  (560 B)
+        sample_output.json  (16072 B)
+        sample_transformed.json  (2070 B)
+        schema_input.txt  (515 B)
+        schema_output.txt  (459 B)
+        unmatched_sample.json  (2 B)
+    20261110T100253Z_30d5dc85/
+        _SUCCESS.json  (128 B)
+        config_used.json  (373 B)
+        daily_type_summary/
+            ._SUCCESS.crc  (8 B)
+            .part-00000-7dc7299d-8a6d-449b-8ad0-35993a59a5e7-c000.snappy.parquet.crc  (72 B)
+            _SUCCESS  (0 B)
+            part-00000-7dc7299d-8a6d-449b-8ad0-35993a59a5e7-c000.snappy.parquet  (8058 B)
+        explain_join.txt  (4304 B)
+        explain_summary.txt  (6106 B)
+        metrics.json  (5371 B)
+        preview_csv/
+            ._SUCCESS.crc  (8 B)
+            .part-00000-d1d463fa-581c-4a4b-8e10-114455dcd4d0-c000.csv.crc  (48 B)
+            _SUCCESS  (0 B)
+            part-00000-d1d463fa-581c-4a4b-8e10-114455dcd4d0-c000.csv  (4983 B)
+        quality_progress.json  (4948 B)
+        run.log  (560 B)
+        sample_output.json  (16072 B)
+        sample_transformed.json  (2070 B)
+        schema_input.txt  (515 B)
+        schema_output.txt  (459 B)
+        unmatched_sample.json  (2 B)
+    20261112T181257Z_65a10a1a/
+        _SUCCESS.json  (174 B)
+        config_used.json  (380 B)
+        daily_type_summary/
+            ._SUCCESS.crc  (8 B)
+            .part-00000-f5723140-c7ea-42a3-b543-7722c0e18e43-c000.snappy.parquet.crc  (72 B)
+            _SUCCESS  (0 B)
+            part-00000-f5723140-c7ea-42a3-b543-7722c0e18e43-c000.snappy.parquet  (8058 B)
+        explain_join.txt  (4364 B)
+        explain_summary.txt  (6166 B)
+        metrics.json  (6022 B)
+        preview_csv/
+            ._SUCCESS.crc  (8 B)
+            .part-00000-e8288b8c-83b5-4bd1-8e6f-c1e4f1a226d9-c000.csv.crc  (48 B)
+            _SUCCESS  (0 B)
+            part-00000-e8288b8c-83b5-4bd1-8e6f-c1e4f1a226d9-c000.csv  (4983 B)
+        quality_progress.json  (5553 B)
+        run.log  (719 B)
+        sample_output.json  (16072 B)
+        sample_transformed.json  (2070 B)
+        schema_input.txt  (515 B)
+        schema_output.txt  (459 B)
+        unmatched_sample.json  (2 B)
+    20261112T181605Z_058d2196/
+        _SUCCESS.json  (174 B)
+        config_used.json  (380 B)
+        daily_type_summary/
+            ._SUCCESS.crc  (8 B)
+            .part-00000-aeedb815-a1e4-42ca-9f83-0eb90e783981-c000.snappy.parquet.crc  (72 B)
+            _SUCCESS  (0 B)
+            part-00000-aeedb815-a1e4-42ca-9f83-0eb90e783981-c000.snappy.parquet  (8058 B)
+        explain_join.txt  (4364 B)
+        explain_summary.txt  (6166 B)
+        metrics.json  (6022 B)
+        preview_csv/
+            ._SUCCESS.crc  (8 B)
+            .part-00000-dc08ddf9-e596-4b28-884f-0ce136643b48-c000.csv.crc  (48 B)
+            _SUCCESS  (0 B)
+            part-00000-dc08ddf9-e596-4b28-884f-0ce136643b48-c000.csv  (4983 B)
+        quality_progress.json  (5553 B)
+        run.log  (719 B)
+        sample_output.json  (16072 B)
+        sample_transformed.json  (2070 B)
+        schema_input.txt  (515 B)
+        schema_output.txt  (459 B)
+        unmatched_sample.json  (2 B)
+
+=== tree evidence/checkpoint3/
+20261110T095859Z_ec6b3d33/
+    _SUCCESS.json  (128 B)
+    config_used.json  (373 B)
+    explain_join.txt  (4304 B)
+    explain_summary.txt  (6106 B)
+    metrics.json  (5371 B)
+    quality_progress.json  (4948 B)
+    run.log  (560 B)
+    sample_output.json  (16072 B)
+    sample_transformed.json  (2070 B)
+    schema_input.txt  (515 B)
+    schema_output.txt  (459 B)
+    unmatched_sample.json  (2 B)
+20261112T181257Z_65a10a1a/
+    _SUCCESS.json  (174 B)
+    config_used.json  (380 B)
+    explain_join.txt  (4364 B)
+    explain_summary.txt  (6166 B)
+    metrics.json  (6022 B)
+    quality_progress.json  (5553 B)
+    run.log  (657 B)
+    sample_output.json  (16072 B)
+    sample_transformed.json  (2070 B)
+    schema_input.txt  (515 B)
+    schema_output.txt  (459 B)
+    unmatched_sample.json  (2 B)
+20261112T181605Z_058d2196/
+    _SUCCESS.json  (174 B)
+    config_used.json  (380 B)
+    explain_join.txt  (4364 B)
+    explain_summary.txt  (6166 B)
+    metrics.json  (6022 B)
+    quality_progress.json  (5553 B)
+    run.log  (657 B)
+    sample_output.json  (16072 B)
+    sample_transformed.json  (2070 B)
+    schema_input.txt  (515 B)
+    schema_output.txt  (459 B)
+    unmatched_sample.json  (2 B)
+_runs_20261112T181247Z/
+    00_commit.txt  (194 B)
+    01_pipeline_runA.txt  (8765 B)
+    02_pipeline_runB.txt  (7832 B)
+    03_compare_A_vs_B.txt  (1393 B)
+    04_compare_old_vs_A.txt  (1231 B)
+
+EXIT_CODE=0
