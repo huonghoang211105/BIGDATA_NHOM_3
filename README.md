@@ -16,7 +16,7 @@
 ```text
 BIGDATA_NHOM_3/
 ├── README.md                           # Tài liệu tổng thể hướng dẫn đồ án (CP2 & CP3)
-├── requirements.txt                    # Thư viện phụ thuộc (PySpark)
+├── requirements.txt                    # Thư viện phụ thuộc (pyspark==3.5.9, ghim cứng)
 ├── .gitignore                          # Cấu hình loại trừ raw lớn, venv, output
 │
 ├── config/
@@ -24,17 +24,29 @@ BIGDATA_NHOM_3/
 │   └── dim_transaction_type.csv        # Dimension danh mục loại giao dịch (5 dòng)
 │
 ├── data/
-│   └── raw/
+│   ├── sample/                         # [Trong Git] Mẫu nhỏ để chạy thử
+│   │   ├── .gitattributes              # *.csv -text: giữ nguyên byte để SHA-256 không đổi
+│   │   ├── README.md                   # Nguồn cắt, số dòng, SHA-256 của sample
+│   │   └── paysim_sample_1000.csv      # Header + 1.000 dòng đầu của snapshot (74.448 bytes)
+│   └── raw/                            # [Ngoài Git, .gitignore] Raw zone
 │       ├── .gitkeep
-│       ├── paysim_data.csv             # Snapshot raw PaySim chuẩn (493.5MB, SHA-256 xác thực)
+│       ├── paysim_data.csv             # Snapshot nguồn PaySim (493.534.783 bytes, SHA-256 16910f90…4eea6b)
 │       ├── checkpoint3_input.json      # Hồ sơ di chuyển và xác thực snapshot cho CP3
-│       └── paysim/                     # Lưu trữ raw theo phân vùng ngày ingest từ CP2
-│           └── ingest_date=2026-10-23/
-│               └── run_20261023T180622Z_c45ac87c/
-│                   ├── paysim_data.csv
-│                   └── manifest.json
+│       └── paysim/                     # Raw bất biến do ingest_paysim.py tạo (CP2)
+│           └── ingest_date=2026-11-12/                 # Ngày ingest theo UTC
+│               └── run_20261112T175026Z_822219b0/      # run_id = <UTC timestamp>_<8 hex>
+│                   ├── paysim_data.csv                 # Bản sao byte-identical của nguồn
+│                   ├── manifest.json                   # Manifest của run (đường dẫn tương đối)
+│                   └── spark_read_20261112T175026Z_822219b0.json  # Báo cáo Spark đọc raw
+│
+├── logs/                               # [CP2] Log chạy
+│   ├── env_check.txt                   # Output env_check (dòng cuối ENV PASS / ENV FAIL)
+│   ├── data_source.json                # Provenance nguồn PaySim do env_check ghi
+│   └── ingest_<run_id>.txt             # 1 file log / 1 lần ingest, tên khớp run_id trong manifest
 │
 ├── evidence/
+│   ├── checkpoint2/
+│   │   └── 20261112T174903Z/           # Output từng lệnh lần chạy lại CP2 (00_commit … 09_history)
 │   └── checkpoint3/
 │       └── 20261110T095859Z_ec6b3d33/  # Bằng chứng run SUCCESS (metrics, explain, samples)
 │           ├── _SUCCESS.json           # Dấu mốc chạy thành công
@@ -52,17 +64,17 @@ BIGDATA_NHOM_3/
 │
 ├── metadata/
 │   ├── source.json                     # Thông tin data card, nguồn gốc Kaggle PaySim
-│   ├── manifest.json                   # Manifest chứng nhận Ingestion CP2
-│   ├── spark_read_20261022T122337Z_ec39637e.json # Log Spark đọc raw CP2
-│   └── spark_read_20261023T181354Z_f09cca3e.json # Log Spark đọc raw CP2
+│   ├── manifest.json                   # Con trỏ tới run SUCCESS mới nhất (bản sao manifest run + run_manifest)
+│   └── ingest_history.jsonl            # Lịch sử mọi lần ingest: SUCCESS / SKIPPED_DUPLICATE / FAILED
 │
 ├── reports/
+│   ├── checkpoint2.md                  # Báo cáo Checkpoint 2 (brief, exit ticket, nội dung 6 slide)
 │   ├── checkpoint3_template.md         # Template báo cáo Checkpoint 3 theo yêu cầu
 │   └── checkpoint3.md                  # Báo cáo kết quả chính thức Checkpoint 3 (Run PASS)
 │
 ├── src/
-│   ├── env_check.py                    # [CP2] Kiểm tra môi trường Python/Java/Spark
-│   ├── ingest_paysim.py                # [CP2] Script nạp dữ liệu PaySim và sinh manifest
+│   ├── env_check.py                    # [CP2] Kiểm tra OS/Java/JAVA_HOME/HADOOP_HOME/Python/PySpark + smoke test
+│   ├── ingest_paysim.py                # [CP2] Ingest idempotent theo SHA-256, quality gate, manifest, history
 │   ├── inspect_raw.py                  # [CP2] Script kiểm tra cấu trúc raw data bằng Spark
 │   ├── verify_manifest.py              # [CP2] Xác thực tính toàn vẹn manifest và mã SHA-256
 │   ├── prepare_raw.py                  # [CP3] Chuẩn bị snapshot độc lập từ archive ZIP
@@ -94,37 +106,80 @@ BIGDATA_NHOM_3/
 
 ## 3. Checkpoint 2 — Environment, Ingestion & Raw Storage
 
-Checkpoint 2 hoàn thành nền tảng môi trường và lưu trữ dữ liệu thô bất biến:
+Checkpoint 2 dựng môi trường tái tạo được và raw zone bất biến, có manifest + log truy vết. Lần chạy lại chính thức: code commit `1aa5272`, evidence [`evidence/checkpoint2/20261112T174903Z/`](evidence/checkpoint2/20261112T174903Z/), báo cáo [`reports/checkpoint2.md`](reports/checkpoint2.md).
 
-### 3.1. Các công việc đã đạt được
-1. **Kiểm tra môi trường (Environment Validation):**
-   - Xác nhận sự tương thích của Python 3.12, OpenJDK 17 và PySpark.
-   - Lệnh thực thi:
-     ```bash
-     python src/env_check.py
-     ```
-   - Kết quả: `ENV PASS` (Minh chứng: `logs/env_check.txt`).
+### 3.1. Môi trường đã kiểm chứng (theo `01_env_check.txt`)
 
-2. **Nạp dữ liệu gốc (Data Ingestion):**
-   - Nạp tệp PaySim gốc từ nguồn local hoặc remote, đảm bảo nguyên vẹn từng byte (byte-identical), không thực hiện làm sạch hay biến đổi trong tầng raw.
-   - Phân vùng lưu trữ theo định dạng: `data/raw/paysim/ingest_date=YYYY-MM-DD/run_<UTC_TIMESTAMP>_<id>/`.
-   - Sinh `manifest.json` ghi nhận metadata: dung lượng, ngày giờ UTC, mã SHA-256, đường dẫn đích và trạng thái `SUCCESS`.
-   - Lệnh thực thi:
-     ```bash
-     python src/ingest_paysim.py --source "data/raw/paysim_data.csv" --dataset paysim --raw-root data/raw
-     ```
+| Thành phần | Version / giá trị thực tế |
+|---|---|
+| OS | Windows 11 (AMD64) |
+| Python | 3.12.10 (bản Microsoft Store, `sys.executable` nằm dưới `WindowsApps\PythonSoftwareFoundation.Python.3.12_…`) |
+| Java | Eclipse Temurin OpenJDK 17.0.20.1 (`JAVA_HOME` = `C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot\`) |
+| PySpark / Spark | 3.5.9 / 3.5.9, master `local[*]` (8 partition mặc định) |
+| Hadoop (Windows) | `HADOOP_HOME=D:\hadoop`, có `bin\winutils.exe` |
 
-3. **Xác thực Manifest & Kiểm tra Raw bằng Spark:**
-   - Script xác thực manifest hỗ trợ truyền cờ `--manifest`:
-     ```bash
-     python src/verify_manifest.py --manifest metadata/manifest.json
-     ```
-     -> Kết quả: `XÁC THỰC MANIFEST: PASS` (khớp dung lượng 493.534.783 bytes và mã SHA-256).
-   - Kiểm tra Spark đọc raw:
-     ```bash
-     python src/inspect_raw.py --manifest metadata/manifest.json
-     ```
-     -> Kết quả: Đọc đủ 6.362.620 dòng trên 12 partitions ban đầu, ghi nhận tại `metadata/spark_read_*.json`.
+### 3.2. Setup trên máy khác
+
+```powershell
+# 1) Yêu cầu: Python 3.12, JDK 17 (JAVA_HOME), Windows thêm HADOOP_HOME có bin\winutils.exe
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1          # Linux/macOS: source .venv/bin/activate
+python -m pip install -r requirements.txt   # pyspark==3.5.9
+
+# 2) (Windows) đặt biến môi trường cho phiên hiện tại nếu chưa có
+$env:JAVA_HOME   = "C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot"
+$env:HADOOP_HOME = "D:\hadoop"
+
+# 3) Đặt snapshot Kaggle paysim1 vào data/raw/paysim_data.csv
+#    (493.534.783 bytes, SHA-256 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b)
+#    Không có snapshot: dùng data/sample/paysim_sample_1000.csv để chạy thử đọc Spark.
+```
+
+### 3.3. Lệnh chạy (tất cả chạy từ gốc repo)
+
+| # | Lệnh | Kỳ vọng |
+|---|---|---|
+| 1 | `python src/env_check.py` | Dòng cuối `ENV PASS`, exit 0 (sai → `ENV FAIL: <lý do>`, exit 1) |
+| 2 | `python src/ingest_paysim.py --source data/raw/paysim_data.csv --dataset paysim --raw-root data/raw` | Lần đầu `SUCCESS`, Spark đọc 6.362.620 dòng |
+| 3 | Chạy lại đúng lệnh 2 | `SKIPPED_DUPLICATE`, exit 0, không tạo thư mục raw mới |
+| 4 | `python src/ingest_paysim.py --source data/raw/khong_ton_tai.csv --dataset paysim --no-spark` | `FAILED: File nguồn không tồn tại`, exit 1 |
+| 5 | `python src/verify_manifest.py --manifest metadata/manifest.json` | `XÁC THỰC MANIFEST: PASS` (bytes + SHA-256 + log tồn tại) |
+| 6 | `python src/inspect_raw.py --manifest metadata/manifest.json` | count 6.362.620, schema 11 cột, 5 dòng mẫu |
+
+`--source` và `--raw-root` dạng tương đối được tính từ **gốc repo**. Cờ thêm: `--force` (cố ý tạo run mới dù trùng snapshot), `--no-spark` (bỏ bước Spark), `--spark-master`.
+
+### 3.4. Quy ước thư mục raw
+
+```text
+data/raw/<dataset>/ingest_date=YYYY-MM-DD/run_<YYYYMMDDTHHMMSSZ>_<8 hex>/
+    <tên file nguồn>            # bản sao byte-identical, không ETL
+    manifest.json               # manifest của run
+    spark_read_<run_id>.json    # báo cáo Spark (rows, partitions, columns, sample)
+```
+
+- **Múi giờ:** `ingest_date` và `run_id` theo **UTC**. Timestamp đầu mỗi dòng log (`2026-11-13 00:50:26,458 [INFO] …`) theo **giờ máy (+07)**. Ví dụ run `20261112T175026Z_822219b0` nằm trong `ingest_date=2026-11-12` dù log ghi 2026-11-13 00:50 giờ Việt Nam.
+- Mọi đường dẫn trong manifest / history / log / `spark_read` là **tương đối so với gốc repo** (dạng `data/raw/...`).
+- Raw zone không đưa vào Git (`data/raw/*` trong `.gitignore`); chỉ metadata, log, evidence được commit.
+
+### 3.5. Chính sách rerun (idempotent theo SHA-256)
+
+1. Tính SHA-256 nguồn và chạy **quality gate** trước khi copy: file tồn tại, bytes > 0, header đủ 11 cột PaySim, SHA-256 khớp `snapshot_sha256` trong `metadata/source.json`.
+2. Nếu `data/raw/<dataset>/` đã có manifest `SUCCESS` cùng SHA-256 (file raw còn và đúng số bytes) → **`SKIPPED_DUPLICATE: trùng snapshot với run <run_id cũ>`**, không copy, exit 0.
+3. Ngược lại copy vào `<file>.part` → quality gate lần 2 trên bản sao → đổi tên → Spark đọc kiểm tra → ghi manifest run → cập nhật con trỏ `metadata/manifest.json`.
+4. Lỗi ở bất kỳ bước nào → `FAILED`, exit 1, thư mục run dở dang bị xoá (không để lại thư mục raw rỗng).
+5. Mọi lần chạy append 1 dòng vào `metadata/ingest_history.jsonl` (`run_id`, `time_utc`, `source`, `sha256`, `bytes`, `status`, `destination`, `log_file`; FAILED có `destination: null` + `planned_destination` + `error`; SKIPPED có `duplicate_of`).
+6. Cố ý tạo bản sao mới của cùng snapshot: thêm `--force`.
+
+### 3.6. Vị trí manifest / log / evidence
+
+| Artifact | Vị trí |
+|---|---|
+| ENV | `logs/env_check.txt`, `logs/data_source.json` |
+| SOURCE | `metadata/source.json` (Kaggle paysim1, CC BY-SA 4.0, `snapshot_sha256`) |
+| INGEST | `logs/ingest_<run_id>.txt` (1 file / lần chạy), `metadata/ingest_history.jsonl` |
+| RAW | `data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/` (ngoài Git) |
+| TRACE | `metadata/manifest.json` → `run_manifest`, `log_file`, `spark_report` |
+| REPO / evidence | `evidence/checkpoint2/20261112T174903Z/` (`00_commit.txt` … `09_ingest_history.txt`), tag `checkpoint-2` |
 
 ---
 
@@ -200,13 +255,16 @@ Tệp quản lý nội bộ [`config/dim_transaction_type.csv`](file:///config/d
 
 ### 5.1. Thiết lập môi trường chạy trên Windows
 
-Môi trường yêu cầu:
-- Python 3.12 (đã có sẵn `sys.executable`).
-- OpenJDK 17 (Temurin).
-- Hadoop winutils: Đặt tại `D:\hadoop` (chứa `bin/winutils.exe` và `bin/hadoop.dll`).
+Môi trường yêu cầu (đã kiểm chứng, xem mục 3.1):
+- Windows 11, Python 3.12.10 (Microsoft Store).
+- Eclipse Temurin OpenJDK 17.0.20.1.
+- PySpark/Spark 3.5.9, master `local[*]`.
+- Hadoop winutils: `HADOOP_HOME=D:\hadoop` (chứa `bin/winutils.exe` và `bin/hadoop.dll`).
 
-Cài đặt thư viện:
+Cài đặt thư viện (venv, xem đầy đủ ở mục 3.2):
 ```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 ```
 
@@ -278,7 +336,7 @@ Dữ liệu được trích xuất từ lượt chạy chính thức `20261110T0
 
 - **Môi trường chạy:**
   - OS: Windows 11 Home Single Language (64-bit, 8 logical CPUs, 16 GB RAM).
-  - Python: 3.12.10 | Java: OpenJDK 17.0.20.1 (Temurin) | Spark: 3.5.9 (Master: `local[*]`).
+  - Python: 3.12.10 (Microsoft Store) | Java: Eclipse Temurin OpenJDK 17.0.20.1 | PySpark/Spark: 3.5.9 (Master: `local[*]`).
   - Hadoop: `D:\hadoop` (winutils 3.3.5, hadoop.dll).
   - Partitions: Input 8 partitions, Output 1 partition.
 - **Thời gian thực thi (Baseline Runtime):**

@@ -1,0 +1,22 @@
+$ python src/ingest_paysim.py --source data/raw/paysim_data.csv --dataset paysim --raw-root data/raw
+# started_utc: 2026-11-12T17:51:42.882482+00:00
+
+2026-11-13 00:51:43,163 [INFO] ============================================================
+2026-11-13 00:51:43,163 [INFO] BẮT ĐẦU JOB INGESTION DỮ LIỆU PAYSIM
+2026-11-13 00:51:43,163 [INFO] Run ID: 20261112T175143Z_04cf1c55
+2026-11-13 00:51:43,163 [INFO] Nguồn: data/raw/paysim_data.csv
+2026-11-13 00:51:43,163 [INFO] Đích dự kiến: data/raw/paysim/ingest_date=2026-11-12/run_20261112T175143Z_04cf1c55/paysim_data.csv
+2026-11-13 00:51:43,163 [INFO] Log: logs/ingest_20261112T175143Z_04cf1c55.txt
+2026-11-13 00:51:43,163 [INFO] ============================================================
+2026-11-13 00:51:43,163 [INFO] snapshot_sha256 kỳ vọng (metadata/source.json): 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+2026-11-13 00:51:43,163 [INFO] Quality gate trên file nguồn:
+2026-11-13 00:51:43,186 [INFO]   - Tồn tại, 493,534,783 bytes > 0, header 11 cột PaySim: OK
+2026-11-13 00:51:43,880 [INFO]   - SHA-256 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b khớp snapshot_sha256: OK
+2026-11-13 00:51:43,880 [INFO] SKIPPED_DUPLICATE: trùng snapshot với run 20261112T175026Z_822219b0
+2026-11-13 00:51:43,880 [INFO] Raw hiện có: data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv (không copy, không tạo thư mục mới)
+2026-11-13 00:51:43,880 [INFO] Đã append lịch sử: metadata/ingest_history.jsonl
+2026-11-13 00:51:43,880 [INFO] KẾT QUẢ: SKIPPED_DUPLICATE (run_id=20261112T175143Z_04cf1c55)
+
+SKIPPED_DUPLICATE run_id=20261112T175143Z_04cf1c55 destination=data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv
+
+EXIT_CODE=0

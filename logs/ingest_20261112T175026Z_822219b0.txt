@@ -1,0 +1,64 @@
+2026-11-13 00:50:26,458 [INFO] ============================================================
+2026-11-13 00:50:26,458 [INFO] BẮT ĐẦU JOB INGESTION DỮ LIỆU PAYSIM
+2026-11-13 00:50:26,458 [INFO] Run ID: 20261112T175026Z_822219b0
+2026-11-13 00:50:26,458 [INFO] Nguồn: data/raw/paysim_data.csv
+2026-11-13 00:50:26,458 [INFO] Đích dự kiến: data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv
+2026-11-13 00:50:26,458 [INFO] Log: logs/ingest_20261112T175026Z_822219b0.txt
+2026-11-13 00:50:26,458 [INFO] ============================================================
+2026-11-13 00:50:26,458 [INFO] snapshot_sha256 kỳ vọng (metadata/source.json): 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+2026-11-13 00:50:26,460 [INFO] Quality gate trên file nguồn:
+2026-11-13 00:50:26,473 [INFO]   - Tồn tại, 493,534,783 bytes > 0, header 11 cột PaySim: OK
+2026-11-13 00:50:27,263 [INFO]   - SHA-256 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b khớp snapshot_sha256: OK
+2026-11-13 00:50:27,280 [INFO] Đang sao chép binary từ file local: data/raw/paysim_data.csv
+2026-11-13 00:50:27,956 [INFO] Quality gate trên bản sao (.part) trước khi công bố:
+2026-11-13 00:50:27,976 [INFO]   - Tồn tại, 493,534,783 bytes > 0, header 11 cột PaySim: OK
+2026-11-13 00:50:28,781 [INFO]   - SHA-256 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b khớp snapshot_sha256: OK
+2026-11-13 00:50:28,788 [INFO] Đã lưu file raw: data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv (493,534,783 bytes)
+2026-11-13 00:50:28,789 [INFO] 
+2026-11-13 00:50:28,790 [INFO] ============================================================
+2026-11-13 00:50:28,790 [INFO] KIỂM TRA RAW DATA BẰNG PYSPARK (SPARK RAW INSPECTION)
+2026-11-13 00:50:28,790 [INFO] Run ID          : 20261112T175026Z_822219b0
+2026-11-13 00:50:28,790 [INFO] Đường dẫn file raw: data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv
+2026-11-13 00:50:28,790 [INFO] ============================================================
+2026-11-13 00:50:34,546 [INFO] Spark Version   : 3.5.9 (Master: local[*])
+2026-11-13 00:50:34,546 [INFO] Đang đọc raw CSV với chế độ FAILFAST...
+2026-11-13 00:50:39,854 [INFO] Cấu trúc cột    : 11 cột [KHỚP CHUẨN PAYSIM]
+2026-11-13 00:50:40,000 [INFO] Số partition    : 8
+2026-11-13 00:50:40,000 [INFO] Đang đếm tổng số dòng (count)...
+2026-11-13 00:50:41,707 [INFO] Tổng số dòng    : 6,362,620 dòng [THANH CONG]
+2026-11-13 00:50:41,707 [INFO] Đang kiểm tra tính toàn vẹn (mapPartitions)...
+2026-11-13 00:51:30,721 [INFO] Parsed rows     : 6,362,620 dòng [THANH CONG]
+2026-11-13 00:51:31,237 [INFO] 
+--- SCHEMA DỮ LIỆU ---
+2026-11-13 00:51:31,237 [INFO] root
+2026-11-13 00:51:31,237 [INFO]  |-- step: string (nullable = true)
+2026-11-13 00:51:31,237 [INFO]  |-- type: string (nullable = true)
+2026-11-13 00:51:31,237 [INFO]  |-- amount: string (nullable = true)
+2026-11-13 00:51:31,237 [INFO]  |-- nameOrig: string (nullable = true)
+2026-11-13 00:51:31,237 [INFO]  |-- oldbalanceOrg: string (nullable = true)
+2026-11-13 00:51:31,237 [INFO]  |-- newbalanceOrig: string (nullable = true)
+2026-11-13 00:51:31,237 [INFO]  |-- nameDest: string (nullable = true)
+2026-11-13 00:51:31,237 [INFO]  |-- oldbalanceDest: string (nullable = true)
+2026-11-13 00:51:31,238 [INFO]  |-- newbalanceDest: string (nullable = true)
+2026-11-13 00:51:31,238 [INFO]  |-- isFraud: string (nullable = true)
+2026-11-13 00:51:31,238 [INFO]  |-- isFlaggedFraud: string (nullable = true)
+2026-11-13 00:51:31,238 [INFO] 
+--- 5 DÒNG DỮ LIỆU MẪU ---
+2026-11-13 00:51:31,238 [INFO] +----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+2026-11-13 00:51:31,238 [INFO] |step|    type|  amount|   nameOrig|oldbalanceOrg|newbalanceOrig|   nameDest|oldbalanceDest|newbalanceDest|isFraud|isFlaggedFraud|
+2026-11-13 00:51:31,239 [INFO] +----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+2026-11-13 00:51:31,239 [INFO] |   1| PAYMENT| 9839.64|C1231006815|     170136.0|     160296.36|M1979787155|           0.0|           0.0|      0|             0|
+2026-11-13 00:51:31,239 [INFO] |   1| PAYMENT| 1864.28|C1666544295|      21249.0|      19384.72|M2044282225|           0.0|           0.0|      0|             0|
+2026-11-13 00:51:31,239 [INFO] |   1|TRANSFER|   181.0|C1305486145|        181.0|           0.0| C553264065|           0.0|           0.0|      1|             0|
+2026-11-13 00:51:31,239 [INFO] |   1|CASH_OUT|   181.0| C840083671|        181.0|           0.0|  C38997010|       21182.0|           0.0|      1|             0|
+2026-11-13 00:51:31,239 [INFO] |   1| PAYMENT|11668.14|C2048537720|      41554.0|      29885.86|M1230701703|           0.0|           0.0|      0|             0|
+2026-11-13 00:51:31,239 [INFO] +----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+2026-11-13 00:51:31,239 [INFO] only showing top 5 rows
+2026-11-13 00:51:31,242 [INFO] 
+Đã lưu báo cáo Spark tại: data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/spark_read_20261112T175026Z_822219b0.json
+2026-11-13 00:51:31,242 [INFO] KẾT QUẢ SPARK RAW: PASS
+2026-11-13 00:51:31,668 [INFO] Đã lưu Manifest run: data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/manifest.json
+2026-11-13 00:51:31,669 [INFO] Đã cập nhật con trỏ: metadata/manifest.json
+2026-11-13 00:51:31,669 [INFO] INGESTION SUCCESS: data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv
+2026-11-13 00:51:31,671 [INFO] Đã append lịch sử: metadata/ingest_history.jsonl
+2026-11-13 00:51:31,672 [INFO] KẾT QUẢ: SUCCESS (run_id=20261112T175026Z_822219b0)

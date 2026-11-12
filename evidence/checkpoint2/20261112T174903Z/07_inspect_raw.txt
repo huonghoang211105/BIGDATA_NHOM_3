@@ -1,0 +1,50 @@
+$ python src/inspect_raw.py --manifest metadata/manifest.json
+# started_utc: 2026-11-12T17:52:31.864049+00:00
+
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+============================================================
+KIỂM TRA RAW DATA BẰNG PYSPARK (SPARK RAW INSPECTION)
+Run ID          : 20261112T175026Z_822219b0
+Đường dẫn file raw: data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv
+============================================================
+Spark Version   : 3.5.9 (Master: local[*])
+Đang đọc raw CSV với chế độ FAILFAST...
+Cấu trúc cột    : 11 cột [KHỚP CHUẨN PAYSIM]
+Số partition    : 8
+Đang đếm tổng số dòng (count)...
+Tổng số dòng    : 6,362,620 dòng [THANH CONG]
+Đang kiểm tra tính toàn vẹn (mapPartitions)...
+Parsed rows     : 6,362,620 dòng [THANH CONG]
+
+--- SCHEMA DỮ LIỆU ---
+root
+ |-- step: string (nullable = true)
+ |-- type: string (nullable = true)
+ |-- amount: string (nullable = true)
+ |-- nameOrig: string (nullable = true)
+ |-- oldbalanceOrg: string (nullable = true)
+ |-- newbalanceOrig: string (nullable = true)
+ |-- nameDest: string (nullable = true)
+ |-- oldbalanceDest: string (nullable = true)
+ |-- newbalanceDest: string (nullable = true)
+ |-- isFraud: string (nullable = true)
+ |-- isFlaggedFraud: string (nullable = true)
+
+--- 5 DÒNG DỮ LIỆU MẪU ---
++----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+|step|    type|  amount|   nameOrig|oldbalanceOrg|newbalanceOrig|   nameDest|oldbalanceDest|newbalanceDest|isFraud|isFlaggedFraud|
++----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+|   1| PAYMENT| 9839.64|C1231006815|     170136.0|     160296.36|M1979787155|           0.0|           0.0|      0|             0|
+|   1| PAYMENT| 1864.28|C1666544295|      21249.0|      19384.72|M2044282225|           0.0|           0.0|      0|             0|
+|   1|TRANSFER|   181.0|C1305486145|        181.0|           0.0| C553264065|           0.0|           0.0|      1|             0|
+|   1|CASH_OUT|   181.0| C840083671|        181.0|           0.0|  C38997010|       21182.0|           0.0|      1|             0|
+|   1| PAYMENT|11668.14|C2048537720|      41554.0|      29885.86|M1230701703|           0.0|           0.0|      0|             0|
++----+--------+--------+-----------+-------------+--------------+-----------+--------------+--------------+-------+--------------+
+only showing top 5 rows
+KẾT QUẢ SPARK RAW: PASS
+SUCCESS: The process with PID 2772 (child process of PID 10652) has been terminated.
+SUCCESS: The process with PID 10652 (child process of PID 12356) has been terminated.
+SUCCESS: The process with PID 12356 (child process of PID 19368) has been terminated.
+
+EXIT_CODE=0

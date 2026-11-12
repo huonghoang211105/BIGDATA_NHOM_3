@@ -1,0 +1,14 @@
+$ python src/verify_manifest.py --manifest metadata/manifest.json
+# started_utc: 2026-11-12T17:52:23.452780+00:00
+
+Đang kiểm tra file: data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv
+==================================================
+Run ID    : 20261112T175026Z_822219b0
+File      : data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv
+Dung lượng: 493,534,783 bytes [KHỚP]
+SHA-256   : 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b [KHỚP]
+Log file  : logs/ingest_20261112T175026Z_822219b0.txt [TỒN TẠI]
+XÁC THỰC MANIFEST: PASS
+==================================================
+
+EXIT_CODE=0

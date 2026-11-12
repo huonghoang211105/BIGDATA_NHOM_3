@@ -1,0 +1,3 @@
+# Giữ nguyên byte (LF) cho file sample để SHA-256 trong README.md đúng trên mọi máy,
+# kể cả Windows có core.autocrlf=true.
+*.csv -text

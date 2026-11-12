@@ -1,0 +1,14 @@
+$ cmd /c tree /F /A data\raw\paysim
+# started_utc: 2026-11-12T17:53:54.619071+00:00
+
+Folder PATH listing for volume DATA
+Volume serial number is CB1F-9500
+D:\BIGDATA_NHOM_3\DATA\RAW\PAYSIM
+\---ingest_date=2026-11-12
+    \---run_20261112T175026Z_822219b0
+            manifest.json
+            paysim_data.csv
+            spark_read_20261112T175026Z_822219b0.json
+            
+
+EXIT_CODE=0

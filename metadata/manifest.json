@@ -1,0 +1,20 @@
+{
+  "dataset": "paysim",
+  "run_id": "20261112T175026Z_822219b0",
+  "ingest_time": "2026-11-12T17:50:26.454616+00:00",
+  "source": "data/raw/paysim_data.csv",
+  "bytes": 493534783,
+  "sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+  "snapshot_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+  "quality_gate": "PASS",
+  "destination": "data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv",
+  "run_dir": "data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0",
+  "log_file": "logs/ingest_20261112T175026Z_822219b0.txt",
+  "status": "SUCCESS",
+  "rerun_policy": "Idempotent theo SHA-256: nếu data/raw/<dataset>/ đã có manifest SUCCESS cùng sha256 thì SKIPPED_DUPLICATE (không copy, không tạo thư mục mới); dùng --force để cố ý tạo run mới.",
+  "spark_verified": true,
+  "spark_rows": 6362620,
+  "spark_version": "3.5.9",
+  "spark_report": "data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/spark_read_20261112T175026Z_822219b0.json",
+  "run_manifest": "data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/manifest.json"
+}

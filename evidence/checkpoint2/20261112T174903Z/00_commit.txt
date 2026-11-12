@@ -1,0 +1,4 @@
+﻿commit: 1aa5272cbb36b4f307c8bfac653e3c5898b6d872
+branch: Jake-branch
+subject: feat(cp2): idempotent ingest, relative paths, run_id-matched logs
+evidence_utc: 20261112T174903Z

@@ -1,0 +1,54 @@
+$ python src/env_check.py
+# started_utc: 2026-11-12T17:49:59.900737+00:00
+
+============================================================
+KIEM TRA MOI TRUONG (OS -> JAVA -> PYTHON -> PYSPARK)
+Thoi gian kiem tra: 2026-11-12T17:50:00.252601+00:00
+============================================================
+[1] He dieu hanh : Windows 11 (AMD64)
+[2] Java Version : openjdk version "17.0.20.1" 2026-08-18
+    java tren PATH: C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot\bin\java.EXE
+    JAVA_HOME     : C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot\
+    HADOOP_HOME   : D:\hadoop
+    winutils.exe  : CO
+[3] Python Version: 3.12.10
+    Python path   : C:\Users\HP\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\python.exe
+[4] PySpark Version: 3.5.9 (requirements.txt ghim: 3.5.9)
+
+============================================================
+SMOKE TEST SPARK JOB
+============================================================
+[5] Khoi tao SparkSession voi Master: 'local[*]'...
+    PYSPARK_PYTHON = PYSPARK_DRIVER_PYTHON = C:\Users\HP\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\python.exe
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+    - Spark Version: 3.5.9
+    - App Name: env-check
+    - Master  : local[*]
+[6] Thuc hien phep tinh phan tan tren DataFrame 1,000,000 dong...
+    - So partition: 8
+    - Count : 1,000,000 dong [THANH CONG]
+    - Filter (chan): 500,000 dong [THANH CONG]
+[7] Smoke test Python worker (RDD parallelize -> map -> sum)...
+    - sum(x*2, x<1000) = 999,000 [THANH CONG]
+KET QUA SMOKE TEST: PASS
+
+============================================================
+NGUON DU LIEU PAYSIM (DATA PROVENANCE)
+============================================================
+Ten dataset    : PaySim - Synthetic Financial Datasets For Fraud Detection
+Nguon          : Kaggle - https://www.kaggle.com/datasets/ealaxi/paysim1
+Phien ban      : paysim1 - version 2/18-10-2026
+Giay phep      : CC BY-SA 4.0
+Duong dan local: data/raw/paysim_data.csv
+Dung luong     : 470.67 MB (493534783 bytes)
+SHA-256        : 16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+Khop snapshot_sha256 (metadata/source.json): True
+Metadata luu tai: logs/data_source.json
+
+ENV PASS
+SUCCESS: The process with PID 14944 (child process of PID 23320) has been terminated.
+SUCCESS: The process with PID 23320 (child process of PID 32920) has been terminated.
+SUCCESS: The process with PID 32920 (child process of PID 23720) has been terminated.
+
+EXIT_CODE=0
