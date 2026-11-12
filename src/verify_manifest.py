@@ -4,7 +4,7 @@
 import argparse
 import json
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT / "src") not in sys.path:
@@ -12,7 +12,7 @@ if str(PROJECT_ROOT / "src") not in sys.path:
 
 from ingest_paysim import compute_sha256
 
-DEFAULT_MANIFEST_PATH = PROJECT_ROOT / "metadata" / "manifest.json"
+DEFAULT_MANIFEST_PATH = "metadata/manifest.json"
 
 
 def parse_args():
@@ -21,20 +21,29 @@ def parse_args():
     )
     parser.add_argument(
         "--manifest",
-        default=str(DEFAULT_MANIFEST_PATH),
+        default=DEFAULT_MANIFEST_PATH,
         help="Đường dẫn tới file manifest.json cần kiểm tra (mặc định: metadata/manifest.json).",
     )
     return parser.parse_args()
+
+
+def resolve_repo_relative(value, field):
+    """Manifest phải lưu đường dẫn tương đối so với gốc repo (dạng data/raw/...)."""
+    if not isinstance(value, str) or not value:
+        raise ValueError(f"Manifest thiếu trường {field}.")
+    if PureWindowsPath(value).is_absolute() or PurePosixPath(value).is_absolute():
+        raise ValueError(f"Trường {field} là đường dẫn tuyệt đối ({value}); manifest phải dùng đường dẫn tương đối.")
+    return PROJECT_ROOT / value
 
 
 def main():
     args = parse_args()
     manifest_path = Path(args.manifest)
     if not manifest_path.is_absolute():
-        manifest_path = (PROJECT_ROOT / manifest_path).resolve()
+        manifest_path = PROJECT_ROOT / manifest_path
 
     if not manifest_path.is_file():
-        print(f"[ERROR] Không tìm thấy manifest: {manifest_path}")
+        print(f"[ERROR] Không tìm thấy manifest: {args.manifest}")
         return 1
 
     try:
@@ -48,30 +57,19 @@ def main():
         print("[ERROR] Manifest không có trạng thái SUCCESS.")
         return 1
 
-    destination = manifest.get("destination")
-    if not destination:
-        print("[ERROR] Manifest thiếu trường destination.")
+    try:
+        raw_path = resolve_repo_relative(manifest.get("destination"), "destination")
+        log_path = resolve_repo_relative(manifest.get("log_file"), "log_file")
+    except ValueError as e:
+        print(f"[ERROR] {e}")
         return 1
 
-    raw_path = Path(destination).resolve()
-
-    # Nếu đường dẫn trong manifest trỏ tới máy cũ không tồn tại, thử tìm tương đối trong PROJECT_ROOT
     if not raw_path.is_file():
-        # Thử tìm phần 'data/raw/...' trong destination
-        dest_str = str(destination).replace("\\", "/")
-        idx = dest_str.find("data/raw/")
-        if idx != -1:
-            rel_candidate = PROJECT_ROOT / Path(dest_str[idx:])
-            if rel_candidate.is_file():
-                raw_path = rel_candidate
-            else:
-                # Thử kiểm tra data/raw/paysim_data.csv
-                default_raw = PROJECT_ROOT / "data" / "raw" / "paysim_data.csv"
-                if default_raw.is_file():
-                    raw_path = default_raw
+        print(f"[ERROR] Không tìm thấy file raw: {manifest['destination']}")
+        return 1
 
-    if not raw_path.is_file():
-        print(f"[ERROR] Không tìm thấy file raw: {raw_path}")
+    if not log_path.is_file():
+        print(f"[ERROR] Không tìm thấy file log của run: {manifest['log_file']}")
         return 1
 
     # Kiểm tra kích thước file
@@ -91,13 +89,13 @@ def main():
         return 1
 
     # Kiểm tra SHA-256
-    expected_hash = manifest.get("sha256") or manifest.get("hash")
+    expected_hash = manifest.get("sha256")
 
     if not isinstance(expected_hash, str) or not expected_hash:
         print("[ERROR] Manifest thiếu mã SHA-256.")
         return 1
 
-    print(f"Đang kiểm tra file: {raw_path}")
+    print(f"Đang kiểm tra file: {manifest['destination']}")
     actual_hash = compute_sha256(raw_path)
 
     if actual_hash.lower() != expected_hash.lower():
@@ -107,10 +105,12 @@ def main():
         return 1
 
     print("=" * 50)
+    print(f"Run ID    : {manifest.get('run_id')}")
+    print(f"File      : {manifest['destination']}")
+    print(f"Dung lượng: {actual_bytes:,} bytes [KHỚP]")
+    print(f"SHA-256   : {actual_hash} [KHỚP]")
+    print(f"Log file  : {manifest['log_file']} [TỒN TẠI]")
     print("XÁC THỰC MANIFEST: PASS")
-    print(f"File     : {raw_path}")
-    print(f"Dung lượng: {actual_bytes:,} bytes")
-    print(f"SHA-256  : {actual_hash}")
     print("=" * 50)
 
     return 0
