@@ -1,8 +1,18 @@
 """Exact DataFrame checks for CP3; no UDF, cache, or tuning."""
+import hashlib
 import json
 from decimal import Decimal
 from pathlib import Path
 from pyspark.sql import functions as F
+
+
+def sha256(path):
+    """SHA-256 of a file, streamed in 8 MiB blocks (moved here from the removed prepare_raw.py)."""
+    h = hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for block in iter(lambda: stream.read(8 * 1024 * 1024), b''):
+            h.update(block)
+    return h.hexdigest()
 
 
 def save_json(path, value):

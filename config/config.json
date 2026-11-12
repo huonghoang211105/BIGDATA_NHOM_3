@@ -1,5 +1,5 @@
 {
-  "input": "data/raw/paysim_data.csv",
+  "input_manifest": "metadata/manifest.json",
   "dimension": "config/dim_transaction_type.csv",
   "output_root": "output",
   "master": "local[*]",
