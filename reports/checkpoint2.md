@@ -1,5 +1,21 @@
 # Báo cáo Checkpoint 2 — Environment → Ingestion → Raw Storage
 
+## Mẫu nộp Checkpoint 2
+
+| Trường | Nội dung |
+|---|---|
+| Tên nhóm / thành viên | Nhóm 3 / TODO: danh sách thành viên và vai trò CP2 |
+| Đề tài | Hệ thống phát hiện gian lận tài chính theo thời gian thực (Financial Fraud Detection on PaySim) |
+| Git commit / tag | Tag **`checkpoint-2`** trên branch `Jake-branch`; code chạy evidence: commit `1aa5272` (`evidence/checkpoint2/20261112T174903Z/00_commit.txt`) |
+| Environment | Python 3.12.10, Java 17.0.20.1 (Temurin), Spark 3.5.9 (PySpark 3.5.9), Mode `local[*]` — Windows 11, `HADOOP_HOME=D:\hadoop` |
+| Data source | Kaggle `ealaxi/paysim1` (version 2), CC BY-SA 4.0; snapshot 493.534.783 bytes, 6.362.620 dòng, SHA-256 `16910f90…4eea6b` (`metadata/source.json`) |
+| Ingestion command | `python src/ingest_paysim.py --source data/raw/paysim_data.csv --dataset paysim --raw-root data/raw` |
+| Raw location | `data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv` (ingest_date/run_id theo UTC, ngoài Git) |
+| Manifest / log location | `metadata/manifest.json` (con trỏ) + manifest trong thư mục run; `logs/ingest_20261112T175026Z_822219b0.txt`; `metadata/ingest_history.jsonl` |
+| Rerun behavior | Idempotent theo SHA-256: chạy 3 lần → 1 SUCCESS + 2 SKIPPED_DUPLICATE, 1 thư mục run, 0 byte chép thêm; `--force` để cố ý tạo run mới |
+| Blocker còn lại | Snapshot 471 MB không nằm trong Git (máy khác phải tự đặt vào `data/raw/`); `reports/checkpoint3.md` còn nhắc run CP2 cũ đã xoá |
+| Owner + deadline | TODO |
+
 ## 1. Thông tin chung
 
 | Mục | Nội dung |
@@ -102,18 +118,29 @@ Chạy cùng lệnh ingest 3 lần → **1 SUCCESS + 2 SKIPPED_DUPLICATE, 1 thư
 
 ## 9. Exit ticket
 
-> Ghi chú: 4 câu hỏi dưới đây do nhóm diễn đạt lại theo nội dung brief — TODO: đối chiếu đúng câu chữ trong brief trước khi nộp.
-
-1. **Bằng chứng môi trường PASS là gì?**
-   `01_env_check.txt`: Windows 11, Python 3.12.10, Java Temurin 17.0.20.1, PySpark/Spark 3.5.9 khớp bản ghim, `HADOOP_HOME=D:\hadoop` có winutils; smoke test JVM (count/filter 1 triệu dòng) và Python worker (sum = 999000) đều đạt; dòng cuối `ENV PASS`, exit 0.
-2. **Nguồn dữ liệu là gì, license gì, làm sao biết đúng snapshot?**
-   Kaggle `ealaxi/paysim1`, CC BY-SA 4.0. Snapshot được chốt bằng `snapshot_sha256` trong `metadata/source.json`; ingest từ chối mọi file có SHA-256 khác (quality gate), và manifest lưu lại cả `sha256` lẫn `snapshot_sha256`.
-3. **Chạy ingest 3 lần thì raw thay đổi thế nào?**
+1. **Một lệnh duy nhất để kiểm tra environment của nhóm là gì?**
+   `python src/env_check.py` — kiểm tra OS, Java/`JAVA_HOME`, `HADOOP_HOME`/winutils, Python, PySpark (so với bản ghim trong `requirements.txt`) và chạy smoke test Spark (JVM + Python worker). Dòng cuối là `ENV PASS` (exit 0) hoặc `ENV FAIL: <lý do>` (exit 1). Bằng chứng: `01_env_check.txt`.
+2. **Nhóm xác định version/snapshot dữ liệu bằng cách nào?**
+   Nguồn Kaggle `ealaxi/paysim1` version 2, chốt bằng `snapshot_sha256` (`16910f90…4eea6b`) trong `metadata/source.json`. Ingest chạy quality gate và từ chối mọi file có SHA-256 khác; manifest của run lưu cả `sha256` thực tế lẫn `snapshot_sha256` kỳ vọng.
+3. **Nếu chạy ingestion 3 lần, raw storage thay đổi thế nào?**
    Không đổi sau lần đầu: 1 SUCCESS + 2 SKIPPED_DUPLICATE, vẫn đúng 1 thư mục `run_20261112T175026Z_822219b0`, 0 byte chép thêm. Bằng chứng: `03_ingest_run2.txt`, `04_ingest_run3.txt`, `08_tree_raw.txt`, `09_ingest_history.txt`.
-4. **Lỗi được phát hiện và truy vết thế nào?**
-   Nguồn không tồn tại → `FAILED: File nguồn không tồn tại: data/raw/khong_ton_tai.csv`, exit 1, không tạo thư mục raw; history ghi `destination: null` và `log_file`. Raw đã công bố được kiểm lại bằng `verify_manifest.py` (bytes + SHA-256 + log) và `inspect_raw.py` (Spark count 6.362.620).
+4. **Rủi ro lớn nhất trước Buổi 7 là gì?**
+   Snapshot 471 MB không nằm trong Git, nên máy khác phải tự đặt file vào `data/raw/paysim_data.csv` trước khi chạy. Giảm thiểu: `data/sample/paysim_sample_1000.csv` để chạy thử đọc Spark, và quality gate kiểm SHA-256 để phát hiện ngay nếu đặt sai file. Owner: TODO. Deadline: TODO.
 
-## 10. Nội dung 6 slide
+## 10. Checklist giảng viên tại bàn
+
+| # | Mục kiểm tra | Kết quả | Bằng chứng |
+|---|---|---|---|
+| 1 | Repo có README + `src/` + raw/log/metadata | PASS | `README.md` mục 3; `src/env_check.py`, `src/ingest_paysim.py`, `src/verify_manifest.py`, `src/inspect_raw.py`; `logs/`, `metadata/`; raw ngoài Git theo quy ước README 3.4 |
+| 2 | `env_check` PASS tại chỗ | PASS | `evidence/checkpoint2/20261112T174903Z/01_env_check.txt` (dòng cuối `ENV PASS`, exit 0); chạy lại tại bàn: `python src/env_check.py` |
+| 3 | Source có provenance | PASS | `metadata/source.json` (Kaggle paysim1, tác giả, CC BY-SA 4.0, bytes, `snapshot_sha256`); `logs/data_source.json` (`matches_snapshot_sha256: true`) |
+| 4 | Ingest chạy lại được + giải thích rerun | PASS | `02_ingest_run1.txt` (SUCCESS), `03_ingest_run2.txt` / `04_ingest_run3.txt` (SKIPPED_DUPLICATE), `09_ingest_history.txt`; chính sách ở mục 7 và README 3.5 |
+| 5 | Raw tồn tại, không rỗng, có quy ước path | PASS | `08_tree_raw.txt`; `06_verify_manifest.txt` (493.534.783 bytes); quy ước `data/raw/<dataset>/ingest_date=YYYY-MM-DD/run_<run_id>/` |
+| 6 | Manifest/log khớp raw | PASS | `metadata/manifest.json` (`run_id`, `destination`, `log_file` = `logs/ingest_20261112T175026Z_822219b0.txt`); `06_verify_manifest.txt` (bytes + SHA-256 khớp, log tồn tại) |
+| 7 | Spark đọc được sample raw | PASS | `07_inspect_raw.txt` (count 6.362.620, schema 11 cột, 5 dòng mẫu); `spark_read_20261112T175026Z_822219b0.json` trong thư mục run |
+| 8 | Mỗi thành viên trả lời được phần mình | Nhóm tự chuẩn bị | TODO: phân công câu hỏi theo thành viên |
+
+## 11. Nội dung 6 slide
 
 **Slide 1 — Nhóm 3 & đề tài**
 - Phát hiện gian lận tài chính trên PaySim (6,36 triệu giao dịch mô phỏng).
@@ -133,10 +160,18 @@ metadata/manifest.json (con trỏ)   logs/ingest_<run_id>.txt + metadata/ingest_
         ▼
 verify_manifest.py (bytes, SHA-256, log) · inspect_raw.py (Spark count/schema/sample)
 ```
+- Trade-off: Local PySpark + file system thay vì HDFS/cloud: đủ cho snapshot 471 MB, dễ tái tạo; đổi lại chưa phân tán, sẽ scale khi cần.
 
 **Slide 3 — Bằng chứng môi trường**
 - Bảng version mục 2; ảnh chụp 3 dòng cuối `01_env_check.txt` (`sum = 999,000`, `KET QUA SMOKE TEST: PASS`, `ENV PASS`).
 - `requirements.txt` ghim `pyspark==3.5.9`; env_check FAIL nếu version cài khác bản ghim.
+- Setup command:
+  ```powershell
+  python -m venv .venv
+  .venv\Scripts\activate
+  pip install -r requirements.txt
+  python src/env_check.py
+  ```
 
 **Slide 4 — Nguồn & ingestion**
 - Kaggle paysim1, CC BY-SA 4.0, 493.534.783 bytes, 6.362.620 dòng, SHA-256 `16910f90…4eea6b`.
