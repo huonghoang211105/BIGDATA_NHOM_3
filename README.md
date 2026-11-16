@@ -84,7 +84,9 @@ BIGDATA_NHOM_3/
 │   ├── verify_manifest.py              # [CP2] Xác thực tính toàn vẹn manifest và mã SHA-256
 │   ├── quality_report.py               # [CP3] sha256, require, save_json, profile dữ liệu
 │   ├── pipeline.py                     # [CP3] Entry point Spark batch pipeline, đọc raw qua metadata/manifest.json
-│   └── compare_runs.py                 # [CP3] So sánh 2 run (exceptAll 2 chiều), exit 0 PASS / 1 FAIL
+│   ├── compare_runs.py                 # [CP3] So sánh 2 run (exceptAll 2 chiều), exit 0 PASS / 1 FAIL
+│   ├── stage_metrics.py                # [CP4] Đọc Spark event log → stage/job/phase metrics + plan AQE cuối
+│   └── benchmark.py                    # [CP4] Chạy pipeline N lần theo git tag (worktree), ghi benchmark.csv
 │
 └── notebooks/
     ├── 01_Checkpoint_Buoi6_Kaggle_v2.ipynb    # Notebook ingestion & environment trên Kaggle
@@ -377,3 +379,46 @@ Dữ liệu được trích xuất từ `metrics.json` của run A `20261112T181
 1. **Báo cáo Markdown đầy đủ:** [`reports/checkpoint3.md`](reports/checkpoint3.md) — mục A–G theo `reports/checkpoint3_template.md` và 4 câu Exit Ticket.
 2. **Minh chứng nhẹ trong Git:** [`evidence/checkpoint3/20261112T181257Z_65a10a1a/`](evidence/checkpoint3/20261112T181257Z_65a10a1a/) (run A), [`evidence/checkpoint3/20261112T181605Z_058d2196/`](evidence/checkpoint3/20261112T181605Z_058d2196/) (run B), output từng lệnh trong [`evidence/checkpoint3/_runs_20261112T181247Z/`](evidence/checkpoint3/_runs_20261112T181247Z/).
 3. **Template Slide 6 trang:** Cập nhật các số liệu chính thức từ Run PASS vào bộ slide thuyết trình của nhóm.
+
+---
+
+## 8. Checkpoint 4 — Benchmark & tối ưu pipeline
+
+### 8.1. Công cụ đo (tag `checkpoint-4-baseline`)
+
+- `src/pipeline.py` ghi thêm mốc `[TIMING] phase=<tên> sec=<giây>` vào `run.log` và `metrics.json → timings_sec`
+  (các phase cộng lại = `runtime_sec`): `imports`, `hash` (SHA-256 input + dim), `spark_startup`
+  (header check + SparkSession + smoke test + thu thập env), `read_schema`, `profile_null`, `profile_dup`,
+  `clean`, `join`, `output`. Mỗi Spark action được gắn job description `<phase> | <action>` để Spark UI và
+  event log hiển thị job thuộc chặng nào. Thêm `explain_profile_dup.txt` (plan đếm trùng 11 cột).
+  Logic xử lý dữ liệu và mọi bước kiểm chất lượng giữ nguyên.
+- Spark event log bật cho mọi run: `spark.eventLog.enabled=true`, `spark.eventLog.dir=logs/spark-events`
+  (thư mục ngoài Git; số liệu được xuất sang evidence).
+- `src/stage_metrics.py` đọc event log, không cần Spark:
+
+  ```powershell
+  python src/stage_metrics.py --event-log logs/spark-events/<spark_app_id> --out-dir <thư mục>
+  ```
+
+  Xuất `stage_metrics.csv` (mỗi stage: duration, số task, median/max task time, input, shuffle read/write,
+  spill memory/disk, peak execution memory, GC), `job_metrics.csv` (mỗi count()/collect()/write là ≥ 1 job),
+  `phase_metrics.csv` (gộp theo phase, kèm số lần quét toàn bộ CSV `fact_scans`) và `sql_final_plans.txt`
+  (plan AQE cuối cùng `isFinalPlan=true`). Đơn vị `*_mb` = MiB.
+- `src/benchmark.py` chạy pipeline từ **git worktree check-out đúng tag** (`.bench/<commit>`, ngoài Git),
+  CSV đầu vào được hard-link (cùng một file vật lý, không copy), mỗi run một dòng trong `benchmark.csv`:
+
+  ```powershell
+  # Baseline: 1 run warm-up (ghi lại nhưng loại khỏi median) + 5 run đo
+  python src/benchmark.py --label baseline --runs 5 --warmup 1
+  # Before/after xen kẽ B, A, B, A, ... (mặc định ref của nhãn X là tag checkpoint-4-X)
+  python src/benchmark.py --label baseline optimized --runs 5 --warmup 1
+  # Median / min / max / stdev theo nhãn (bỏ warm-up)
+  python src/benchmark.py --summary
+  ```
+
+  Mỗi run lưu `evidence/checkpoint4/<label>/<run_id>/`: `run.log`, `metrics.json`, `explain_*.txt`,
+  `stage_metrics.csv`, `job_metrics.csv`, `phase_metrics.csv`, `sql_final_plans.txt`, `env.json`, `console.txt`.
+  Cột `checks` = PASS khi mọi bất biến nghiệp vụ (số dòng, null, trùng, invalid, unmatched, 16 dòng amount = 0,
+  fraud 8.213, tổng tiền, 152 nhóm) khớp `config/config.json`.
+
+Kết quả và quyết định: `experiment-log.md`, `reports/checkpoint4.md`.

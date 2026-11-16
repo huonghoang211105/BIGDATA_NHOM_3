@@ -97,8 +97,13 @@ def main():
     parser.add_argument('--evidence-dir', default='evidence/checkpoint3',
                         help='On SUCCESS copy light run files to <evidence-dir>/<run_id>/ '
                              '(repo-relative, default evidence/checkpoint3).')
+    parser.add_argument('--event-log-dir', default=None,
+                        help='Spark event log dir (default: config spark_event_log_dir or '
+                             'logs/spark-events). Read later by src/stage_metrics.py.')
     args = parser.parse_args()
     cfg = json.loads(repo_path(args.config).read_text(encoding='utf-8-sig'))
+    event_log_dir = repo_path(args.event_log_dir or cfg.get('spark_event_log_dir', 'logs/spark-events'))
+    event_log_dir.mkdir(parents=True, exist_ok=True)
     # Input comes from the CP2 raw zone through its manifest, never from a hard-coded file.
     manifest_path = repo_path(cfg['input_manifest'])
     raw_manifest, source = load_raw_manifest(manifest_path)
@@ -132,12 +137,28 @@ def main():
                'input_path': rel(source), 'dimension_path': rel(dim_path),
                # Lineage: CP2 raw run -> this CP3 run
                'raw_manifest': rel(manifest_path), 'raw_run_id': raw_manifest.get('run_id'),
-               'raw_run_manifest': raw_manifest.get('run_manifest')}
+               'raw_run_manifest': raw_manifest.get('run_manifest'),
+               # CP4 instrumentation: wall-clock per phase; phases sum to runtime_sec.
+               'timings_sec': {}}
+    lap_state = {'t': started}
+
+    def lap(name):
+        """Close the current phase: record seconds since the previous lap and log a [TIMING] mark."""
+        now = time.perf_counter()
+        metrics['timings_sec'][name] = round(now - lap_state['t'], 3)
+        lap_state['t'] = now
+        logging.info('[TIMING] phase=%s sec=%.3f', name, metrics['timings_sec'][name])
+
+    def job(label):
+        """Label the next Spark jobs (shows in Spark UI and event log as the job description)."""
+        spark.sparkContext.setJobDescription(label)
+
     try:
         from pyspark.sql import SparkSession, functions as F, types as T
-        from quality_report import profile, require, save_json, sha256
+        from quality_report import (basic_profile, duplicate_frame, require, save_json, sha256)
         logging.info('[LINEAGE] raw_run_id=%s manifest=%s input=%s',
                      metrics['raw_run_id'], metrics['raw_manifest'], metrics['input_path'])
+        lap('imports')
         require(source.is_file(), f'Missing input: {rel(source)}. Run src/ingest_paysim.py first.')
         require(raw_manifest.get('sha256') == cfg['expected_sha256'],
                 'CP2 manifest sha256 differs from config expected_sha256')
@@ -146,6 +167,7 @@ def main():
         require(actual_hash == cfg['expected_sha256'], 'Input snapshot hash mismatch')
         metrics.update(input_sha256=actual_hash, input_bytes=source.stat().st_size,
                        input_files=1, dimension_sha256=sha256(dim_path))
+        lap('hash')
         save_json(run / 'config_used.json', cfg)
         money = T.DecimalType(20, 2)
         fields = [('step', T.IntegerType()), ('type', T.StringType()),
@@ -158,8 +180,13 @@ def main():
         with source.open(encoding='utf-8-sig', newline='') as stream:
             require(next(csv.reader(stream)) == names, 'Unexpected raw header/order')
         spark = (SparkSession.builder.master(cfg['master']).appName('checkpoint3-paysim')
-                 .config('spark.ui.showConsoleProgress', 'false').getOrCreate())
+                 .config('spark.ui.showConsoleProgress', 'false')
+                 # CP4: event log for per-stage metrics; identical for baseline and optimized.
+                 .config('spark.eventLog.enabled', 'true')
+                 .config('spark.eventLog.dir', event_log_dir.as_uri())
+                 .getOrCreate())
         spark.sparkContext.setLogLevel('WARN')
+        job('startup | smoke')
         require(spark.range(10).count() == 10, 'JVM smoke failed')
         require(spark.sparkContext.parallelize([1, 2], 2).map(lambda x: x + 1).sum() == 5,
                 'Python worker smoke failed')
@@ -179,10 +206,18 @@ def main():
                 'spark.sql.autoBroadcastJoinThreshold',
                 'spark.sql.adaptive.coalescePartitions.enabled']},
             'os': f'{platform.system()} {platform.release()} ({platform.machine()})',
-            'total_ram_bytes': total_ram_bytes()}
+            'total_ram_bytes': total_ram_bytes(),
+            # CP4: driver memory is not set in config -> Spark default (1g heap in local mode).
+            'driver_memory': spark.sparkContext.getConf().get('spark.driver.memory', '1g (default)'),
+            'jvm_max_heap_bytes': spark.sparkContext._jvm.java.lang.Runtime.getRuntime().maxMemory(),
+            'default_parallelism': spark.sparkContext.defaultParallelism,
+            'spark_app_id': spark.sparkContext.applicationId,
+            'event_log_file': spark.sparkContext.applicationId}
         disk = shutil.disk_usage(output_root)
         metrics['environment'].update(output_disk_total_bytes=disk.total,
                                       output_disk_free_bytes=disk.free)
+        lap('spark_startup')
+        job('read_schema | partitions')
         schema = T.StructType([T.StructField(n, typ, True) for n, typ in fields])
         raw = (spark.read.schema(schema).option('header', True)
                .option('enforceSchema', False).option('mode', 'FAILFAST')
@@ -191,13 +226,23 @@ def main():
             with redirect_stdout(file):
                 raw.printSchema()
         metrics['input_partitions'] = raw.rdd.getNumPartitions()
-        metrics['input_profile'] = profile(raw)
+        lap('read_schema')
+        job('profile_null | agg(nulls,min,max,countDistinct,sum).first')
+        metrics['input_profile'] = basic_profile(raw)
+        lap('profile_null')
+        job('profile_dup | groupBy(11 cols).count>1 .agg.first')
+        duplicates = duplicate_frame(raw)
+        with (run / 'explain_profile_dup.txt').open('w', encoding='utf-8') as file:
+            with redirect_stdout(file):
+                duplicates.explain(mode='formatted')
+        metrics['input_profile'].update(duplicates.first().asDict())
+        lap('profile_dup')
         n = metrics['input_profile']['rows']
         logging.info('[INPUT] rows=%s bytes=%s', n, source.stat().st_size)
         require(n == cfg['expected_rows'], 'Unexpected input count')
         require(metrics['input_profile']['duplicate_extra_rows'] == 0,
                 'Unexpected full-row duplicates; inspect rather than blindly deduplicate')
-        # T1: normalize strings, retaining all raw columns.
+        # T1: chuẩn hóa chữ : xóa khoảng trắng, upper
         normalized = (raw.withColumn('type', F.upper(F.trim('type')))
                       .withColumn('nameOrig', F.trim('nameOrig'))
                       .withColumn('nameDest', F.trim('nameDest')))
@@ -209,9 +254,13 @@ def main():
                         | (F.col('type') == ''))
         tagged = normalized.withColumn('_invalid', invalid_rule)
         invalid = tagged.filter('_invalid').drop('_invalid')
-        # T2: zero amounts and all transaction types remain valid.
+        # T2: loại các dòng có lỗi ví dụ các dòng null, step < 1, amount < 0, isFlaggedFraud !=0 hoặc 1
         valid = tagged.filter(~F.col('_invalid')).drop('_invalid')
-        bad_n, valid_n = invalid.count(), valid.count()
+        job('clean | invalid.count')
+        bad_n = invalid.count()
+        job('clean | valid.count')
+        valid_n = valid.count()
+        job('clean | normalized.count')
         metrics['row_counts'] = {'raw': n, 'normalized': normalized.count(),
                                  'invalid': bad_n, 'valid': valid_n}
         require(n == bad_n + valid_n, 'Clean count does not reconcile')
@@ -219,18 +268,22 @@ def main():
             invalid.write.mode('errorifexists').parquet((run / 'rejected').as_posix())
         save_json(run / 'quality_progress.json', metrics)
         require(bad_n == 0, 'Invalid records found; inspect rejected before publication')
-        # T3: derive simulation day/hour without fabricating calendar timestamps.
+        # T3: thêm cột day_index, hour_index, log_amount
         enriched = (valid.withColumn('day_index',
                                     (F.floor((F.col('step') - 1) / 24) + 1).cast('int'))
                     .withColumn('hour_index', F.pmod(F.col('step') - 1, F.lit(24)))
                     .withColumn('log_amount', F.log1p('amount')))
-        # T4: explicit projection, preserving transaction grain.
+        # T4: chọn các cột cần thiết
         enriched = enriched.select(*names, 'day_index', 'hour_index', 'log_amount')
+        job('clean | enriched.count')
         metrics['row_counts']['derived'] = enriched.count()
+        job('clean | sample_transformed orderBy.limit(5).collect')
         save_json(run / 'sample_transformed.json',
                   [r.asDict() for r in enriched.orderBy('step', 'type', 'nameOrig', 'nameDest')
                    .limit(5).collect()])
         logging.info('[CLEAN] valid=%s rejected=%s', valid_n, bad_n)
+        lap('clean')
+        job('join | dim checks')
         dim = (spark.read.schema('type STRING, type_name_vi STRING, flow_group STRING')
                .option('header', True).option('mode', 'FAILFAST')
                .option('enforceSchema', False).csv(dim_path.as_posix())
@@ -242,10 +295,14 @@ def main():
         duplicate_keys = dim.groupBy('type').count().filter(F.col('count') > 1).count()
         require(duplicate_keys == 0, 'Dimension keys duplicate; join would multiply rows')
         unmatched = enriched.join(dim.select('type'), 'type', 'left_anti')
+        job('join | unmatched(left_anti).count')
         unmatched_n = unmatched.count()
+        job('join | unmatched.limit(20).collect')
         save_json(run / 'unmatched_sample.json', [r.asDict() for r in unmatched.limit(20).collect()])
         joined = enriched.join(dim, 'type', 'left')
+        job('join | joined.count')
         joined_n = joined.count()
+        job('join | dim.count')
         metrics['join'] = {'type': 'left', 'key': 'type', 'relationship': 'many-to-one',
                            'left_rows': valid_n, 'right_rows': dim.count(),
                            'duplicate_dim_keys': duplicate_keys, 'after_rows': joined_n,
@@ -255,6 +312,7 @@ def main():
         require(joined_n == valid_n, 'Join changed fact grain')
         require(unmatched_n == 0, 'Unknown types; review dimension before publishing')
         logging.info('[JOIN] before=%s after=%s unmatched=%s', valid_n, joined_n, unmatched_n)
+        lap('join')
         summary = joined.groupBy('day_index', 'type', 'type_name_vi', 'flow_group').agg(
             F.count('*').alias('txn_count'), F.sum('amount').alias('total_amount'),
             F.round(F.avg('amount'), 2).alias('avg_amount'),
@@ -268,8 +326,10 @@ def main():
                 with redirect_stdout(file):
                     frame.explain(mode='formatted')
         summary_path = run / 'daily_type_summary'
+        job('output | summary groupBy(day_index,type).write.parquet')
         summary.write.mode('errorifexists').parquet(summary_path.as_posix())
         # Verify persisted Parquet rather than only the in-memory logical result.
+        job('output | readback checks')
         saved = spark.read.parquet(summary_path.as_posix())
         totals = saved.agg(F.sum('txn_count').alias('transactions'),
                            F.sum('fraud_count').alias('frauds'),
@@ -291,6 +351,7 @@ def main():
         with (run / 'schema_output.txt').open('w', encoding='utf-8') as file:
             with redirect_stdout(file):
                 saved.printSchema()
+        lap('output')
         metrics['runtime_sec'] = round(time.perf_counter() - started, 3)
         metrics['status'] = 'SUCCESS'
         metrics['evidence_dir'] = rel(evidence_root / run_id)

@@ -29,7 +29,8 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
-def profile(df):
+def basic_profile(df):
+    """Null counts, ranges, totals: one aggregation job over the input."""
     expressions = [F.count('*').alias('rows')]
     for name in df.columns:
         expressions.append(F.sum(F.when(F.col(name).isNull(), 1).otherwise(0))
@@ -43,9 +44,22 @@ def profile(df):
                     F.sum('isFraud').alias('fraud_rows'),
                     F.sum(F.when(F.col('amount') == 0, 1).otherwise(0))
                     .alias('zero_amount_rows')]
-    metrics = df.agg(*expressions).first().asDict()
+    return df.agg(*expressions).first().asDict()
+
+
+def duplicate_frame(df):
+    """Exact full-row duplicate check (all columns); returned unexecuted so it can be explained."""
     duplicates = df.groupBy(*df.columns).count().filter(F.col('count') > 1)
-    metrics.update(duplicates.agg(F.count('*').alias('duplicate_groups'),
-                    F.coalesce(F.sum(F.col('count') - 1), F.lit(0))
-                    .alias('duplicate_extra_rows')).first().asDict())
+    return duplicates.agg(F.count('*').alias('duplicate_groups'),
+                          F.coalesce(F.sum(F.col('count') - 1), F.lit(0))
+                          .alias('duplicate_extra_rows'))
+
+
+def duplicate_profile(df):
+    return duplicate_frame(df).first().asDict()
+
+
+def profile(df):
+    metrics = basic_profile(df)
+    metrics.update(duplicate_profile(df))
     return metrics

@@ -15,3 +15,8 @@ data/raw/*
 # Spark pipeline output (large partitioned parquet/csv)
 output/
 
+# CP4 benchmark: git worktrees per tag and raw Spark event logs (metrics are exported to evidence/)
+.bench/
+logs/spark-events/
+logs/benchmark_failed_*.txt
+
