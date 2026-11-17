@@ -1,0 +1,47 @@
+job_id,phase,description,callsite,sql_execution_id,result,duration_sec,stages_executed,stages_skipped,fact_scans
+0,startup,startup | smoke,,0,JobSucceeded,0.623,0,0,0
+1,startup,startup | smoke,,0,JobSucceeded,0.095,2,1,0
+2,startup,startup | smoke,sum at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:191,,JobSucceeded,1.981,3,0,0
+3,profile_null,"profile_null | agg(nulls,min,max,countDistinct,sum).first",first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\quality_report.py:47,1,JobSucceeded,11.457,4,0,1
+4,profile_null,"profile_null | agg(nulls,min,max,countDistinct,sum).first",first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\quality_report.py:47,1,JobSucceeded,0.172,6,1,0
+5,profile_null,"profile_null | agg(nulls,min,max,countDistinct,sum).first",first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\quality_report.py:47,1,JobSucceeded,0.063,9,2,0
+6,profile_dup,profile_dup | groupBy(11 cols).count>1 .agg.first,first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:238,2,JobSucceeded,32.886,10,0,1
+7,profile_dup,profile_dup | groupBy(11 cols).count>1 .agg.first,first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:238,2,JobSucceeded,9.568,12,1,0
+8,profile_dup,profile_dup | groupBy(11 cols).count>1 .agg.first,first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:238,2,JobSucceeded,0.027,15,2,0
+9,clean,clean | invalid.count,,3,JobSucceeded,10.507,16,0,1
+10,clean,clean | invalid.count,,3,JobSucceeded,0.017,18,1,0
+11,clean,clean | valid.count,,4,JobSucceeded,8.952,19,0,1
+12,clean,clean | valid.count,,4,JobSucceeded,0.016,21,1,0
+13,clean,clean | normalized.count,,5,JobSucceeded,0.567,22,0,1
+14,clean,clean | normalized.count,,5,JobSucceeded,0.016,24,1,0
+15,clean,clean | enriched.count,,6,JobSucceeded,9.636,25,0,1
+16,clean,clean | enriched.count,,6,JobSucceeded,0.033,27,1,0
+17,clean,clean | sample_transformed orderBy.limit(5).collect,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:283,7,JobSucceeded,10.196,28,0,1
+18,join,join | dim checks,,8,JobSucceeded,0.032,29,0,0
+19,join,join | dim checks,,8,JobSucceeded,0.0,31,1,0
+20,join,join | dim checks,,9,JobSucceeded,0.09,32,0,0
+21,join,join | dim checks,,9,JobSucceeded,0.031,34,1,0
+22,join,join | dim checks,,9,JobSucceeded,0.017,37,2,0
+23,join,join | unmatched(left_anti).count,,10,JobSucceeded,0.015,38,0,0
+24,join,join | unmatched(left_anti).count,,10,JobSucceeded,9.309,39,0,1
+25,join,join | unmatched(left_anti).count,,10,JobSucceeded,0.031,41,1,0
+26,join,join | unmatched.limit(20).collect,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:301,11,JobSucceeded,0.015,42,0,0
+27,join,join | unmatched.limit(20).collect,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:301,11,JobSucceeded,4.379,43,0,0
+28,join,join | unmatched.limit(20).collect,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:301,11,JobSucceeded,5.811,44,0,1
+29,join,join | unmatched.limit(20).collect,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:301,11,JobSucceeded,4.825,45,0,1
+30,join,join | joined.count,,12,JobSucceeded,0.007,46,0,0
+31,join,join | joined.count,,12,JobSucceeded,7.397,47,0,1
+32,join,join | joined.count,,12,JobSucceeded,0.019,49,1,0
+33,join,join | dim.count,,13,JobSucceeded,0.023,50,0,0
+34,join,join | dim.count,,13,JobSucceeded,0.015,52,1,0
+35,output,"output | summary groupBy(day_index,type).write.parquet",,14,JobSucceeded,0.032,53,0,0
+36,output,"output | summary groupBy(day_index,type).write.parquet",,14,JobSucceeded,11.594,54,0,1
+37,output,"output | summary groupBy(day_index,type).write.parquet",,14,JobSucceeded,1.007,56,1,0
+38,output,output | readback checks,,,JobSucceeded,0.08,57,0,0
+39,output,output | readback checks,first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:337,15,JobSucceeded,0.094,58,0,0
+40,output,output | readback checks,first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:337,15,JobSucceeded,0.016,60,1,0
+41,output,output | readback checks,,16,JobSucceeded,0.209,61,0,0
+42,output,output | readback checks,,16,JobSucceeded,0.038,63,1,0
+43,output,output | readback checks,,16,JobSucceeded,0.016,66,2,0
+44,output,output | readback checks,,17,JobSucceeded,0.11,67,0,0
+45,output,output | readback checks,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:350,18,JobSucceeded,0.029,68,0,0

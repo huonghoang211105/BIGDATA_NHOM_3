@@ -1,0 +1,594 @@
+===== SQL execution 1 | profile_null | agg(nulls,min,max,countDistinct,sum).first | 10.143s =====
+== Physical Plan ==
+AdaptiveSparkPlan (17)
++- == Final Plan ==
+   * HashAggregate (10)
+   +- ShuffleQueryStage (9), Statistics(sizeInBytes=224.0 B, rowCount=1)
+      +- Exchange (8)
+         +- * HashAggregate (7)
+            +- * HashAggregate (6)
+               +- AQEShuffleRead (5)
+                  +- ShuffleQueryStage (4), Statistics(sizeInBytes=164.1 KiB, rowCount=750)
+                     +- Exchange (3)
+                        +- * HashAggregate (2)
+                           +- Scan csv  (1)
++- == Initial Plan ==
+   HashAggregate (16)
+   +- Exchange (15)
+      +- HashAggregate (14)
+         +- HashAggregate (13)
+            +- Exchange (12)
+               +- HashAggregate (11)
+                  +- Scan csv  (1)
+
+
+(1) Scan csv 
+Output [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv]
+ReadSchema: struct<step:int,type:string,amount:decimal(20,2),nameOrig:string,oldbalanceOrg:decimal(20,2),newbalanceOrig:decimal(20,2),nameDest:string,oldbalanceDest:decimal(20,2),newbalanceDest:decimal(20,2),isFraud:int,isFlaggedFraud:int>
+
+(2) HashAggregate [codegen id : 1]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Keys [1]: [step#8]
+Functions [19]: [partial_count(1), partial_sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END), partial_min(step#8), partial_max(step#8), partial_min(amount#10), partial_max(amount#10), partial_sum(amount#10), partial_sum(isFraud#17), partial_sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)]
+Aggregate Attributes [19]: [count(1)#41L, sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END)#43L, sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END)#45L, sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END)#47L, sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END)#49L, sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END)#51L, sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END)#53L, sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END)#55L, sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END)#57L, sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END)#59L, sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END)#61L, sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END)#63L, min(step#8)#65, max(step#8)#67, min(amount#10)#70, max(amount#10)#72, sum(amount#10)#74, sum(isFraud#17)#76L, sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)#78L]
+Results [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+
+(3) Exchange
+Input [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+Arguments: hashpartitioning(step#8, 200), ENSURE_REQUIREMENTS, [plan_id=71]
+
+(4) ShuffleQueryStage
+Output [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+Arguments: 0
+
+(5) AQEShuffleRead
+Input [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+Arguments: coalesced
+
+(6) HashAggregate [codegen id : 2]
+Input [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+Keys [1]: [step#8]
+Functions [19]: [merge_count(1), merge_sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END), merge_min(step#8), merge_max(step#8), merge_min(amount#10), merge_max(amount#10), merge_sum(amount#10), merge_sum(isFraud#17), merge_sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)]
+Aggregate Attributes [19]: [count(1)#41L, sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END)#43L, sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END)#45L, sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END)#47L, sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END)#49L, sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END)#51L, sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END)#53L, sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END)#55L, sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END)#57L, sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END)#59L, sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END)#61L, sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END)#63L, min(step#8)#65, max(step#8)#67, min(amount#10)#70, max(amount#10)#72, sum(amount#10)#74, sum(isFraud#17)#76L, sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)#78L]
+Results [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+
+(7) HashAggregate [codegen id : 2]
+Input [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+Keys: []
+Functions [20]: [merge_count(1), merge_sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END), merge_min(step#8), merge_max(step#8), merge_min(amount#10), merge_max(amount#10), merge_sum(amount#10), merge_sum(isFraud#17), merge_sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END), partial_count(distinct step#8)]
+Aggregate Attributes [20]: [count(1)#41L, sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END)#43L, sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END)#45L, sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END)#47L, sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END)#49L, sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END)#51L, sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END)#53L, sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END)#55L, sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END)#57L, sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END)#59L, sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END)#61L, sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END)#63L, min(step#8)#65, max(step#8)#67, min(amount#10)#70, max(amount#10)#72, sum(amount#10)#74, sum(isFraud#17)#76L, sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)#78L, count(step#8)#91L]
+Results [21]: [count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L, count#155L]
+
+(8) Exchange
+Input [21]: [count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L, count#155L]
+Arguments: SinglePartition, ENSURE_REQUIREMENTS, [plan_id=97]
+
+(9) ShuffleQueryStage
+Output [21]: [count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L, count#155L]
+Arguments: 1
+
+(10) HashAggregate [codegen id : 3]
+Input [21]: [count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L, count#155L]
+Keys: []
+Functions [20]: [count(1), sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END), min(step#8), max(step#8), min(amount#10), max(amount#10), sum(amount#10), sum(isFraud#17), sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END), count(distinct step#8)]
+Aggregate Attributes [20]: [count(1)#41L, sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END)#43L, sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END)#45L, sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END)#47L, sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END)#49L, sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END)#51L, sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END)#53L, sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END)#55L, sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END)#57L, sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END)#59L, sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END)#61L, sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END)#63L, min(step#8)#65, max(step#8)#67, min(amount#10)#70, max(amount#10)#72, sum(amount#10)#74, sum(isFraud#17)#76L, sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)#78L, count(step#8)#91L]
+Results [20]: [count(1)#41L AS rows#42L, sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END)#43L AS null_step#44L, sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END)#45L AS null_type#46L, sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END)#47L AS null_amount#48L, sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END)#49L AS null_nameOrig#50L, sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END)#51L AS null_oldbalanceOrg#52L, sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END)#53L AS null_newbalanceOrig#54L, sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END)#55L AS null_nameDest#56L, sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END)#57L AS null_oldbalanceDest#58L, sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END)#59L AS null_newbalanceDest#60L, sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END)#61L AS null_isFraud#62L, sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END)#63L AS null_isFlaggedFraud#64L, min(step#8)#65 AS step_min#66, max(step#8)#67 AS step_max#68, count(step#8)#91L AS distinct_steps#69L, min(amount#10)#70 AS amount_min#71, max(amount#10)#72 AS amount_max#73, sum(amount#10)#74 AS total_amount#75, sum(isFraud#17)#76L AS fraud_rows#77L, sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)#78L AS zero_amount_rows#79L]
+
+(11) HashAggregate
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Keys [1]: [step#8]
+Functions [19]: [partial_count(1), partial_sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END), partial_sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END), partial_min(step#8), partial_max(step#8), partial_min(amount#10), partial_max(amount#10), partial_sum(amount#10), partial_sum(isFraud#17), partial_sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)]
+Aggregate Attributes [19]: [count(1)#41L, sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END)#43L, sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END)#45L, sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END)#47L, sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END)#49L, sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END)#51L, sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END)#53L, sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END)#55L, sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END)#57L, sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END)#59L, sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END)#61L, sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END)#63L, min(step#8)#65, max(step#8)#67, min(amount#10)#70, max(amount#10)#72, sum(amount#10)#74, sum(isFraud#17)#76L, sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)#78L]
+Results [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+
+(12) Exchange
+Input [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+Arguments: hashpartitioning(step#8, 200), ENSURE_REQUIREMENTS, [plan_id=52]
+
+(13) HashAggregate
+Input [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+Keys [1]: [step#8]
+Functions [19]: [merge_count(1), merge_sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END), merge_min(step#8), merge_max(step#8), merge_min(amount#10), merge_max(amount#10), merge_sum(amount#10), merge_sum(isFraud#17), merge_sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)]
+Aggregate Attributes [19]: [count(1)#41L, sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END)#43L, sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END)#45L, sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END)#47L, sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END)#49L, sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END)#51L, sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END)#53L, sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END)#55L, sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END)#57L, sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END)#59L, sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END)#61L, sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END)#63L, min(step#8)#65, max(step#8)#67, min(amount#10)#70, max(amount#10)#72, sum(amount#10)#74, sum(isFraud#17)#76L, sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)#78L]
+Results [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+
+(14) HashAggregate
+Input [21]: [step#8, count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L]
+Keys: []
+Functions [20]: [merge_count(1), merge_sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END), merge_sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END), merge_min(step#8), merge_max(step#8), merge_min(amount#10), merge_max(amount#10), merge_sum(amount#10), merge_sum(isFraud#17), merge_sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END), partial_count(distinct step#8)]
+Aggregate Attributes [20]: [count(1)#41L, sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END)#43L, sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END)#45L, sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END)#47L, sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END)#49L, sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END)#51L, sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END)#53L, sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END)#55L, sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END)#57L, sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END)#59L, sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END)#61L, sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END)#63L, min(step#8)#65, max(step#8)#67, min(amount#10)#70, max(amount#10)#72, sum(amount#10)#74, sum(isFraud#17)#76L, sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)#78L, count(step#8)#91L]
+Results [21]: [count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L, count#155L]
+
+(15) Exchange
+Input [21]: [count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L, count#155L]
+Arguments: SinglePartition, ENSURE_REQUIREMENTS, [plan_id=56]
+
+(16) HashAggregate
+Input [21]: [count#114L, sum#116L, sum#118L, sum#120L, sum#122L, sum#124L, sum#126L, sum#128L, sum#130L, sum#132L, sum#134L, sum#136L, min#138, max#140, min#142, max#144, sum#147, isEmpty#148, sum#150L, sum#152L, count#155L]
+Keys: []
+Functions [20]: [count(1), sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END), sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END), min(step#8), max(step#8), min(amount#10), max(amount#10), sum(amount#10), sum(isFraud#17), sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END), count(distinct step#8)]
+Aggregate Attributes [20]: [count(1)#41L, sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END)#43L, sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END)#45L, sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END)#47L, sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END)#49L, sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END)#51L, sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END)#53L, sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END)#55L, sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END)#57L, sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END)#59L, sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END)#61L, sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END)#63L, min(step#8)#65, max(step#8)#67, min(amount#10)#70, max(amount#10)#72, sum(amount#10)#74, sum(isFraud#17)#76L, sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)#78L, count(step#8)#91L]
+Results [20]: [count(1)#41L AS rows#42L, sum(CASE WHEN isnull(step#8) THEN 1 ELSE 0 END)#43L AS null_step#44L, sum(CASE WHEN isnull(type#9) THEN 1 ELSE 0 END)#45L AS null_type#46L, sum(CASE WHEN isnull(amount#10) THEN 1 ELSE 0 END)#47L AS null_amount#48L, sum(CASE WHEN isnull(nameOrig#11) THEN 1 ELSE 0 END)#49L AS null_nameOrig#50L, sum(CASE WHEN isnull(oldbalanceOrg#12) THEN 1 ELSE 0 END)#51L AS null_oldbalanceOrg#52L, sum(CASE WHEN isnull(newbalanceOrig#13) THEN 1 ELSE 0 END)#53L AS null_newbalanceOrig#54L, sum(CASE WHEN isnull(nameDest#14) THEN 1 ELSE 0 END)#55L AS null_nameDest#56L, sum(CASE WHEN isnull(oldbalanceDest#15) THEN 1 ELSE 0 END)#57L AS null_oldbalanceDest#58L, sum(CASE WHEN isnull(newbalanceDest#16) THEN 1 ELSE 0 END)#59L AS null_newbalanceDest#60L, sum(CASE WHEN isnull(isFraud#17) THEN 1 ELSE 0 END)#61L AS null_isFraud#62L, sum(CASE WHEN isnull(isFlaggedFraud#18) THEN 1 ELSE 0 END)#63L AS null_isFlaggedFraud#64L, min(step#8)#65 AS step_min#66, max(step#8)#67 AS step_max#68, count(step#8)#91L AS distinct_steps#69L, min(amount#10)#70 AS amount_min#71, max(amount#10)#72 AS amount_max#73, sum(amount#10)#74 AS total_amount#75, sum(isFraud#17)#76L AS fraud_rows#77L, sum(CASE WHEN (amount#10 = 0.00) THEN 1 ELSE 0 END)#78L AS zero_amount_rows#79L]
+
+(17) AdaptiveSparkPlan
+Output [20]: [rows#42L, null_step#44L, null_type#46L, null_amount#48L, null_nameOrig#50L, null_oldbalanceOrg#52L, null_newbalanceOrig#54L, null_nameDest#56L, null_oldbalanceDest#58L, null_newbalanceDest#60L, null_isFraud#62L, null_isFlaggedFraud#64L, step_min#66, step_max#68, distinct_steps#69L, amount_min#71, amount_max#73, total_amount#75, fraud_rows#77L, zero_amount_rows#79L]
+Arguments: isFinalPlan=true
+
+===== SQL execution 2 | profile_dup | groupBy(11 cols).count>1 .agg.first | 41.988s =====
+== Physical Plan ==
+AdaptiveSparkPlan (19)
++- == Final Plan ==
+   * HashAggregate (11)
+   +- ShuffleQueryStage (10), Statistics(sizeInBytes=216.0 B, rowCount=9)
+      +- Exchange (9)
+         +- * HashAggregate (8)
+            +- * Filter (7)
+               +- * HashAggregate (6)
+                  +- AQEShuffleRead (5)
+                     +- ShuffleQueryStage (4), Statistics(sizeInBytes=1358.7 MiB, rowCount=6.36E+6)
+                        +- Exchange (3)
+                           +- * HashAggregate (2)
+                              +- Scan csv  (1)
++- == Initial Plan ==
+   HashAggregate (18)
+   +- Exchange (17)
+      +- HashAggregate (16)
+         +- Filter (15)
+            +- HashAggregate (14)
+               +- Exchange (13)
+                  +- HashAggregate (12)
+                     +- Scan csv  (1)
+
+
+(1) Scan csv 
+Output [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv]
+ReadSchema: struct<step:int,type:string,amount:decimal(20,2),nameOrig:string,oldbalanceOrg:decimal(20,2),newbalanceOrig:decimal(20,2),nameDest:string,oldbalanceDest:decimal(20,2),newbalanceDest:decimal(20,2),isFraud:int,isFlaggedFraud:int>
+
+(2) HashAggregate [codegen id : 1]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Keys [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#356L]
+Results [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+
+(3) Exchange
+Input [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+Arguments: hashpartitioning(step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, 200), ENSURE_REQUIREMENTS, [plan_id=185]
+
+(4) ShuffleQueryStage
+Output [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+Arguments: 0
+
+(5) AQEShuffleRead
+Input [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+Arguments: coalesced
+
+(6) HashAggregate [codegen id : 2]
+Input [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+Keys [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#320L]
+Results [1]: [count(1)#320L AS count#321L]
+
+(7) Filter [codegen id : 2]
+Input [1]: [count#321L]
+Condition : (count#321L > 1)
+
+(8) HashAggregate [codegen id : 2]
+Input [1]: [count#321L]
+Keys: []
+Functions [2]: [partial_count(1), partial_sum((count#321L - 1))]
+Aggregate Attributes [2]: [count#352L, sum#358L]
+Results [2]: [count#354L, sum#359L]
+
+(9) Exchange
+Input [2]: [count#354L, sum#359L]
+Arguments: SinglePartition, ENSURE_REQUIREMENTS, [plan_id=226]
+
+(10) ShuffleQueryStage
+Output [2]: [count#354L, sum#359L]
+Arguments: 1
+
+(11) HashAggregate [codegen id : 3]
+Input [2]: [count#354L, sum#359L]
+Keys: []
+Functions [2]: [count(1), sum((count#321L - 1))]
+Aggregate Attributes [2]: [count(1)#334L, sum((count#321L - 1))#336L]
+Results [2]: [count(1)#334L AS duplicate_groups#335L, coalesce(sum((count#321L - 1))#336L, 0) AS duplicate_extra_rows#337L]
+
+(12) HashAggregate
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Keys [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#356L]
+Results [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+
+(13) Exchange
+Input [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+Arguments: hashpartitioning(step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, 200), ENSURE_REQUIREMENTS, [plan_id=163]
+
+(14) HashAggregate
+Input [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+Keys [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#320L]
+Results [1]: [count(1)#320L AS count#321L]
+
+(15) Filter
+Input [1]: [count#321L]
+Condition : (count#321L > 1)
+
+(16) HashAggregate
+Input [1]: [count#321L]
+Keys: []
+Functions [2]: [partial_count(1), partial_sum((count#321L - 1))]
+Aggregate Attributes [2]: [count#352L, sum#358L]
+Results [2]: [count#354L, sum#359L]
+
+(17) Exchange
+Input [2]: [count#354L, sum#359L]
+Arguments: SinglePartition, ENSURE_REQUIREMENTS, [plan_id=168]
+
+(18) HashAggregate
+Input [2]: [count#354L, sum#359L]
+Keys: []
+Functions [2]: [count(1), sum((count#321L - 1))]
+Aggregate Attributes [2]: [count(1)#334L, sum((count#321L - 1))#336L]
+Results [2]: [count(1)#334L AS duplicate_groups#335L, coalesce(sum((count#321L - 1))#336L, 0) AS duplicate_extra_rows#337L]
+
+(19) AdaptiveSparkPlan
+Output [2]: [duplicate_groups#335L, duplicate_extra_rows#337L]
+Arguments: isFinalPlan=true
+
+===== SQL execution 12 | join | joined.count | 11.137s =====
+== Physical Plan ==
+AdaptiveSparkPlan (25)
++- == Final Plan ==
+   * HashAggregate (14)
+   +- ShuffleQueryStage (13), Statistics(sizeInBytes=128.0 B, rowCount=8)
+      +- Exchange (12)
+         +- * HashAggregate (11)
+            +- * Project (10)
+               +- * BroadcastHashJoin LeftOuter BuildRight (9)
+                  :- * Project (3)
+                  :  +- * Filter (2)
+                  :     +- Scan csv  (1)
+                  +- BroadcastQueryStage (8), Statistics(sizeInBytes=2.0 MiB, rowCount=5)
+                     +- BroadcastExchange (7)
+                        +- * Project (6)
+                           +- * Filter (5)
+                              +- Scan csv  (4)
++- == Initial Plan ==
+   HashAggregate (24)
+   +- Exchange (23)
+      +- HashAggregate (22)
+         +- Project (21)
+            +- BroadcastHashJoin LeftOuter BuildRight (20)
+               :- Project (16)
+               :  +- Filter (15)
+               :     +- Scan csv  (1)
+               +- BroadcastExchange (19)
+                  +- Project (18)
+                     +- Filter (17)
+                        +- Scan csv  (4)
+
+
+(1) Scan csv 
+Output [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv]
+PushedFilters: [IsNotNull(step), IsNotNull(amount), IsNotNull(oldbalanceOrg), IsNotNull(newbalanceOrig), IsNotNull(oldbalanceDest), IsNotNull(newbalanceDest), IsNotNull(isFraud), IsNotNull(isFlaggedFraud), GreaterThanOrEqual(step,1), GreaterThanOrEqual(amount,0.00), In(isFraud, [0,1]), In(isFlaggedFraud, [0,1])]
+ReadSchema: struct<step:int,type:string,amount:decimal(20,2),nameOrig:string,oldbalanceOrg:decimal(20,2),newbalanceOrig:decimal(20,2),nameDest:string,oldbalanceDest:decimal(20,2),newbalanceDest:decimal(20,2),isFraud:int,isFlaggedFraud:int>
+
+(2) Filter [codegen id : 2]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Condition : (((((((((((((((((isnotnull(step#8) AND isnotnull(upper(trim(type#9, None)))) AND isnotnull(amount#10)) AND isnotnull(trim(nameOrig#11, None))) AND isnotnull(oldbalanceOrg#12)) AND isnotnull(newbalanceOrig#13)) AND isnotnull(trim(nameDest#14, None))) AND isnotnull(oldbalanceDest#15)) AND isnotnull(newbalanceDest#16)) AND isnotnull(isFraud#17)) AND isnotnull(isFlaggedFraud#18)) AND (step#8 >= 1)) AND (amount#10 >= 0.00)) AND isFraud#17 IN (0,1)) AND isFlaggedFraud#18 IN (0,1)) AND NOT (trim(nameOrig#11, None) = )) AND NOT (trim(nameDest#14, None) = )) AND NOT (upper(trim(type#9, None)) = ))
+
+(3) Project [codegen id : 2]
+Output [1]: [upper(trim(type#9, None)) AS type#374]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+
+(4) Scan csv 
+Output [1]: [type#612]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/config/dim_transaction_type.csv]
+ReadSchema: struct<type:string>
+
+(5) Filter [codegen id : 1]
+Input [1]: [type#612]
+Condition : (NOT (upper(trim(type#612, None)) = ) AND isnotnull(upper(trim(type#612, None))))
+
+(6) Project [codegen id : 1]
+Output [1]: [upper(trim(type#612, None)) AS type#618]
+Input [1]: [type#612]
+
+(7) BroadcastExchange
+Input [1]: [type#618]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=847]
+
+(8) BroadcastQueryStage
+Output [1]: [type#618]
+Arguments: 0
+
+(9) BroadcastHashJoin [codegen id : 2]
+Left keys [1]: [type#374]
+Right keys [1]: [type#618]
+Join type: LeftOuter
+Join condition: None
+
+(10) Project [codegen id : 2]
+Output: []
+Input [2]: [type#374, type#618]
+
+(11) HashAggregate [codegen id : 2]
+Input: []
+Keys: []
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#744L]
+Results [1]: [count#745L]
+
+(12) Exchange
+Input [1]: [count#745L]
+Arguments: SinglePartition, ENSURE_REQUIREMENTS, [plan_id=894]
+
+(13) ShuffleQueryStage
+Output [1]: [count#745L]
+Arguments: 1
+
+(14) HashAggregate [codegen id : 3]
+Input [1]: [count#745L]
+Keys: []
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#741L]
+Results [1]: [count(1)#741L AS count#742L]
+
+(15) Filter
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Condition : (((((((((((((((((isnotnull(step#8) AND isnotnull(upper(trim(type#9, None)))) AND isnotnull(amount#10)) AND isnotnull(trim(nameOrig#11, None))) AND isnotnull(oldbalanceOrg#12)) AND isnotnull(newbalanceOrig#13)) AND isnotnull(trim(nameDest#14, None))) AND isnotnull(oldbalanceDest#15)) AND isnotnull(newbalanceDest#16)) AND isnotnull(isFraud#17)) AND isnotnull(isFlaggedFraud#18)) AND (step#8 >= 1)) AND (amount#10 >= 0.00)) AND isFraud#17 IN (0,1)) AND isFlaggedFraud#18 IN (0,1)) AND NOT (trim(nameOrig#11, None) = )) AND NOT (trim(nameDest#14, None) = )) AND NOT (upper(trim(type#9, None)) = ))
+
+(16) Project
+Output [1]: [upper(trim(type#9, None)) AS type#374]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+
+(17) Filter
+Input [1]: [type#612]
+Condition : (NOT (upper(trim(type#612, None)) = ) AND isnotnull(upper(trim(type#612, None))))
+
+(18) Project
+Output [1]: [upper(trim(type#612, None)) AS type#618]
+Input [1]: [type#612]
+
+(19) BroadcastExchange
+Input [1]: [type#618]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=819]
+
+(20) BroadcastHashJoin
+Left keys [1]: [type#374]
+Right keys [1]: [type#618]
+Join type: LeftOuter
+Join condition: None
+
+(21) Project
+Output: []
+Input [2]: [type#374, type#618]
+
+(22) HashAggregate
+Input: []
+Keys: []
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#744L]
+Results [1]: [count#745L]
+
+(23) Exchange
+Input [1]: [count#745L]
+Arguments: SinglePartition, ENSURE_REQUIREMENTS, [plan_id=824]
+
+(24) HashAggregate
+Input [1]: [count#745L]
+Keys: []
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#741L]
+Results [1]: [count(1)#741L AS count#742L]
+
+(25) AdaptiveSparkPlan
+Output [1]: [count#742L]
+Arguments: isFinalPlan=true
+
+===== SQL execution 14 | output | summary groupBy(day_index,type).write.parquet | 13.306s =====
+== Physical Plan ==
+AdaptiveSparkPlan (33)
++- == Final Plan ==
+   Execute InsertIntoHadoopFsRelationCommand (18)
+   +- WriteFiles (17)
+      +- * Project (16)
+         +- * HashAggregate (15)
+            +- AQEShuffleRead (14)
+               +- ShuffleQueryStage (13), Statistics(sizeInBytes=34.8 KiB, rowCount=187)
+                  +- Exchange (12)
+                     +- * HashAggregate (11)
+                        +- * Project (10)
+                           +- * BroadcastHashJoin LeftOuter BuildRight (9)
+                              :- * Project (3)
+                              :  +- * Filter (2)
+                              :     +- Scan csv  (1)
+                              +- BroadcastQueryStage (8), Statistics(sizeInBytes=2.0 MiB, rowCount=5)
+                                 +- BroadcastExchange (7)
+                                    +- * Project (6)
+                                       +- * Filter (5)
+                                          +- Scan csv  (4)
++- == Initial Plan ==
+   Execute InsertIntoHadoopFsRelationCommand (32)
+   +- WriteFiles (31)
+      +- Project (30)
+         +- HashAggregate (29)
+            +- Exchange (28)
+               +- HashAggregate (27)
+                  +- Project (26)
+                     +- BroadcastHashJoin LeftOuter BuildRight (25)
+                        :- Project (21)
+                        :  +- Filter (20)
+                        :     +- Scan csv  (19)
+                        +- BroadcastExchange (24)
+                           +- Project (23)
+                              +- Filter (22)
+                                 +- Scan csv  (4)
+
+
+(1) Scan csv 
+Output [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv]
+PushedFilters: [IsNotNull(step), IsNotNull(amount), IsNotNull(oldbalanceOrg), IsNotNull(newbalanceOrig), IsNotNull(oldbalanceDest), IsNotNull(newbalanceDest), IsNotNull(isFraud), IsNotNull(isFlaggedFraud), GreaterThanOrEqual(step,1), GreaterThanOrEqual(amount,0.00), In(isFraud, [0,1]), In(isFlaggedFraud, [0,1])]
+ReadSchema: struct<step:int,type:string,amount:decimal(20,2),nameOrig:string,oldbalanceOrg:decimal(20,2),newbalanceOrig:decimal(20,2),nameDest:string,oldbalanceDest:decimal(20,2),newbalanceDest:decimal(20,2),isFraud:int,isFlaggedFraud:int>
+
+(2) Filter [codegen id : 2]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Condition : (((((((((((((((((isnotnull(step#8) AND isnotnull(upper(trim(type#9, None)))) AND isnotnull(amount#10)) AND isnotnull(trim(nameOrig#11, None))) AND isnotnull(oldbalanceOrg#12)) AND isnotnull(newbalanceOrig#13)) AND isnotnull(trim(nameDest#14, None))) AND isnotnull(oldbalanceDest#15)) AND isnotnull(newbalanceDest#16)) AND isnotnull(isFraud#17)) AND isnotnull(isFlaggedFraud#18)) AND (step#8 >= 1)) AND (amount#10 >= 0.00)) AND isFraud#17 IN (0,1)) AND isFlaggedFraud#18 IN (0,1)) AND NOT (trim(nameOrig#11, None) = )) AND NOT (trim(nameDest#14, None) = )) AND NOT (upper(trim(type#9, None)) = ))
+
+(3) Project [codegen id : 2]
+Output [4]: [upper(trim(type#9, None)) AS type#374, amount#10, isFraud#17, cast((FLOOR((cast((step#8 - 1) as double) / 24.0)) + 1) as int) AS day_index#515]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+
+(4) Scan csv 
+Output [3]: [type#612, type_name_vi#613, flow_group#614]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/config/dim_transaction_type.csv]
+ReadSchema: struct<type:string,type_name_vi:string,flow_group:string>
+
+(5) Filter [codegen id : 1]
+Input [3]: [type#612, type_name_vi#613, flow_group#614]
+Condition : (NOT (upper(trim(type#612, None)) = ) AND isnotnull(upper(trim(type#612, None))))
+
+(6) Project [codegen id : 1]
+Output [3]: [upper(trim(type#612, None)) AS type#618, type_name_vi#613, flow_group#614]
+Input [3]: [type#612, type_name_vi#613, flow_group#614]
+
+(7) BroadcastExchange
+Input [3]: [type#618, type_name_vi#613, flow_group#614]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=1090]
+
+(8) BroadcastQueryStage
+Output [3]: [type#618, type_name_vi#613, flow_group#614]
+Arguments: 0
+
+(9) BroadcastHashJoin [codegen id : 2]
+Left keys [1]: [type#374]
+Right keys [1]: [type#618]
+Join type: LeftOuter
+Join condition: None
+
+(10) Project [codegen id : 2]
+Output [6]: [type#374, amount#10, isFraud#17, day_index#515, type_name_vi#613, flow_group#614]
+Input [7]: [type#374, amount#10, isFraud#17, day_index#515, type#618, type_name_vi#613, flow_group#614]
+
+(11) HashAggregate [codegen id : 2]
+Input [6]: [type#374, amount#10, isFraud#17, day_index#515, type_name_vi#613, flow_group#614]
+Keys [4]: [day_index#515, type#374, type_name_vi#613, flow_group#614]
+Functions [5]: [partial_count(1), partial_sum(amount#10), partial_avg(amount#10), partial_sum(isFraud#17), partial_sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)]
+Aggregate Attributes [8]: [count#812L, sum#813, isEmpty#814, sum#815, count#816L, sum#817L, sum#838, isEmpty#839]
+Results [12]: [day_index#515, type#374, type_name_vi#613, flow_group#614, count#820L, sum#821, isEmpty#822, sum#823, count#824L, sum#825L, sum#840, isEmpty#841]
+
+(12) Exchange
+Input [12]: [day_index#515, type#374, type_name_vi#613, flow_group#614, count#820L, sum#821, isEmpty#822, sum#823, count#824L, sum#825L, sum#840, isEmpty#841]
+Arguments: hashpartitioning(day_index#515, type#374, type_name_vi#613, flow_group#614, 200), ENSURE_REQUIREMENTS, [plan_id=1159]
+
+(13) ShuffleQueryStage
+Output [12]: [day_index#515, type#374, type_name_vi#613, flow_group#614, count#820L, sum#821, isEmpty#822, sum#823, count#824L, sum#825L, sum#840, isEmpty#841]
+Arguments: 1
+
+(14) AQEShuffleRead
+Input [12]: [day_index#515, type#374, type_name_vi#613, flow_group#614, count#820L, sum#821, isEmpty#822, sum#823, count#824L, sum#825L, sum#840, isEmpty#841]
+Arguments: coalesced
+
+(15) HashAggregate [codegen id : 3]
+Input [12]: [day_index#515, type#374, type_name_vi#613, flow_group#614, count#820L, sum#821, isEmpty#822, sum#823, count#824L, sum#825L, sum#840, isEmpty#841]
+Keys [4]: [day_index#515, type#374, type_name_vi#613, flow_group#614]
+Functions [5]: [count(1), sum(amount#10), avg(amount#10), sum(isFraud#17), sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)]
+Aggregate Attributes [5]: [count(1)#782L, sum(amount#10)#784, avg(amount#10)#786, sum(isFraud#17)#788L, sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)#790]
+Results [9]: [day_index#515, type#374, type_name_vi#613, flow_group#614, count(1)#782L AS txn_count#783L, sum(amount#10)#784 AS total_amount#785, round(avg(amount#10)#786, 2) AS avg_amount#787, sum(isFraud#17)#788L AS fraud_count#789L, sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)#790 AS fraud_amount#791]
+
+(16) Project [codegen id : 3]
+Output [10]: [day_index#515, type#374, type_name_vi#613, flow_group#614, txn_count#783L, total_amount#785, avg_amount#787, fraud_count#789L, fraud_amount#791, round(((cast(fraud_count#789L as double) * 100.0) / cast(txn_count#783L as double)), 6) AS fraud_rate_pct#801]
+Input [9]: [day_index#515, type#374, type_name_vi#613, flow_group#614, txn_count#783L, total_amount#785, avg_amount#787, fraud_count#789L, fraud_amount#791]
+
+(17) WriteFiles
+Input [10]: [day_index#515, type#374, type_name_vi#613, flow_group#614, txn_count#783L, total_amount#785, avg_amount#787, fraud_count#789L, fraud_amount#791, fraud_rate_pct#801]
+
+(18) Execute InsertIntoHadoopFsRelationCommand
+Input: []
+Arguments: file:/D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/output/snapshot_16910f90577b/20261117T151749Z_a28eaadb/daily_type_summary, false, Parquet, [path=D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/output/snapshot_16910f90577b/20261117T151749Z_a28eaadb/daily_type_summary], ErrorIfExists, [day_index, type, type_name_vi, flow_group, txn_count, total_amount, avg_amount, fraud_count, fraud_amount, fraud_rate_pct]
+
+(19) Scan csv 
+Output [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv]
+PushedFilters: [IsNotNull(step), IsNotNull(amount), IsNotNull(oldbalanceOrg), IsNotNull(newbalanceOrig), IsNotNull(oldbalanceDest), IsNotNull(newbalanceDest), IsNotNull(isFraud), IsNotNull(isFlaggedFraud), GreaterThanOrEqual(step,1), GreaterThanOrEqual(amount,0.00), In(isFraud, [0,1]), In(isFlaggedFraud, [0,1])]
+ReadSchema: struct<step:int,type:string,amount:decimal(20,2),nameOrig:string,oldbalanceOrg:decimal(20,2),newbalanceOrig:decimal(20,2),nameDest:string,oldbalanceDest:decimal(20,2),newbalanceDest:decimal(20,2),isFraud:int,isFlaggedFraud:int>
+
+(20) Filter
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Condition : (((((((((((((((((isnotnull(step#8) AND isnotnull(upper(trim(type#9, None)))) AND isnotnull(amount#10)) AND isnotnull(trim(nameOrig#11, None))) AND isnotnull(oldbalanceOrg#12)) AND isnotnull(newbalanceOrig#13)) AND isnotnull(trim(nameDest#14, None))) AND isnotnull(oldbalanceDest#15)) AND isnotnull(newbalanceDest#16)) AND isnotnull(isFraud#17)) AND isnotnull(isFlaggedFraud#18)) AND (step#8 >= 1)) AND (amount#10 >= 0.00)) AND isFraud#17 IN (0,1)) AND isFlaggedFraud#18 IN (0,1)) AND NOT (trim(nameOrig#11, None) = )) AND NOT (trim(nameDest#14, None) = )) AND NOT (upper(trim(type#9, None)) = ))
+
+(21) Project
+Output [4]: [upper(trim(type#9, None)) AS type#374, amount#10, isFraud#17, cast((FLOOR((cast((step#8 - 1) as double) / 24.0)) + 1) as int) AS day_index#515]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+
+(22) Filter
+Input [3]: [type#612, type_name_vi#613, flow_group#614]
+Condition : (NOT (upper(trim(type#612, None)) = ) AND isnotnull(upper(trim(type#612, None))))
+
+(23) Project
+Output [3]: [upper(trim(type#612, None)) AS type#618, type_name_vi#613, flow_group#614]
+Input [3]: [type#612, type_name_vi#613, flow_group#614]
+
+(24) BroadcastExchange
+Input [3]: [type#618, type_name_vi#613, flow_group#614]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=1057]
+
+(25) BroadcastHashJoin
+Left keys [1]: [type#374]
+Right keys [1]: [type#618]
+Join type: LeftOuter
+Join condition: None
+
+(26) Project
+Output [6]: [type#374, amount#10, isFraud#17, day_index#515, type_name_vi#613, flow_group#614]
+Input [7]: [type#374, amount#10, isFraud#17, day_index#515, type#618, type_name_vi#613, flow_group#614]
+
+(27) HashAggregate
+Input [6]: [type#374, amount#10, isFraud#17, day_index#515, type_name_vi#613, flow_group#614]
+Keys [4]: [day_index#515, type#374, type_name_vi#613, flow_group#614]
+Functions [5]: [partial_count(1), partial_sum(amount#10), partial_avg(amount#10), partial_sum(isFraud#17), partial_sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)]
+Aggregate Attributes [8]: [count#812L, sum#813, isEmpty#814, sum#815, count#816L, sum#817L, sum#838, isEmpty#839]
+Results [12]: [day_index#515, type#374, type_name_vi#613, flow_group#614, count#820L, sum#821, isEmpty#822, sum#823, count#824L, sum#825L, sum#840, isEmpty#841]
+
+(28) Exchange
+Input [12]: [day_index#515, type#374, type_name_vi#613, flow_group#614, count#820L, sum#821, isEmpty#822, sum#823, count#824L, sum#825L, sum#840, isEmpty#841]
+Arguments: hashpartitioning(day_index#515, type#374, type_name_vi#613, flow_group#614, 200), ENSURE_REQUIREMENTS, [plan_id=1062]
+
+(29) HashAggregate
+Input [12]: [day_index#515, type#374, type_name_vi#613, flow_group#614, count#820L, sum#821, isEmpty#822, sum#823, count#824L, sum#825L, sum#840, isEmpty#841]
+Keys [4]: [day_index#515, type#374, type_name_vi#613, flow_group#614]
+Functions [5]: [count(1), sum(amount#10), avg(amount#10), sum(isFraud#17), sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)]
+Aggregate Attributes [5]: [count(1)#782L, sum(amount#10)#784, avg(amount#10)#786, sum(isFraud#17)#788L, sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)#790]
+Results [9]: [day_index#515, type#374, type_name_vi#613, flow_group#614, count(1)#782L AS txn_count#783L, sum(amount#10)#784 AS total_amount#785, round(avg(amount#10)#786, 2) AS avg_amount#787, sum(isFraud#17)#788L AS fraud_count#789L, sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)#790 AS fraud_amount#791]
+
+(30) Project
+Output [10]: [day_index#515, type#374, type_name_vi#613, flow_group#614, txn_count#783L, total_amount#785, avg_amount#787, fraud_count#789L, fraud_amount#791, round(((cast(fraud_count#789L as double) * 100.0) / cast(txn_count#783L as double)), 6) AS fraud_rate_pct#801]
+Input [9]: [day_index#515, type#374, type_name_vi#613, flow_group#614, txn_count#783L, total_amount#785, avg_amount#787, fraud_count#789L, fraud_amount#791]
+
+(31) WriteFiles
+Input [10]: [day_index#515, type#374, type_name_vi#613, flow_group#614, txn_count#783L, total_amount#785, avg_amount#787, fraud_count#789L, fraud_amount#791, fraud_rate_pct#801]
+
+(32) Execute InsertIntoHadoopFsRelationCommand
+Input: []
+Arguments: file:/D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/output/snapshot_16910f90577b/20261117T151749Z_a28eaadb/daily_type_summary, false, Parquet, [path=D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/output/snapshot_16910f90577b/20261117T151749Z_a28eaadb/daily_type_summary], ErrorIfExists, [day_index, type, type_name_vi, flow_group, txn_count, total_amount, avg_amount, fraud_count, fraud_amount, fraud_rate_pct]
+
+(33) AdaptiveSparkPlan
+Output: []
+Arguments: isFinalPlan=true
+

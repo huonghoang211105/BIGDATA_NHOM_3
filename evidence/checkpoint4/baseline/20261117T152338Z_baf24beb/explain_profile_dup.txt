@@ -1,0 +1,63 @@
+== Physical Plan ==
+AdaptiveSparkPlan (9)
++- HashAggregate (8)
+   +- Exchange (7)
+      +- HashAggregate (6)
+         +- Filter (5)
+            +- HashAggregate (4)
+               +- Exchange (3)
+                  +- HashAggregate (2)
+                     +- Scan csv  (1)
+
+
+(1) Scan csv 
+Output [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/.bench/ae845921d9ca/data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv]
+ReadSchema: struct<step:int,type:string,amount:decimal(20,2),nameOrig:string,oldbalanceOrg:decimal(20,2),newbalanceOrig:decimal(20,2),nameDest:string,oldbalanceDest:decimal(20,2),newbalanceDest:decimal(20,2),isFraud:int,isFlaggedFraud:int>
+
+(2) HashAggregate
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Keys [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#356L]
+Results [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+
+(3) Exchange
+Input [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+Arguments: hashpartitioning(step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, 200), ENSURE_REQUIREMENTS, [plan_id=134]
+
+(4) HashAggregate
+Input [12]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, count#357L]
+Keys [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#320L]
+Results [1]: [count(1)#320L AS count#321L]
+
+(5) Filter
+Input [1]: [count#321L]
+Condition : (count#321L > 1)
+
+(6) HashAggregate
+Input [1]: [count#321L]
+Keys: []
+Functions [2]: [partial_count(1), partial_sum((count#321L - 1))]
+Aggregate Attributes [2]: [count#352L, sum#353L]
+Results [2]: [count#354L, sum#355L]
+
+(7) Exchange
+Input [2]: [count#354L, sum#355L]
+Arguments: SinglePartition, ENSURE_REQUIREMENTS, [plan_id=139]
+
+(8) HashAggregate
+Input [2]: [count#354L, sum#355L]
+Keys: []
+Functions [2]: [count(1), sum((count#321L - 1))]
+Aggregate Attributes [2]: [count(1)#334L, sum((count#321L - 1))#336L]
+Results [2]: [count(1)#334L AS duplicate_groups#335L, coalesce(sum((count#321L - 1))#336L, 0) AS duplicate_extra_rows#337L]
+
+(9) AdaptiveSparkPlan
+Output [2]: [duplicate_groups#335L, duplicate_extra_rows#337L]
+Arguments: isFinalPlan=false
+
+

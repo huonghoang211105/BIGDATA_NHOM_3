@@ -1,0 +1,16 @@
+2026-11-17 22:17:50,204 [LINEAGE] raw_run_id=20261112T175026Z_822219b0 manifest=metadata/manifest.json input=data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv
+2026-11-17 22:17:50,204 [TIMING] phase=imports sec=0.424
+2026-11-17 22:17:50,800 [TIMING] phase=hash sec=0.599
+2026-11-17 22:18:01,849 [TIMING] phase=spark_startup sec=11.049
+2026-11-17 22:18:02,211 [TIMING] phase=read_schema sec=0.356
+2026-11-17 22:18:12,637 [TIMING] phase=profile_null sec=10.430
+2026-11-17 22:18:54,840 [TIMING] phase=profile_dup sec=42.195
+2026-11-17 22:18:54,840 [INPUT] rows=6362620 bytes=493534783
+2026-11-17 22:19:35,082 [CLEAN] valid=6362620 rejected=0
+2026-11-17 22:19:35,082 [TIMING] phase=clean sec=40.241
+2026-11-17 22:20:13,391 [JOIN] before=6362620 after=6362620 unmatched=0
+2026-11-17 22:20:13,391 [TIMING] phase=join sec=38.312
+2026-11-17 22:20:28,012 [TIMING] phase=output sec=14.623
+2026-11-17 22:20:28,028 [OUTPUT] groups=152 path=output/snapshot_16910f90577b/20261117T151749Z_a28eaadb/daily_type_summary
+2026-11-17 22:20:28,028 [BASELINE] elapsed_sec=158.23
+2026-11-17 22:20:28,028 SUCCESS: output/snapshot_16910f90577b/20261117T151749Z_a28eaadb
