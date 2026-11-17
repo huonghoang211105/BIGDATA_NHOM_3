@@ -47,16 +47,37 @@ def basic_profile(df):
     return df.agg(*expressions).first().asDict()
 
 
-def duplicate_frame(df):
-    """Exact full-row duplicate check (all columns); returned unexecuted so it can be explained."""
-    duplicates = df.groupBy(*df.columns).count().filter(F.col('count') > 1)
+def duplicate_candidates(df):
+    """Step 1: xxhash64 of every full row; hashes seen more than once. Shuffles one bigint per row
+    instead of all columns. Identical rows always share a hash, so no true duplicate is missed."""
+    return (df.groupBy(F.xxhash64(*df.columns).alias('_row_hash')).count()
+            .filter(F.col('count') > 1).select('_row_hash'))
+
+
+def duplicate_frame(df, candidates=None):
+    """Exact full-row duplicate check (all columns); returned unexecuted so it can be explained.
+    With candidates (step-1 hashes), only rows whose hash is a candidate are grouped on all columns;
+    hash collisions only add candidates, which this exact groupBy then discards."""
+    rows = df
+    if candidates is not None:
+        rows = (df.withColumn('_row_hash', F.xxhash64(*df.columns))
+                .join(F.broadcast(candidates), '_row_hash', 'left_semi').drop('_row_hash'))
+    duplicates = rows.groupBy(*df.columns).count().filter(F.col('count') > 1)
     return duplicates.agg(F.count('*').alias('duplicate_groups'),
                           F.coalesce(F.sum(F.col('count') - 1), F.lit(0))
                           .alias('duplicate_extra_rows'))
 
 
-def duplicate_profile(df):
-    return duplicate_frame(df).first().asDict()
+def duplicate_profile(df, details=None):
+    """duplicate_groups / duplicate_extra_rows, exact. Step 2 runs only if step 1 finds candidates."""
+    hashes = [row['_row_hash'] for row in duplicate_candidates(df).collect()]
+    if details is not None:
+        details.update(method='xxhash64 prefilter + exact groupBy on candidates',
+                       hash_candidates=len(hashes), exact_step_ran=bool(hashes))
+    if not hashes:
+        return {'duplicate_groups': 0, 'duplicate_extra_rows': 0}
+    candidates = df.sparkSession.createDataFrame([(h,) for h in hashes], '_row_hash bigint')
+    return duplicate_frame(df, candidates).first().asDict()
 
 
 def profile(df):

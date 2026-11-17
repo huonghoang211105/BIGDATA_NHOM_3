@@ -155,7 +155,8 @@ def main():
 
     try:
         from pyspark.sql import SparkSession, functions as F, types as T
-        from quality_report import (basic_profile, duplicate_frame, require, save_json, sha256)
+        from quality_report import (basic_profile, duplicate_candidates, duplicate_profile, require,
+                                    save_json, sha256)
         logging.info('[LINEAGE] raw_run_id=%s manifest=%s input=%s',
                      metrics['raw_run_id'], metrics['raw_manifest'], metrics['input_path'])
         lap('imports')
@@ -230,12 +231,12 @@ def main():
         job('profile_null | agg(nulls,min,max,countDistinct,sum).first')
         metrics['input_profile'] = basic_profile(raw)
         lap('profile_null')
-        job('profile_dup | groupBy(11 cols).count>1 .agg.first')
-        duplicates = duplicate_frame(raw)
+        job('profile_dup | groupBy(xxhash64(11 cols)).count>1 [+ exact 11-col check on candidates]')
         with (run / 'explain_profile_dup.txt').open('w', encoding='utf-8') as file:
             with redirect_stdout(file):
-                duplicates.explain(mode='formatted')
-        metrics['input_profile'].update(duplicates.first().asDict())
+                duplicate_candidates(raw).explain(mode='formatted')
+        metrics['duplicate_check'] = {}
+        metrics['input_profile'].update(duplicate_profile(raw, metrics['duplicate_check']))
         lap('profile_dup')
         n = metrics['input_profile']['rows']
         logging.info('[INPUT] rows=%s bytes=%s', n, source.stat().st_size)

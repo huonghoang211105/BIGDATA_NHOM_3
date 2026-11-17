@@ -1,0 +1,9 @@
+﻿$ python tests/test_dup_check.py   # commit base 9bcb710 + working tree, 2026-11-17T23:01:34
+[PASS] mixed: 1 pair + 1 near-pair + 1 triple: old={'duplicate_groups': 2, 'duplicate_extra_rows': 3} new={'duplicate_groups': 2, 'duplicate_extra_rows': 3} expected=(2, 3) hash_candidates=2 exact_step_ran=True
+[PASS] no duplicates: old={'duplicate_groups': 0, 'duplicate_extra_rows': 0} new={'duplicate_groups': 0, 'duplicate_extra_rows': 0} expected=(0, 0) hash_candidates=0 exact_step_ran=False
+[PASS] hash collision, no real duplicate: old={'duplicate_groups': 0, 'duplicate_extra_rows': 0} new={'duplicate_groups': 0, 'duplicate_extra_rows': 0} expected=(0, 0) hash_candidates=1 exact_step_ran=True
+[PASS] duplicate rows with nulls: old={'duplicate_groups': 1, 'duplicate_extra_rows': 1} new={'duplicate_groups': 1, 'duplicate_extra_rows': 1} expected=(1, 1) hash_candidates=1 exact_step_ran=True
+[PASS] sample 1000, as is: old={'duplicate_groups': 0, 'duplicate_extra_rows': 0} new={'duplicate_groups': 0, 'duplicate_extra_rows': 0} expected=(0, 0) hash_candidates=0 exact_step_ran=False
+[PASS] sample 1000 + 1 injected duplicate: old={'duplicate_groups': 1, 'duplicate_extra_rows': 1} new={'duplicate_groups': 1, 'duplicate_extra_rows': 1} expected=(1, 1) hash_candidates=1 exact_step_ran=True
+RESULT: PASS (5/5 tests passed)
+exit=0
