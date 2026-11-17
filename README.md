@@ -410,11 +410,14 @@ Dữ liệu được trích xuất từ `metrics.json` của run A `20261112T181
   ```powershell
   # Baseline: 1 run warm-up (ghi lại nhưng loại khỏi median) + 5 run đo
   python src/benchmark.py --label baseline --runs 5 --warmup 1
-  # Before/after xen kẽ B, A, B, A, ... (mặc định ref của nhãn X là tag checkpoint-4-X)
-  python src/benchmark.py --label baseline optimized --runs 5 --warmup 1
-  # Median / min / max / stdev theo nhãn (bỏ warm-up)
-  python src/benchmark.py --summary
+  # Before/after xen kẽ B, A, B, A, ... mỗi bên một worktree; chạy lại đúng lệnh này = resume
+  # (bỏ qua (session, label, run_no) đã có trong benchmark.csv)
+  python src/benchmark.py --pair baseline=checkpoint-4-baseline optimized=checkpoint-4-optimized --runs 5 --warmup 1 --session exp1
+  # Median / min / max / stdev theo session + nhãn (bỏ warm-up); 2 nhãn → thêm bảng Δ, Δ% so với biên độ baseline
+  python src/benchmark.py --summary --session exp1
   ```
+
+  Mỗi run xong ghi ngay 1 dòng vào `benchmark.csv` (cột `session`; các run Phase 1 có `session = phase1`).
 
   Mỗi run lưu `evidence/checkpoint4/<label>/<run_id>/`: `run.log`, `metrics.json`, `explain_*.txt`,
   `stage_metrics.csv`, `job_metrics.csv`, `phase_metrics.csv`, `sql_final_plans.txt`, `env.json`, `console.txt`.

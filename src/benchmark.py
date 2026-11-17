@@ -6,10 +6,15 @@ changes. The raw CSV is hard-linked into the worktree (same physical file, same 
 
     # Phase 1: baseline only (1 warm-up run discarded + 5 measured runs)
     python src/benchmark.py --label baseline --runs 5 --warmup 1
-    # Phase 2: interleaved B, A, B, A, ... (labels run in the given order inside every round)
-    python src/benchmark.py --label baseline optimized --runs 5 --warmup 1
-    # Median / min / max per label from benchmark.csv (warm-up rows excluded)
-    python src/benchmark.py --summary
+    # Phase 2: interleaved B, A, B, A, ... (pairs run in the given order inside every round)
+    python src/benchmark.py --pair baseline=checkpoint-4-baseline optimized=checkpoint-4-optimized \
+        --runs 5 --warmup 1 --session exp1
+    # Same command again = resume: (session, label, run_no) already in benchmark.csv are skipped
+    # Median / min / max per label (warm-up rows excluded); with 2 labels also before/after delta
+    python src/benchmark.py --summary --session exp1
+
+Each finished run appends its row to benchmark.csv immediately, so an interrupted session loses at most
+the run in progress (its partial output stays in the worktree and is never counted).
 
 Per run: evidence/checkpoint4/<label>/<run_id>/ gets the pipeline evidence (run.log, metrics.json,
 explain_*.txt, ...) plus stage_metrics.csv, job_metrics.csv, phase_metrics.csv, sql_final_plans.txt
@@ -41,7 +46,7 @@ COLUMNS = [
     'shuffle_write_mb', 'spill_mb', 'rows_in', 'rows_out', 'fraud_count', 'total_amount', 'spark_version',
     'master', 'driver_memory', 'shuffle_partitions', 'aqe_enabled',
     # Extra detail: finer timing split, target-stage metrics, correctness, machine state
-    'ref', 'round', 'started_at_utc', 'process_wall_sec', 'sec_imports', 'sec_spark_startup',
+    'session', 'ref', 'round', 'started_at_utc', 'process_wall_sec', 'sec_imports', 'sec_spark_startup',
     'sec_read_schema', 'sec_profile_null', 'sec_profile_dup', 'spill_memory_mb', 'fact_scans', 'jobs',
     'stages', 'tasks', 'dup_job_wall_sec', 'dup_shuffle_write_mb', 'dup_spill_memory_mb',
     'dup_spill_disk_mb', 'dup_task_max_sec', 'clean_job_wall_sec', 'clean_fact_scans',
@@ -51,6 +56,37 @@ SUMMARY_COLS = ['runtime_sec', 'sec_hash', 'sec_spark_startup', 'sec_read_schema
                 'sec_profile_dup', 'sec_profile', 'sec_clean', 'sec_join', 'sec_output', 'max_task_sec',
                 'shuffle_read_mb', 'shuffle_write_mb', 'spill_mb', 'spill_memory_mb',
                 'dup_shuffle_write_mb', 'dup_spill_disk_mb', 'dup_task_max_sec']
+LEGACY_SESSION = 'phase1'  # rows written before the session column existed (Phase 1 baseline)
+
+
+def read_rows(csv_path):
+    if not csv_path.exists():
+        return []
+    with csv_path.open(encoding='utf-8', newline='') as stream:
+        rows = list(csv.DictReader(stream))
+    for row in rows:
+        if not row.get('session'):
+            row['session'] = LEGACY_SESSION
+    return rows
+
+
+def ensure_header(csv_path):
+    """Rewrite benchmark.csv with the current COLUMNS if an older header lacks some (values kept)."""
+    if not csv_path.exists():
+        return
+    with csv_path.open(encoding='utf-8', newline='') as stream:
+        header = next(csv.reader(stream), [])
+    if header == COLUMNS:
+        return
+    rows = read_rows(csv_path)
+    unknown = set(header) - set(COLUMNS)
+    if unknown:
+        raise SystemExit(f'{csv_path} has unknown columns {sorted(unknown)}; refusing to rewrite')
+    with csv_path.open('w', encoding='utf-8', newline='') as stream:
+        writer = csv.DictWriter(stream, fieldnames=COLUMNS)
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f'benchmark.csv header migrated to {len(COLUMNS)} columns ({len(rows)} rows kept)')
 
 
 def git(*args, cwd=ROOT):
@@ -97,13 +133,13 @@ def prepare_worktree(ref):
     return wt, commit
 
 
-def run_once(label, ref, wt, commit, round_no, run_no, warm, evidence_root, csv_path):
+def run_once(label, ref, wt, commit, round_no, run_no, warm, evidence_root, csv_path, session):
     started = datetime.now(timezone.utc).isoformat()
     ram = free_ram_mb()
     cmd = [sys.executable, 'src/pipeline.py', '--config', 'config/config.json',
            '--evidence-dir', f'{evidence_root}/{label}', '--event-log-dir', str(EVENT_DIR)]
     env = dict(os.environ, PYTHONIOENCODING='utf-8')
-    print(f'\n=== {label} round={round_no} run_no={run_no} ({warm}) ref={ref} commit={commit[:8]} '
+    print(f'\n=== [{session}] {label} round={round_no} run_no={run_no} ({warm}) ref={ref} commit={commit[:8]} '
           f'free_ram_mb={ram} ===', flush=True)
     t0 = time.perf_counter()
     proc = subprocess.run(cmd, cwd=wt, env=env, capture_output=True, text=True,
@@ -154,7 +190,7 @@ def run_once(label, ref, wt, commit, round_no, run_no, warm, evidence_root, csv_
         'driver_memory': env_info['driver_memory'],
         'shuffle_partitions': sql_conf['spark.sql.shuffle.partitions'],
         'aqe_enabled': sql_conf['spark.sql.adaptive.enabled'],
-        'ref': ref, 'round': round_no, 'started_at_utc': started, 'process_wall_sec': wall,
+        'session': session, 'ref': ref, 'round': round_no, 'started_at_utc': started, 'process_wall_sec': wall,
         'sec_imports': t['imports'], 'sec_spark_startup': t['spark_startup'],
         'sec_read_schema': t['read_schema'], 'sec_profile_null': t['profile_null'],
         'sec_profile_dup': t['profile_dup'], 'spill_memory_mb': s['spill_memory_mb'],
@@ -171,7 +207,7 @@ def run_once(label, ref, wt, commit, round_no, run_no, warm, evidence_root, csv_
         'free_ram_mb_start': ram, 'jvm_max_heap_mb': round(env_info['jvm_max_heap_bytes'] / 2**20),
         'evidence_dir': target.relative_to(ROOT).as_posix() if target.is_relative_to(ROOT) else str(target)}
     (target / 'env.json').write_text(json.dumps({
-        'benchmark': {k: row[k] for k in ('label', 'ref', 'git_commit', 'round', 'run_no', 'warm_or_cold',
+        'benchmark': {k: row[k] for k in ('session', 'label', 'ref', 'git_commit', 'round', 'run_no', 'warm_or_cold',
                                           'started_at_utc', 'process_wall_sec', 'free_ram_mb_start')},
         'spark_version': env_info['spark'], 'master': env_info['master'],
         'logical_cpus': env_info['logical_cpus'], 'default_parallelism': env_info.get('default_parallelism'),
@@ -198,32 +234,62 @@ def run_once(label, ref, wt, commit, round_no, run_no, warm, evidence_root, csv_
     return row
 
 
-def summarize(csv_path):
-    with csv_path.open(encoding='utf-8') as stream:
-        rows = [r for r in csv.DictReader(stream) if r['warm_or_cold'] != 'warmup']
+def values(items, col):
+    return [float(r[col]) for r in items if r.get(col) not in (None, '')]
+
+
+def summarize(csv_path, session=None):
+    rows = [r for r in read_rows(csv_path) if r['warm_or_cold'] != 'warmup'
+            and (session is None or r['session'] == session)]
     groups = {}
     for r in rows:
-        groups.setdefault((r['label'], r['git_commit'][:8]), []).append(r)
-    for (label, commit), items in groups.items():
-        print(f'\n## {label} @ {commit}  (n={len(items)}, checks: '
+        groups.setdefault((r['session'], r['label'], r['git_commit'][:8]), []).append(r)
+    for (sess, label, commit), items in groups.items():
+        print(f'\n## [{sess}] {label} @ {commit}  (n={len(items)}, checks: '
               f'{sorted(set(r["checks"] for r in items))})')
         print('| metric | median | min | max | max-min | stdev | runs |')
         print('|---|---:|---:|---:|---:|---:|---|')
         for col in SUMMARY_COLS:
-            vals = [float(r[col]) for r in items if r.get(col) not in (None, '')]
+            vals = values(items, col)
             if not vals:
                 continue
             sd = statistics.stdev(vals) if len(vals) > 1 else 0.0
             print(f'| {col} | {statistics.median(vals):.3f} | {min(vals):.3f} | {max(vals):.3f} | '
                   f'{max(vals) - min(vals):.3f} | {sd:.3f} | {", ".join(f"{v:g}" for v in vals)} |')
+    # Before/after table when a session holds exactly two labels (first seen = before).
+    by_session = {}
+    for (sess, label, _), items in groups.items():
+        by_session.setdefault(sess, []).append((label, items))
+    for sess, arms in by_session.items():
+        if len(arms) != 2:
+            continue
+        (la, a), (lb, b) = arms
+        print(f'\n## [{sess}] before/after: {la} -> {lb} (median; variance = {la} max-min / stdev)')
+        print(f'| metric | {la} | {lb} | delta | delta % | {la} max-min | {la} stdev | |delta| > max-min? |')
+        print('|---|---:|---:|---:|---:|---:|---:|---|')
+        for col in SUMMARY_COLS:
+            va, vb = values(a, col), values(b, col)
+            if not va or not vb:
+                continue
+            ma, mb = statistics.median(va), statistics.median(vb)
+            spread = max(va) - min(va)
+            sd = statistics.stdev(va) if len(va) > 1 else 0.0
+            pct = f'{(mb - ma) / ma * 100:+.1f}%' if ma else 'n/a'
+            print(f'| {col} | {ma:.3f} | {mb:.3f} | {mb - ma:+.3f} | {pct} | {spread:.3f} | {sd:.3f} | '
+                  f'{"yes" if abs(mb - ma) > spread else "NO"} |')
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--pair', nargs='+', metavar='LABEL=REF',
+                        help='Labels with their git refs, interleaved in this order inside every round '
+                             '(e.g. baseline=checkpoint-4-baseline optimized=checkpoint-4-optimized).')
     parser.add_argument('--label', nargs='+', default=['baseline'],
-                        help='One or more labels; several labels are interleaved within each round.')
+                        help='Shorthand for --pair LABEL=checkpoint-4-LABEL ... (ignored if --pair is given).')
     parser.add_argument('--ref', action='append', default=[],
-                        help='label=gitref override (default ref for label X is tag checkpoint-4-X).')
+                        help='label=gitref override for --label (default ref is tag checkpoint-4-LABEL).')
+    parser.add_argument('--session', default='default',
+                        help='Session name stored in benchmark.csv; rerunning the same session resumes it.')
     parser.add_argument('--runs', type=int, default=5, help='Measured runs per label (>= 3).')
     parser.add_argument('--warmup', type=int, default=1, help='Warm-up rounds per label, recorded but excluded.')
     parser.add_argument('--pause', type=float, default=5.0, help='Seconds between runs (same for all labels).')
@@ -231,28 +297,54 @@ def main():
     parser.add_argument('--csv', type=Path, default=ROOT / 'benchmark.csv')
     parser.add_argument('--summary', action='store_true', help='Only print the summary of --csv.')
     args = parser.parse_args()
+    ensure_header(args.csv)
     if args.summary:
-        summarize(args.csv)
+        summarize(args.csv, None if args.session == 'default' else args.session)
         return
-    refs = dict(item.split('=', 1) for item in args.ref)
+    if args.pair:
+        pairs = [item.split('=', 1) for item in args.pair]
+        if any(len(p) != 2 or not p[0] or not p[1] for p in pairs):
+            raise SystemExit('--pair expects LABEL=REF items')
+    else:
+        refs = dict(item.split('=', 1) for item in args.ref)
+        pairs = [(label, refs.get(label, f'checkpoint-4-{label}')) for label in args.label]
+    if len({label for label, _ in pairs}) != len(pairs):
+        raise SystemExit('Duplicate label')
     EVENT_DIR.mkdir(parents=True, exist_ok=True)
     arms = []
-    for label in args.label:
-        ref = refs.get(label, f'checkpoint-4-{label}')
+    for label, ref in pairs:
         wt, commit = prepare_worktree(ref)
         arms.append((label, ref, wt, commit))
         print(f'{label}: ref={ref} commit={commit} worktree={wt.relative_to(ROOT).as_posix()}')
-    counters = {label: 0 for label in args.label}
+    # Resume: what this session already has in benchmark.csv (per label).
+    done = {label: {'warmup': 0, 'runs': set()} for label, _ in pairs}
+    for row in read_rows(args.csv):
+        if row['session'] != args.session or row['label'] not in done:
+            continue
+        arm = next(a for a in arms if a[0] == row['label'])
+        if row['git_commit'] != arm[3]:
+            raise SystemExit(f'Session {args.session!r} already has {row["label"]} rows from commit '
+                             f'{row["git_commit"][:8]}, now {arm[3][:8]}; use a new --session')
+        if row['warm_or_cold'] == 'warmup':
+            done[row['label']]['warmup'] += 1
+        else:
+            done[row['label']]['runs'].add(int(row['run_no']))
+    for label, state in done.items():
+        if state['warmup'] or state['runs']:
+            print(f'resume [{args.session}] {label}: warm-up done={state["warmup"]}, '
+                  f'runs done={sorted(state["runs"])}')
     for round_no in range(1, args.warmup + args.runs + 1):
         warm = 'warmup' if round_no <= args.warmup else 'warm'
+        run_no = 0 if warm == 'warmup' else round_no - args.warmup
         for label, ref, wt, commit in arms:
-            run_no = 0
-            if warm == 'warm':
-                counters[label] += 1
-                run_no = counters[label]
-            run_once(label, ref, wt, commit, round_no, run_no, warm, args.evidence_root, args.csv)
+            state = done[label]
+            if (warm == 'warmup' and state['warmup'] >= round_no) or (warm == 'warm' and run_no in state['runs']):
+                print(f'skip [{args.session}] {label} round={round_no} run_no={run_no} (already in csv)')
+                continue
+            run_once(label, ref, wt, commit, round_no, run_no, warm, args.evidence_root, args.csv,
+                     args.session)
             time.sleep(args.pause)
-    summarize(args.csv)
+    summarize(args.csv, args.session)
 
 
 if __name__ == '__main__':
