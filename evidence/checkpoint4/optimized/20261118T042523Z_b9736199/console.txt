@@ -1,0 +1,31 @@
+2026-11-18 11:25:23,982 [LINEAGE] raw_run_id=20261112T175026Z_822219b0 manifest=metadata/manifest.json input=data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv
+2026-11-18 11:25:23,983 [TIMING] phase=imports sec=0.311
+2026-11-18 11:25:24,522 [TIMING] phase=hash sec=0.545
+2026-11-18 11:25:34,023 [TIMING] phase=spark_startup sec=9.496
+2026-11-18 11:25:34,305 [TIMING] phase=read_schema sec=0.286
+2026-11-18 11:25:46,861 [TIMING] phase=profile_null sec=12.562
+2026-11-18 11:26:03,742 [TIMING] phase=profile_dup sec=16.873
+2026-11-18 11:26:03,742 [INPUT] rows=6362620 bytes=493534783
+2026-11-18 11:26:43,951 [CLEAN] valid=6362620 rejected=0
+2026-11-18 11:26:43,951 [TIMING] phase=clean sec=40.214
+2026-11-18 11:27:22,073 [JOIN] before=6362620 after=6362620 unmatched=0
+2026-11-18 11:27:22,073 [TIMING] phase=join sec=38.131
+2026-11-18 11:27:37,907 [TIMING] phase=output sec=15.818
+2026-11-18 11:27:37,913 [OUTPUT] groups=152 path=output/snapshot_16910f90577b/20261118T042523Z_b9736199/daily_type_summary
+2026-11-18 11:27:37,913 [BASELINE] elapsed_sec=134.236
+2026-11-18 11:27:37,913 SUCCESS: output/snapshot_16910f90577b/20261118T042523Z_b9736199
+[EVIDENCE] copied 13 files to evidence/checkpoint4/optimized/20261118T042523Z_b9736199: _SUCCESS.json, config_used.json, metrics.json, quality_progress.json, run.log, explain_join.txt, explain_profile_dup.txt, explain_summary.txt, schema_input.txt, schema_output.txt, sample_output.json, sample_transformed.json, unmatched_sample.json
+2026-11-18 11:27:38,427 Closing down clientserver connection
+SUCCESS: The process with PID 3004 (child process of PID 15636) has been terminated.
+SUCCESS: The process with PID 15636 (child process of PID 3564) has been terminated.
+SUCCESS: The process with PID 3564 (child process of PID 2856) has been terminated.
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/11/18 11:25:55 WARN RowBasedKeyValueBatch: Calling spill() on RowBasedKeyValueBatch. Will not spill but return 0.
+26/11/18 11:25:55 WARN RowBasedKeyValueBatch: Calling spill() on RowBasedKeyValueBatch. Will not spill but return 0.
+26/11/18 11:25:55 WARN RowBasedKeyValueBatch: Calling spill() on RowBasedKeyValueBatch. Will not spill but return 0.
+26/11/18 11:25:55 WARN RowBasedKeyValueBatch: Calling spill() on RowBasedKeyValueBatch. Will not spill but return 0.
+26/11/18 11:25:55 WARN RowBasedKeyValueBatch: Calling spill() on RowBasedKeyValueBatch. Will not spill but return 0.
+26/11/18 11:25:55 WARN RowBasedKeyValueBatch: Calling spill() on RowBasedKeyValueBatch. Will not spill but return 0.
+26/11/18 11:25:55 WARN RowBasedKeyValueBatch: Calling spill() on RowBasedKeyValueBatch. Will not spill but return 0.
+26/11/18 11:25:55 WARN RowBasedKeyValueBatch: Calling spill() on RowBasedKeyValueBatch. Will not spill but return 0.

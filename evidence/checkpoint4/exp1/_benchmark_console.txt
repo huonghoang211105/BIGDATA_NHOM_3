@@ -1,0 +1,104 @@
+﻿baseline: ref=checkpoint-4-baseline commit=ae845921d9ca62d0b68a3b4d847a088344c764b9 worktree=.bench/ae845921d9ca
+optimized: ref=checkpoint-4-optimized commit=d2b15a5a8f73aee3b26eabf5aef2068ddb2c41fb worktree=.bench/d2b15a5a8f73
+
+=== [exp1] baseline round=1 run_no=0 (warmup) ref=checkpoint-4-baseline commit=ae845921 free_ram_mb=1057 ===
+    runtime_sec=242.08 hash=0.973 startup=38.467 profile_null=16.123 profile_dup=55.208 clean=51.228 join=55.527 output=18.941 checks=PASS -> evidence/checkpoint4/baseline/20261118T040532Z_586e9368
+
+=== [exp1] optimized round=1 run_no=0 (warmup) ref=checkpoint-4-optimized commit=d2b15a5a free_ram_mb=1338 ===
+    runtime_sec=181.561 hash=0.63 startup=11.561 profile_null=16.138 profile_dup=26.674 clean=63.677 join=45.805 output=15.349 checks=PASS -> evidence/checkpoint4/optimized/20261118T040940Z_98eff953
+
+=== [exp1] baseline round=2 run_no=1 (warm) ref=checkpoint-4-baseline commit=ae845921 free_ram_mb=2274 ===
+    runtime_sec=156.697 hash=0.551 startup=10.109 profile_null=13.235 profile_dup=38.364 clean=41.374 join=36.897 output=15.305 checks=PASS -> evidence/checkpoint4/baseline/20261118T041248Z_c0be2d08
+
+=== [exp1] optimized round=2 run_no=1 (warm) ref=checkpoint-4-optimized commit=d2b15a5a free_ram_mb=2375 ===
+    runtime_sec=136.78 hash=0.534 startup=9.903 profile_null=13.386 profile_dup=17.794 clean=43.607 join=36.014 output=14.806 checks=PASS -> evidence/checkpoint4/optimized/20261118T041531Z_c704e241
+
+=== [exp1] baseline round=3 run_no=2 (warm) ref=checkpoint-4-baseline commit=ae845921 free_ram_mb=2482 ===
+    runtime_sec=151.506 hash=0.537 startup=8.842 profile_null=12.645 profile_dup=37.857 clean=41.265 join=35.043 output=14.714 checks=PASS -> evidence/checkpoint4/baseline/20261118T041753Z_a30dd096
+
+=== [exp1] optimized round=3 run_no=2 (warm) ref=checkpoint-4-optimized commit=d2b15a5a free_ram_mb=2689 ===
+    runtime_sec=130.144 hash=0.532 startup=9.639 profile_null=13.488 profile_dup=16.666 clean=39.455 join=34.963 output=14.628 checks=PASS -> evidence/checkpoint4/optimized/20261118T042031Z_62e87044
+
+=== [exp1] baseline round=4 run_no=3 (warm) ref=checkpoint-4-baseline commit=ae845921 free_ram_mb=3010 ===
+    runtime_sec=149.459 hash=0.561 startup=8.968 profile_null=12.57 profile_dup=36.195 clean=40.188 join=35.519 output=14.859 checks=PASS -> evidence/checkpoint4/baseline/20261118T042247Z_4036d808
+
+=== [exp1] optimized round=4 run_no=3 (warm) ref=checkpoint-4-optimized commit=d2b15a5a free_ram_mb=2853 ===
+    runtime_sec=134.236 hash=0.545 startup=9.496 profile_null=12.562 profile_dup=16.873 clean=40.214 join=38.131 output=15.818 checks=PASS -> evidence/checkpoint4/optimized/20261118T042523Z_b9736199
+
+=== [exp1] baseline round=5 run_no=4 (warm) ref=checkpoint-4-baseline commit=ae845921 free_ram_mb=2456 ===
+    runtime_sec=162.64 hash=0.538 startup=8.944 profile_null=12.831 profile_dup=40.126 clean=45.736 join=38.251 output=15.569 checks=PASS -> evidence/checkpoint4/baseline/20261118T042743Z_6722e467
+
+=== [exp1] optimized round=5 run_no=4 (warm) ref=checkpoint-4-optimized commit=d2b15a5a free_ram_mb=2275 ===
+    runtime_sec=138.536 hash=0.575 startup=10.075 profile_null=13.26 profile_dup=17.366 clean=43.598 join=37.018 output=15.871 checks=PASS -> evidence/checkpoint4/optimized/20261118T043032Z_f3b6f273
+
+=== [exp1] baseline round=6 run_no=5 (warm) ref=checkpoint-4-baseline commit=ae845921 free_ram_mb=2264 ===
+    runtime_sec=154.751 hash=0.566 startup=9.972 profile_null=13.027 profile_dup=38.906 clean=40.915 join=35.428 output=15.257 checks=PASS -> evidence/checkpoint4/baseline/20261118T043257Z_126578d1
+
+=== [exp1] optimized round=6 run_no=5 (warm) ref=checkpoint-4-optimized commit=d2b15a5a free_ram_mb=2315 ===
+    runtime_sec=135.565 hash=0.532 startup=9.785 profile_null=13.327 profile_dup=17.883 clean=40.159 join=37.149 output=15.989 checks=PASS -> evidence/checkpoint4/optimized/20261118T043538Z_5f0e4b92
+
+## [exp1] baseline @ ae845921  (n=5, checks: ['PASS'])
+| metric | median | min | max | max-min | stdev | runs |
+|---|---:|---:|---:|---:|---:|---|
+| runtime_sec | 154.751 | 149.459 | 162.640 | 13.181 | 5.104 | 156.697, 151.506, 149.459, 162.64, 154.751 |
+| sec_hash | 0.551 | 0.537 | 0.566 | 0.029 | 0.013 | 0.551, 0.537, 0.561, 0.538, 0.566 |
+| sec_spark_startup | 8.968 | 8.842 | 10.109 | 1.267 | 0.619 | 10.109, 8.842, 8.968, 8.944, 9.972 |
+| sec_read_schema | 0.299 | 0.262 | 0.404 | 0.142 | 0.054 | 0.404, 0.299, 0.262, 0.326, 0.292 |
+| sec_profile_null | 12.831 | 12.570 | 13.235 | 0.665 | 0.274 | 13.235, 12.645, 12.57, 12.831, 13.027 |
+| sec_profile_dup | 38.364 | 36.195 | 40.126 | 3.931 | 1.443 | 38.364, 37.857, 36.195, 40.126, 38.906 |
+| sec_profile | 51.599 | 48.765 | 52.957 | 4.192 | 1.596 | 51.599, 50.502, 48.765, 52.957, 51.933 |
+| sec_clean | 41.265 | 40.188 | 45.736 | 5.548 | 2.196 | 41.374, 41.265, 40.188, 45.736, 40.915 |
+| sec_join | 35.519 | 35.043 | 38.251 | 3.208 | 1.331 | 36.897, 35.043, 35.519, 38.251, 35.428 |
+| sec_output | 15.257 | 14.714 | 15.569 | 0.855 | 0.348 | 15.305, 14.714, 14.859, 15.569, 15.257 |
+| max_task_sec | 28.502 | 27.367 | 29.263 | 1.896 | 0.746 | 28.502, 28.427, 27.367, 29.1, 29.263 |
+| shuffle_read_mb | 413.849 | 413.849 | 413.849 | 0.000 | 0.000 | 413.849, 413.849, 413.849, 413.849, 413.849 |
+| shuffle_write_mb | 413.849 | 413.849 | 413.849 | 0.000 | 0.000 | 413.849, 413.849, 413.849, 413.849, 413.849 |
+| spill_mb | 815.204 | 815.204 | 815.204 | 0.000 | 0.000 | 815.204, 815.204, 815.204, 815.204, 815.204 |
+| spill_memory_mb | 3512.753 | 3512.752 | 3512.753 | 0.001 | 0.000 | 3512.75, 3512.75, 3512.75, 3512.75, 3512.75 |
+| dup_shuffle_write_mb | 413.735 | 413.735 | 413.735 | 0.000 | 0.000 | 413.735, 413.735, 413.735, 413.735, 413.735 |
+| dup_spill_disk_mb | 815.204 | 815.204 | 815.204 | 0.000 | 0.000 | 815.204, 815.204, 815.204, 815.204, 815.204 |
+| dup_task_max_sec | 28.502 | 27.367 | 29.263 | 1.896 | 0.746 | 28.502, 28.427, 27.367, 29.1, 29.263 |
+
+## [exp1] optimized @ d2b15a5a  (n=5, checks: ['PASS'])
+| metric | median | min | max | max-min | stdev | runs |
+|---|---:|---:|---:|---:|---:|---|
+| runtime_sec | 135.565 | 130.144 | 138.536 | 8.392 | 3.168 | 136.78, 130.144, 134.236, 138.536, 135.565 |
+| sec_hash | 0.534 | 0.532 | 0.575 | 0.043 | 0.018 | 0.534, 0.532, 0.545, 0.575, 0.532 |
+| sec_spark_startup | 9.785 | 9.496 | 10.075 | 0.579 | 0.225 | 9.903, 9.639, 9.496, 10.075, 9.785 |
+| sec_read_schema | 0.343 | 0.286 | 0.375 | 0.089 | 0.032 | 0.335, 0.348, 0.286, 0.375, 0.343 |
+| sec_profile_null | 13.327 | 12.562 | 13.488 | 0.926 | 0.369 | 13.386, 13.488, 12.562, 13.26, 13.327 |
+| sec_profile_dup | 17.366 | 16.666 | 17.883 | 1.217 | 0.541 | 17.794, 16.666, 16.873, 17.366, 17.883 |
+| sec_profile | 30.626 | 29.435 | 31.210 | 1.775 | 0.747 | 31.18, 30.154, 29.435, 30.626, 31.21 |
+| sec_clean | 40.214 | 39.455 | 43.607 | 4.152 | 2.027 | 43.607, 39.455, 40.214, 43.598, 40.159 |
+| sec_join | 37.018 | 34.963 | 38.131 | 3.168 | 1.207 | 36.014, 34.963, 38.131, 37.018, 37.149 |
+| sec_output | 15.818 | 14.628 | 15.989 | 1.361 | 0.650 | 14.806, 14.628, 15.818, 15.871, 15.989 |
+| max_task_sec | 14.609 | 13.907 | 15.285 | 1.378 | 0.567 | 14.942, 13.907, 14.127, 14.609, 15.285 |
+| shuffle_read_mb | 67.579 | 67.579 | 67.579 | 0.000 | 0.000 | 67.579, 67.579, 67.579, 67.579, 67.579 |
+| shuffle_write_mb | 67.579 | 67.579 | 67.579 | 0.000 | 0.000 | 67.579, 67.579, 67.579, 67.579, 67.579 |
+| spill_mb | 217.010 | 217.010 | 217.010 | 0.000 | 0.000 | 217.01, 217.01, 217.01, 217.01, 217.01 |
+| spill_memory_mb | 1049.996 | 1049.996 | 1049.996 | 0.000 | 0.000 | 1050, 1050, 1050, 1050, 1050 |
+| dup_shuffle_write_mb | 67.465 | 67.465 | 67.465 | 0.000 | 0.000 | 67.465, 67.465, 67.465, 67.465, 67.465 |
+| dup_spill_disk_mb | 217.010 | 217.010 | 217.010 | 0.000 | 0.000 | 217.01, 217.01, 217.01, 217.01, 217.01 |
+| dup_task_max_sec | 14.609 | 13.907 | 15.285 | 1.378 | 0.567 | 14.942, 13.907, 14.127, 14.609, 15.285 |
+
+## [exp1] before/after: baseline -> optimized (median; variance = baseline max-min / stdev)
+| metric | baseline | optimized | delta | delta % | baseline max-min | baseline stdev | |delta| > max-min? |
+|---|---:|---:|---:|---:|---:|---:|---|
+| runtime_sec | 154.751 | 135.565 | -19.186 | -12.4% | 13.181 | 5.104 | yes |
+| sec_hash | 0.551 | 0.534 | -0.017 | -3.1% | 0.029 | 0.013 | NO |
+| sec_spark_startup | 8.968 | 9.785 | +0.817 | +9.1% | 1.267 | 0.619 | NO |
+| sec_read_schema | 0.299 | 0.343 | +0.044 | +14.7% | 0.142 | 0.054 | NO |
+| sec_profile_null | 12.831 | 13.327 | +0.496 | +3.9% | 0.665 | 0.274 | NO |
+| sec_profile_dup | 38.364 | 17.366 | -20.998 | -54.7% | 3.931 | 1.443 | yes |
+| sec_profile | 51.599 | 30.626 | -20.973 | -40.6% | 4.192 | 1.596 | yes |
+| sec_clean | 41.265 | 40.214 | -1.051 | -2.5% | 5.548 | 2.196 | NO |
+| sec_join | 35.519 | 37.018 | +1.499 | +4.2% | 3.208 | 1.331 | NO |
+| sec_output | 15.257 | 15.818 | +0.561 | +3.7% | 0.855 | 0.348 | NO |
+| max_task_sec | 28.502 | 14.609 | -13.893 | -48.7% | 1.896 | 0.746 | yes |
+| shuffle_read_mb | 413.849 | 67.579 | -346.270 | -83.7% | 0.000 | 0.000 | yes |
+| shuffle_write_mb | 413.849 | 67.579 | -346.270 | -83.7% | 0.000 | 0.000 | yes |
+| spill_mb | 815.204 | 217.010 | -598.194 | -73.4% | 0.000 | 0.000 | yes |
+| spill_memory_mb | 3512.753 | 1049.996 | -2462.757 | -70.1% | 0.001 | 0.000 | yes |
+| dup_shuffle_write_mb | 413.735 | 67.465 | -346.270 | -83.7% | 0.000 | 0.000 | yes |
+| dup_spill_disk_mb | 815.204 | 217.010 | -598.194 | -73.4% | 0.000 | 0.000 | yes |
+| dup_task_max_sec | 28.502 | 14.609 | -13.893 | -48.7% | 1.896 | 0.746 | yes |

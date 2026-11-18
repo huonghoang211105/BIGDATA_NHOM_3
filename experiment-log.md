@@ -1,7 +1,9 @@
 # Experiment log — Checkpoint 4: Benchmark & tối ưu pipeline (Nhóm 3)
 
-> Trạng thái: **NHÁP — hết Phase 1** (baseline + bottleneck evidence + hypothesis). Mục 7–10 điền ở Phase 2.
-> Mọi con số dưới đây lấy từ `benchmark.csv` và `evidence/checkpoint4/baseline/<run_id>/`. Không có số ước lượng.
+> Trạng thái: **HOÀN TẤT**. Baseline `ae84592` (tag `checkpoint-4-baseline`) → optimized `d2b15a5` (tag
+> `checkpoint-4-optimized`). Kết quả: **KEEP**. Runtime median 154,751 → 135,565 s (−12,4 %), correctness PASS 283/283.
+> Mục 1–6 là Phase 1 (session `phase1`, ngày 17/11). Mục 7–10 là Phase 2 (session `exp1`, ngày 18/11, chạy xen kẽ).
+> Mọi con số lấy từ `benchmark.csv` và `evidence/checkpoint4/`. Không có số ước lượng, trừ chỗ ghi rõ "suy luận, chưa đo".
 
 ## 1. Workload, môi trường, control
 
@@ -160,7 +162,7 @@ Lưu ý: mỗi bản ghi shuffle vẫn lớn hơn 8 byte (UnsafeRow gồm null b
   thì ghi là không kết luận được ở cấp toàn pipeline.
 - Không đổi: số job/stage quét CSV ở clean/join/output; mọi business metric; schema output 10 cột.
 
-### Kế hoạch Phase 2 (chờ duyệt)
+### Kế hoạch Phase 2 (đã duyệt ngày 17/11, đã thực hiện như dưới đây)
 
 1. Nhánh `opt/hash-dedup-check` từ `checkpoint-4-baseline`; chỉ đổi `duplicate_frame()` / bước profile_dup.
    Không đổi config Spark.
@@ -170,7 +172,169 @@ Lưu ý: mỗi bản ghi shuffle vẫn lớn hơn 8 byte (UnsafeRow gồm null b
    (xen kẽ B/A, cả hai phía cùng 1 warm-up).
 4. Kiểm correctness: assert các mốc row count, profile, business metric, schema, và so output với `compare_runs.py`.
 
-## 7. Change — *(Phase 2)*
-## 8. Before / After — *(Phase 2)*
-## 9. Correctness — *(Phase 2)*
-## 10. Decision — *(Phase 2)*
+## 7. Change (một thay đổi duy nhất)
+
+Nhánh `opt/hash-dedup-check`, commit **`d2b15a5`** (tag `checkpoint-4-optimized`). Diff so với tag baseline chỉ ở
+`src/quality_report.py` (phần kiểm trùng) và chỗ gọi trong `src/pipeline.py`
+(`git diff checkpoint-4-baseline checkpoint-4-optimized -- src/pipeline.py src/quality_report.py`).
+**Config Spark không đổi**: driver 1g mặc định, `shuffle.partitions=200`, AQE bật.
+
+| | Code |
+|---|---|
+| **Before** | `df.groupBy(11 cột).count().filter(count > 1).agg(duplicate_groups, duplicate_extra_rows)` |
+| **After, bước 1** | `df.groupBy(xxhash64(11 cột)).count().filter(count > 1)` → collect các hash ứng viên |
+| **After, rỗng** | `duplicate_groups = duplicate_extra_rows = 0`. Kết quả chính xác vì hai dòng giống hệt nhau luôn cùng hash; bước 2 không chạy |
+| **After, khác rỗng** | broadcast các hash ứng viên → `left_semi` lọc input theo hash → groupBy đủ 11 cột trên tập con (giống hệt cách cũ). Va chạm hash chỉ thêm ứng viên và bị loại ở bước này |
+
+Tên field output giữ nguyên. `metrics.json` có thêm `duplicate_check = {hash_candidates, exact_step_ran}`. Ở cả 6 run
+optimized: `hash_candidates = 0`, `exact_step_ran = false`.
+
+**Test** `tests/test_dup_check.py`: so cách cũ và cách mới, **5/5 PASS** (`evidence/checkpoint4/optimized/_test_dup_check.txt`):
+1 cặp trùng + 1 cặp chỉ khác 1 cột + 1 dòng lặp 3 lần → (2, 3); không trùng → (0, 0); **va chạm xxhash64 thật** (hoán
+vị null giữa `isFraud`/`isFlaggedFraud`): hash ứng viên = 1, trùng thật = 0; dòng trùng có null → (1, 1); mẫu 1.000 dòng
+chèn thêm 1 dòng trùng → (1, 1).
+
+## 8. Before / After (session `exp1`, chạy xen kẽ)
+
+`python src/benchmark.py --pair baseline=checkpoint-4-baseline optimized=checkpoint-4-optimized --runs 5 --warmup 1 --session exp1`,
+chạy trong một cửa sổ PowerShell riêng ngày 18/11 (11:05–11:38). Máy vừa khởi động lại lúc 10:55, nên OS cache lạnh ở
+round warm-up. Thứ tự: B0, A0 (warm-up), B1, A1, …, B5, A5. Kết quả tổng hợp ở `evidence/checkpoint4/exp1/summary_exp1.md`.
+
+### Từng run (giây)
+
+| Round | Baseline run_id | Baseline runtime | profile_dup | Optimized run_id | Optimized runtime | profile_dup |
+|---:|---|---:|---:|---|---:|---:|
+| 1 (warm-up, bỏ) | 20261118T040532Z_586e9368 | 242,080 | 55,208 | 20261118T040940Z_98eff953 | 181,561 | 26,674 |
+| 2 | 20261118T041248Z_c0be2d08 | 156,697 | 38,364 | 20261118T041531Z_c704e241 | 136,780 | 17,794 |
+| 3 | 20261118T041753Z_a30dd096 | 151,506 | 37,857 | 20261118T042031Z_62e87044 | 130,144 | 16,666 |
+| 4 | 20261118T042247Z_4036d808 | 149,459 | 36,195 | 20261118T042523Z_b9736199 | 134,236 | 16,873 |
+| 5 | 20261118T042743Z_6722e467 | 162,640 | 40,126 | 20261118T043032Z_f3b6f273 | 138,536 | 17,366 |
+| 6 | 20261118T043257Z_126578d1 | 154,751 | 38,906 | 20261118T043538Z_5f0e4b92 | 135,565 | 17,883 |
+
+RAM trống lúc bắt đầu các run đo: 2.264–3.010 MiB (warm-up: 1.057 / 1.338 MiB). `checks = PASS` ở cả 12 run.
+
+### Bảng before/after (median của 5 run đo; nhiễu = max − min và stdev của baseline trong exp1)
+
+| Metric | Baseline | Optimized | Δ | Δ % | Nhiễu baseline (max−min / stdev) | Vượt nhiễu? |
+|---|---:|---:|---:|---:|---:|---|
+| **Runtime** (min–max) | **154,751** (149,459–162,640) | **135,565** (130,144–138,536) | **−19,186 s** | **−12,4 %** | 13,181 / 5,104 | **Có** (> max−min) |
+| sec_profile_dup | 38,364 | 17,366 | −20,998 | −54,7 % | 3,931 / 1,443 | **Có** (≈ 14,5 × stdev) |
+| sec_profile (null + dup) | 51,599 | 30,626 | −20,973 | −40,6 % | 4,192 / 1,596 | Có |
+| sec_profile_null | 12,831 | 13,327 | +0,496 | +3,9 % | 0,665 / 0,274 | Không |
+| sec_spark_startup | 8,968 | 9,785 | +0,817 | +9,1 % | 1,267 / 0,619 | Không |
+| sec_clean | 41,265 | 40,214 | −1,051 | −2,5 % | 5,548 / 2,196 | Không |
+| sec_join | 35,519 | 37,018 | +1,499 | +4,2 % | 3,208 / 1,331 | Không |
+| sec_output | 15,257 | 15,818 | +0,561 | +3,7 % | 0,855 / 0,348 | Không |
+| Max task time (cả run = stage 10) | 28,502 s | 14,609 s | −13,893 | −48,7 % | 1,896 / 0,746 | Có |
+| Shuffle write / read (cả run, MiB) | 413,849 / 413,849 | 67,579 / 67,579 | −346,270 | −83,7 % | 0 (byte cố định) | Có |
+| Spill memory / disk (cả run, MiB) | 3.512,753 / 815,204 | 1.049,996 / 217,010 | −2.462,8 / −598,2 | −70,1 % / −73,4 % | 0 | Có |
+| Số Spark job / run | 46 | 45 | −1 (bước 2 không chạy) | | | |
+| WARN `RowBasedKeyValueBatch: Calling spill()` / run | 55–62 | 8 | | | | |
+| Stage quét toàn bộ CSV / run | 12 | 12 | 0 (ngoài phạm vi experiment) | | | |
+| Output rows | 152 | 152 | 0 | | | |
+| fraud_count / total_amount | 8.213 / 1.144.392.944.759,77 | 8.213 / 1.144.392.944.759,77 | 0 | | | |
+| *Tham chiếu: baseline Phase 1 (17/11)* | *160,142 (156,453–177,613)* | | | | *21,160 / 8,475* | |
+
+### Stage profile_dup (median 5 run đo, `stage_metrics.csv`)
+
+| Stage | Metric | Baseline | Optimized |
+|---|---|---:|---:|
+| 10 (map: scan + partial agg + Exchange) | duration / task median / task max | 28,502 / 27,642 / 28,502 s | 14,609 / 14,343 / 14,609 s |
+| | shuffle write | 413,735 MiB, **6.362.620 records** | 67,465 MiB, **6.362.620 records** |
+| | spill memory / disk | 1.768,340 / 406,176 MiB | 491,998 / 104,870 MiB |
+| | peak execution memory / task | 52,205 MiB | 42,000 MiB |
+| 12 (reduce: final agg) | duration | 9,062 s | 2,191 s |
+| | shuffle read; spill memory / disk | 413,735 MiB; 1.744,412 / 409,028 MiB | 67,465 MiB; 557,998 / 112,140 MiB |
+
+### Plan trước–sau (`explain_profile_dup.txt`, `sql_final_plans.txt`)
+
+| | Baseline | Optimized |
+|---|---|---|
+| Khóa Exchange | `hashpartitioning(step, type, amount, nameOrig, oldbalanceOrg, newbalanceOrig, nameDest, oldbalanceDest, newbalanceDest, isFraud, isFlaggedFraud, 200)` | `hashpartitioning(_groupingexpression#…L, 200)`, với `Project xxhash64(11 cột, 42) AS _groupingexpression` (bigint) |
+| AQE ShuffleQueryStage | sizeInBytes = 1.358,7 MiB, rowCount = 6,36E+6 | sizeInBytes = 145,6 MiB, rowCount = 6,36E+6 |
+| Exchange thứ hai | Có (SinglePartition cho agg cuối) | Không (chỉ collect các hash có count > 1) |
+
+### Đánh giá hypothesis
+
+- **Đúng:** Exchange chuyển sang một cột bigint. Shuffle bytes −83,7 % trong khi **số record giữ nguyên 6.362.620**,
+  khớp điều chỉnh đã nêu ở Phase 1. Task max −48,7 %. `sec_profile_dup` −54,7 %. Các chặng không đổi code (profile_null,
+  clean, join, output, startup) đều dao động trong nhiễu.
+- **Chỉ đúng một phần:** spill **chưa về 0**. Còn 1.050,0 MiB memory / 217,0 MiB disk (giảm 70–73 %). Peak execution
+  memory ở stage map vẫn chạm khoảng 42 MiB/task. *Suy luận (chưa đo riêng):* partial aggregate vẫn phải giữ khoảng 795 nghìn
+  khóa hash khác nhau mỗi task (6,36 triệu / 8), vượt vùng execution memory của heap 1g nên phải spill. Bản ghi nhỏ hơn
+  thì spill ít hơn nhưng không hết.
+
+## 9. Correctness
+
+`python src/check_correctness.py --session exp1` → **OVERALL PASS 283/283**
+(`evidence/checkpoint4/exp1/correctness.json`, `correctness_console.txt`). Script kiểm tất cả 12 run exp1 (kể cả warm-up),
+so với run tham chiếu baseline #1 (`20261118T041248Z_c0be2d08`):
+
+| Nhóm kiểm | Kết quả |
+|---|---|
+| Session: mỗi bên 5 run đo + 1 warm-up, mỗi bên một commit (`ae84592` / `d2b15a5`) | PASS |
+| Row count: input 6.362.620 → valid 6.362.620 → after join 6.362.620; unmatched 0; invalid 0 | PASS × 12 |
+| Profile: null 0 (11 cột), duplicate_groups 0, duplicate_extra_rows 0, amount = 0 là 16 dòng | PASS × 12 |
+| Business: fraud 8.213; tổng tiền 1.144.392.944.759,77; 6.362.620 giao dịch; 152 nhóm | PASS × 12 |
+| Input SHA-256 `16910f90…` và dim SHA-256 `9f570105…` giống run tham chiếu | PASS × 12 |
+| Output Parquet: 10 cột, schema = tham chiếu, `schema_output.txt` giống hệt, khóa (day_index, type) duy nhất | PASS × 12 |
+| Checksum: sort theo (day_index, type), so **từng ô**: 0 khác biệt; SHA-256 các dòng đã sort `dfe6a12120f6e554…` giống nhau ở 12/12 run; exceptAll 2 chiều 0/0 | PASS × 12 |
+| `tests/test_dup_check.py` | PASS (exit 0) |
+
+Ngoài ra `compare_runs.py` baseline #1 vs optimized #1 → **RERUN PASS** (`evidence/checkpoint4/exp1/compare_runs_b1_vs_a1.txt`).
+
+## 10. Decision: **KEEP**
+
+**Lý do:**
+1. Δ runtime median −19,186 s (−12,4 %; nhanh 1,14×) **lớn hơn** biên độ max − min của baseline trong cùng session
+   (13,181 s), và gấp khoảng 3,8 lần stdev baseline (5,104 s). Hai khoảng min–max không chồng nhau: run optimized chậm nhất
+   (138,536 s) vẫn nhanh hơn run baseline nhanh nhất (149,459 s).
+2. Mức giảm tập trung đúng ở chặng bị nhắm tới: `sec_profile_dup` −20,998 s, tương đương khoảng 14,5 lần stdev của chặng
+   này. Toàn bộ Δ runtime giải thích được bằng Δ profile_dup, các chặng khác không đổi trong nhiễu.
+3. Cơ chế được xác nhận bằng metric cố định theo byte (không phụ thuộc nhiễu thời gian): shuffle −83,7 %, spill −70–73 %,
+   plan có Exchange trên cột bigint.
+4. Correctness PASS 283/283, output giống hệt từng ô; bước kiểm trùng vẫn chính xác (đã test cả ca va chạm hash và ca chèn
+   dòng trùng).
+
+**So với Phase 1:** Δ −19,186 s **nhỏ hơn** biên độ của Phase 1 (21,160 s). Phase 1 đo ngày khác, lúc máy có ít RAM trống hơn
+(1,1–2,3 GiB), và median baseline hôm đó là 160,142 s so với 154,751 s ở exp1. Vì vậy kết luận before/after **chỉ dựa trên
+exp1**, nơi hai phía chạy xen kẽ trong cùng điều kiện. So chéo giữa hai ngày không đủ để kết luận về runtime tổng, nhưng
+Δ ở chặng profile_dup (−21 s so với stdev khoảng 0,5–1,4 s) vẫn rõ ở cả hai ngày.
+
+### Hạn chế
+
+- 1 máy Windows 11, `local[*]` (driver kiêm executor), driver heap mặc định 1g. Kết quả không đại diện cho cluster.
+- 1 file input 471 MiB. Không đo với kích thước khác.
+- OS cache: máy khởi động lại trước exp1. Warm-up đầu chậm (baseline 242,1 s, optimized 181,6 s) và đã bị loại cho cả hai
+  phía; các run đo coi là warm cache.
+- RAM trống lúc đo 2,2–2,9 GiB, IDE (Antigravity) mở trong suốt lúc đo, như nhau cho cả hai phía nhờ chạy xen kẽ.
+- Dim CRLF: worktree benchmark check-out `dim_transaction_type.csv` dạng CRLF (SHA `9f570105…`), khác bản LF của CP3
+  (`e3061072…`). Hai phía cùng byte, và đã chứng minh output không đổi (`evidence/checkpoint4/optimized/_smoke/dim_crlf_data_check.txt`).
+- Phase 1 và exp1 đo ở hai ngày khác nhau, nên bảng before/after chỉ lấy từ exp1.
+- Mỗi phía chỉ có 5 run, nên median và biên độ còn thô; chưa làm kiểm định thống kê.
+
+### Câu hỏi giảng viên
+
+**"Nếu data tăng 10× thì giải pháp còn hợp lý không?"** *(suy luận, chưa đo)*
+Vẫn hợp lý, và lợi ích có thể lớn hơn. Với khoảng 63,6 triệu dòng, cách cũ phải shuffle cả 11 cột cho mọi dòng (theo tỉ lệ
+hiện tại là vài GiB) và spill nhiều hơn với heap 1g. Cách mới chỉ shuffle một bigint cộng count mỗi dòng. Xác suất có va chạm
+xxhash64 vẫn rất nhỏ (cỡ n²/2⁶⁵ ≈ 10⁻⁴), và nếu có thì bước 2 vẫn cho kết quả đúng. Hai giới hạn cần biết:
+(1) số record shuffle vẫn tăng tuyến tính theo số dòng, spill vẫn còn nếu không tăng bộ nhớ;
+(2) nếu dữ liệu có **nhiều** dòng trùng thật, danh sách hash ứng viên được collect về driver có thể lớn. Khi đó nên giữ
+ứng viên ở dạng DataFrame (join, không collect). Ngoài ra, chi phí parse CSV (12 stage quét mỗi run) cũng tăng tuyến tính
+và sẽ thành phần trội. Đó là lý do cho Buổi 11.
+
+**"Nếu speedup < variance thì kết luận được gì?"**
+Không kết luận được rằng pipeline nhanh hơn. Δ khi đó không phân biệt được với dao động giữa các run, nên chỉ được ghi là
+"không phát hiện khác biệt ở cấp runtime". Vẫn có thể báo cáo các metric cố định theo byte (shuffle, spill, số record, plan)
+như bằng chứng về cơ chế, nhưng không được quy chúng thành speedup. Muốn kết luận thì phải tăng số run, giảm nhiễu (đóng ứng
+dụng, cố định nguồn điện) hoặc đo ở cấp chặng có stdev nhỏ. Ở exp1, Δ runtime đã vượt max − min của baseline trong cùng
+session nên kết luận được. Nếu chỉ so với biên độ của Phase 1 (21,16 s) thì riêng runtime tổng sẽ là chưa đủ.
+
+### Next action
+
+- **Buổi 11:** chuyển input CSV → Parquet (Data Lake). Hiện mỗi run vẫn có 12 stage parse CSV (tổng input khoảng 11 lần kích
+  thước file); clean + join + output chiếm khoảng 93 s ở bản tối ưu. Đánh giá bằng đúng quy trình này: tag baseline/after,
+  worktree, chạy xen kẽ, ≥ 5 run, correctness gate.
+- **Experiment riêng (không gộp):** tăng driver memory (1g → lớn hơn), để xem spill còn lại ở profile_dup có hết không.
+- Ứng viên B (persist sau khi đọc) **không** làm trong đồ án này, theo quyết định chỉ làm một experiment.

@@ -1,0 +1,7 @@
+phase,jobs,job_wall_sum_sec,stages,tasks,fact_scans,input_mb,shuffle_read_mb,shuffle_write_mb,spill_memory_mb,spill_disk_mb,executor_run_sum_sec,task_max_sec
+startup,3,2.603,3,11,0,0.0,0.0,0.0,0.0,0.0,4.92,1.889
+profile_null,3,12.323,3,10,1,471.396,0.075,0.075,0.0,0.0,94.186,12.021
+profile_dup,3,37.81,3,18,1,471.396,413.735,413.735,3512.752,815.204,291.076,28.502
+clean,9,39.936,9,44,5,2356.98,0.0,0.0,0.0,0.0,309.59,10.403
+join,17,35.479,17,36,4,1414.189,0.0,0.0,0.0,0.0,198.9,10.531
+output,11,13.87,11,18,1,471.439,0.039,0.039,0.0,0.0,94.508,11.976

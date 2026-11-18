@@ -1,0 +1,2097 @@
+{
+  "session": "exp1",
+  "reference_run": "20261118T041248Z_c0be2d08",
+  "reference_commit": "ae845921d9ca62d0b68a3b4d847a088344c764b9",
+  "commits": {
+    "baseline": [
+      "ae845921d9ca62d0b68a3b4d847a088344c764b9"
+    ],
+    "optimized": [
+      "d2b15a5a8f73aee3b26eabf5aef2068ddb2c41fb"
+    ]
+  },
+  "runs": [
+    {
+      "label": "baseline",
+      "run_no": "0",
+      "warm_or_cold": "warmup",
+      "run_id": "20261118T040532Z_586e9368",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "optimized",
+      "run_no": "0",
+      "warm_or_cold": "warmup",
+      "run_id": "20261118T040940Z_98eff953",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "baseline",
+      "run_no": "1",
+      "warm_or_cold": "warm",
+      "run_id": "20261118T041248Z_c0be2d08",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "optimized",
+      "run_no": "1",
+      "warm_or_cold": "warm",
+      "run_id": "20261118T041531Z_c704e241",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "baseline",
+      "run_no": "2",
+      "warm_or_cold": "warm",
+      "run_id": "20261118T041753Z_a30dd096",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "optimized",
+      "run_no": "2",
+      "warm_or_cold": "warm",
+      "run_id": "20261118T042031Z_62e87044",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "baseline",
+      "run_no": "3",
+      "warm_or_cold": "warm",
+      "run_id": "20261118T042247Z_4036d808",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "optimized",
+      "run_no": "3",
+      "warm_or_cold": "warm",
+      "run_id": "20261118T042523Z_b9736199",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "baseline",
+      "run_no": "4",
+      "warm_or_cold": "warm",
+      "run_id": "20261118T042743Z_6722e467",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "optimized",
+      "run_no": "4",
+      "warm_or_cold": "warm",
+      "run_id": "20261118T043032Z_f3b6f273",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "baseline",
+      "run_no": "5",
+      "warm_or_cold": "warm",
+      "run_id": "20261118T043257Z_126578d1",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    },
+    {
+      "label": "optimized",
+      "run_no": "5",
+      "warm_or_cold": "warm",
+      "run_id": "20261118T043538Z_5f0e4b92",
+      "output_sha256_sorted": "dfe6a12120f6e554c3975e47d3571e0744d4f5d1dc3f888f05219d02c7dd96d6"
+    }
+  ],
+  "tests_dup_check": {
+    "exit_code": 0,
+    "lines": [
+      "[PASS] mixed: 1 pair + 1 near-pair + 1 triple: old={'duplicate_groups': 2, 'duplicate_extra_rows': 3} new={'duplicate_groups': 2, 'duplicate_extra_rows': 3} expected=(2, 3) hash_candidates=2 exact_step_ran=True",
+      "[PASS] no duplicates: old={'duplicate_groups': 0, 'duplicate_extra_rows': 0} new={'duplicate_groups': 0, 'duplicate_extra_rows': 0} expected=(0, 0) hash_candidates=0 exact_step_ran=False",
+      "[PASS] hash collision, no real duplicate: old={'duplicate_groups': 0, 'duplicate_extra_rows': 0} new={'duplicate_groups': 0, 'duplicate_extra_rows': 0} expected=(0, 0) hash_candidates=1 exact_step_ran=True",
+      "[PASS] duplicate rows with nulls: old={'duplicate_groups': 1, 'duplicate_extra_rows': 1} new={'duplicate_groups': 1, 'duplicate_extra_rows': 1} expected=(1, 1) hash_candidates=1 exact_step_ran=True",
+      "[PASS] sample 1000, as is: old={'duplicate_groups': 0, 'duplicate_extra_rows': 0} new={'duplicate_groups': 0, 'duplicate_extra_rows': 0} expected=(0, 0) hash_candidates=0 exact_step_ran=False",
+      "[PASS] sample 1000 + 1 injected duplicate: old={'duplicate_groups': 1, 'duplicate_extra_rows': 1} new={'duplicate_groups': 1, 'duplicate_extra_rows': 1} expected=(1, 1) hash_candidates=1 exact_step_ran=True",
+      "RESULT: PASS (5/5 tests passed)"
+    ]
+  },
+  "checks_total": 283,
+  "checks_failed": 0,
+  "overall": "PASS",
+  "checks": [
+    {
+      "scope": "session/baseline",
+      "check": "measured runs >= 5",
+      "expected": ">=5",
+      "actual": "5",
+      "status": "PASS"
+    },
+    {
+      "scope": "session/baseline",
+      "check": "warm-up runs",
+      "expected": "1",
+      "actual": "1",
+      "status": "PASS"
+    },
+    {
+      "scope": "session/baseline",
+      "check": "single commit",
+      "expected": "1",
+      "actual": "1",
+      "status": "PASS"
+    },
+    {
+      "scope": "session/optimized",
+      "check": "measured runs >= 5",
+      "expected": ">=5",
+      "actual": "5",
+      "status": "PASS"
+    },
+    {
+      "scope": "session/optimized",
+      "check": "warm-up runs",
+      "expected": "1",
+      "actual": "1",
+      "status": "PASS"
+    },
+    {
+      "scope": "session/optimized",
+      "check": "single commit",
+      "expected": "1",
+      "actual": "1",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "status",
+      "expected": "SUCCESS",
+      "actual": "SUCCESS",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "rows input",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "rows valid",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "rows after join",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "unmatched",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "invalid",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "null (sum of 11 columns)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "duplicate_groups",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "duplicate_extra_rows",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "amount = 0 rows",
+      "expected": "16",
+      "actual": "16",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "fraud (output)",
+      "expected": "8213",
+      "actual": "8213",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "total amount (output)",
+      "expected": "1144392944759.77",
+      "actual": "1144392944759.77",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "transactions (output)",
+      "expected": "6362620",
+      "actual": "6362620",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "groups (output)",
+      "expected": "152",
+      "actual": "152",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "input sha256 = reference",
+      "expected": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "actual": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "dimension sha256 = reference",
+      "expected": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "actual": "9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#0 586e9368",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#0 98eff953",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#1 c0be2d08",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#1 c704e241",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#2 a30dd096",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#2 62e87044",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#3 4036d808",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#3 b9736199",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#4 6722e467",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#4 f3b6f273",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "baseline#5 126578d1",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "output columns",
+      "expected": "10",
+      "actual": "10",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "schema = reference",
+      "expected": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "actual": "struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "schema_output.txt = reference",
+      "expected": "same",
+      "actual": "same",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "key (day_index,type) unique",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "values = reference (sorted, cell by cell)",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "sha256(sorted rows) = reference",
+      "expected": "dfe6a12120f6e554",
+      "actual": "dfe6a12120f6e554",
+      "status": "PASS"
+    },
+    {
+      "scope": "optimized#5 5f0e4b92",
+      "check": "exceptAll both ways",
+      "expected": "0/0",
+      "actual": "0/0",
+      "status": "PASS"
+    },
+    {
+      "scope": "tests/test_dup_check.py",
+      "check": "exit code",
+      "expected": "0",
+      "actual": "0",
+      "status": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,284 @@
+﻿[PASS] session/baseline                   measured runs >= 5                     expected=>=5 actual=5
+[PASS] session/baseline                   warm-up runs                           expected=1 actual=1
+[PASS] session/baseline                   single commit                          expected=1 actual=1
+[PASS] session/optimized                  measured runs >= 5                     expected=>=5 actual=5
+[PASS] session/optimized                  warm-up runs                           expected=1 actual=1
+[PASS] session/optimized                  single commit                          expected=1 actual=1
+[PASS] baseline#0 586e9368                status                                 expected=SUCCESS actual=SUCCESS
+[PASS] baseline#0 586e9368                rows input                             expected=6362620 actual=6362620
+[PASS] baseline#0 586e9368                rows valid                             expected=6362620 actual=6362620
+[PASS] baseline#0 586e9368                rows after join                        expected=6362620 actual=6362620
+[PASS] baseline#0 586e9368                unmatched                              expected=0 actual=0
+[PASS] baseline#0 586e9368                invalid                                expected=0 actual=0
+[PASS] baseline#0 586e9368                null (sum of 11 columns)               expected=0 actual=0
+[PASS] baseline#0 586e9368                duplicate_groups                       expected=0 actual=0
+[PASS] baseline#0 586e9368                duplicate_extra_rows                   expected=0 actual=0
+[PASS] baseline#0 586e9368                amount = 0 rows                        expected=16 actual=16
+[PASS] baseline#0 586e9368                fraud (output)                         expected=8213 actual=8213
+[PASS] baseline#0 586e9368                total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] baseline#0 586e9368                transactions (output)                  expected=6362620 actual=6362620
+[PASS] baseline#0 586e9368                groups (output)                        expected=152 actual=152
+[PASS] baseline#0 586e9368                input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] baseline#0 586e9368                dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] optimized#0 98eff953               status                                 expected=SUCCESS actual=SUCCESS
+[PASS] optimized#0 98eff953               rows input                             expected=6362620 actual=6362620
+[PASS] optimized#0 98eff953               rows valid                             expected=6362620 actual=6362620
+[PASS] optimized#0 98eff953               rows after join                        expected=6362620 actual=6362620
+[PASS] optimized#0 98eff953               unmatched                              expected=0 actual=0
+[PASS] optimized#0 98eff953               invalid                                expected=0 actual=0
+[PASS] optimized#0 98eff953               null (sum of 11 columns)               expected=0 actual=0
+[PASS] optimized#0 98eff953               duplicate_groups                       expected=0 actual=0
+[PASS] optimized#0 98eff953               duplicate_extra_rows                   expected=0 actual=0
+[PASS] optimized#0 98eff953               amount = 0 rows                        expected=16 actual=16
+[PASS] optimized#0 98eff953               fraud (output)                         expected=8213 actual=8213
+[PASS] optimized#0 98eff953               total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] optimized#0 98eff953               transactions (output)                  expected=6362620 actual=6362620
+[PASS] optimized#0 98eff953               groups (output)                        expected=152 actual=152
+[PASS] optimized#0 98eff953               input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] optimized#0 98eff953               dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] baseline#1 c0be2d08                status                                 expected=SUCCESS actual=SUCCESS
+[PASS] baseline#1 c0be2d08                rows input                             expected=6362620 actual=6362620
+[PASS] baseline#1 c0be2d08                rows valid                             expected=6362620 actual=6362620
+[PASS] baseline#1 c0be2d08                rows after join                        expected=6362620 actual=6362620
+[PASS] baseline#1 c0be2d08                unmatched                              expected=0 actual=0
+[PASS] baseline#1 c0be2d08                invalid                                expected=0 actual=0
+[PASS] baseline#1 c0be2d08                null (sum of 11 columns)               expected=0 actual=0
+[PASS] baseline#1 c0be2d08                duplicate_groups                       expected=0 actual=0
+[PASS] baseline#1 c0be2d08                duplicate_extra_rows                   expected=0 actual=0
+[PASS] baseline#1 c0be2d08                amount = 0 rows                        expected=16 actual=16
+[PASS] baseline#1 c0be2d08                fraud (output)                         expected=8213 actual=8213
+[PASS] baseline#1 c0be2d08                total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] baseline#1 c0be2d08                transactions (output)                  expected=6362620 actual=6362620
+[PASS] baseline#1 c0be2d08                groups (output)                        expected=152 actual=152
+[PASS] baseline#1 c0be2d08                input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] baseline#1 c0be2d08                dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] optimized#1 c704e241               status                                 expected=SUCCESS actual=SUCCESS
+[PASS] optimized#1 c704e241               rows input                             expected=6362620 actual=6362620
+[PASS] optimized#1 c704e241               rows valid                             expected=6362620 actual=6362620
+[PASS] optimized#1 c704e241               rows after join                        expected=6362620 actual=6362620
+[PASS] optimized#1 c704e241               unmatched                              expected=0 actual=0
+[PASS] optimized#1 c704e241               invalid                                expected=0 actual=0
+[PASS] optimized#1 c704e241               null (sum of 11 columns)               expected=0 actual=0
+[PASS] optimized#1 c704e241               duplicate_groups                       expected=0 actual=0
+[PASS] optimized#1 c704e241               duplicate_extra_rows                   expected=0 actual=0
+[PASS] optimized#1 c704e241               amount = 0 rows                        expected=16 actual=16
+[PASS] optimized#1 c704e241               fraud (output)                         expected=8213 actual=8213
+[PASS] optimized#1 c704e241               total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] optimized#1 c704e241               transactions (output)                  expected=6362620 actual=6362620
+[PASS] optimized#1 c704e241               groups (output)                        expected=152 actual=152
+[PASS] optimized#1 c704e241               input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] optimized#1 c704e241               dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] baseline#2 a30dd096                status                                 expected=SUCCESS actual=SUCCESS
+[PASS] baseline#2 a30dd096                rows input                             expected=6362620 actual=6362620
+[PASS] baseline#2 a30dd096                rows valid                             expected=6362620 actual=6362620
+[PASS] baseline#2 a30dd096                rows after join                        expected=6362620 actual=6362620
+[PASS] baseline#2 a30dd096                unmatched                              expected=0 actual=0
+[PASS] baseline#2 a30dd096                invalid                                expected=0 actual=0
+[PASS] baseline#2 a30dd096                null (sum of 11 columns)               expected=0 actual=0
+[PASS] baseline#2 a30dd096                duplicate_groups                       expected=0 actual=0
+[PASS] baseline#2 a30dd096                duplicate_extra_rows                   expected=0 actual=0
+[PASS] baseline#2 a30dd096                amount = 0 rows                        expected=16 actual=16
+[PASS] baseline#2 a30dd096                fraud (output)                         expected=8213 actual=8213
+[PASS] baseline#2 a30dd096                total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] baseline#2 a30dd096                transactions (output)                  expected=6362620 actual=6362620
+[PASS] baseline#2 a30dd096                groups (output)                        expected=152 actual=152
+[PASS] baseline#2 a30dd096                input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] baseline#2 a30dd096                dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] optimized#2 62e87044               status                                 expected=SUCCESS actual=SUCCESS
+[PASS] optimized#2 62e87044               rows input                             expected=6362620 actual=6362620
+[PASS] optimized#2 62e87044               rows valid                             expected=6362620 actual=6362620
+[PASS] optimized#2 62e87044               rows after join                        expected=6362620 actual=6362620
+[PASS] optimized#2 62e87044               unmatched                              expected=0 actual=0
+[PASS] optimized#2 62e87044               invalid                                expected=0 actual=0
+[PASS] optimized#2 62e87044               null (sum of 11 columns)               expected=0 actual=0
+[PASS] optimized#2 62e87044               duplicate_groups                       expected=0 actual=0
+[PASS] optimized#2 62e87044               duplicate_extra_rows                   expected=0 actual=0
+[PASS] optimized#2 62e87044               amount = 0 rows                        expected=16 actual=16
+[PASS] optimized#2 62e87044               fraud (output)                         expected=8213 actual=8213
+[PASS] optimized#2 62e87044               total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] optimized#2 62e87044               transactions (output)                  expected=6362620 actual=6362620
+[PASS] optimized#2 62e87044               groups (output)                        expected=152 actual=152
+[PASS] optimized#2 62e87044               input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] optimized#2 62e87044               dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] baseline#3 4036d808                status                                 expected=SUCCESS actual=SUCCESS
+[PASS] baseline#3 4036d808                rows input                             expected=6362620 actual=6362620
+[PASS] baseline#3 4036d808                rows valid                             expected=6362620 actual=6362620
+[PASS] baseline#3 4036d808                rows after join                        expected=6362620 actual=6362620
+[PASS] baseline#3 4036d808                unmatched                              expected=0 actual=0
+[PASS] baseline#3 4036d808                invalid                                expected=0 actual=0
+[PASS] baseline#3 4036d808                null (sum of 11 columns)               expected=0 actual=0
+[PASS] baseline#3 4036d808                duplicate_groups                       expected=0 actual=0
+[PASS] baseline#3 4036d808                duplicate_extra_rows                   expected=0 actual=0
+[PASS] baseline#3 4036d808                amount = 0 rows                        expected=16 actual=16
+[PASS] baseline#3 4036d808                fraud (output)                         expected=8213 actual=8213
+[PASS] baseline#3 4036d808                total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] baseline#3 4036d808                transactions (output)                  expected=6362620 actual=6362620
+[PASS] baseline#3 4036d808                groups (output)                        expected=152 actual=152
+[PASS] baseline#3 4036d808                input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] baseline#3 4036d808                dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] optimized#3 b9736199               status                                 expected=SUCCESS actual=SUCCESS
+[PASS] optimized#3 b9736199               rows input                             expected=6362620 actual=6362620
+[PASS] optimized#3 b9736199               rows valid                             expected=6362620 actual=6362620
+[PASS] optimized#3 b9736199               rows after join                        expected=6362620 actual=6362620
+[PASS] optimized#3 b9736199               unmatched                              expected=0 actual=0
+[PASS] optimized#3 b9736199               invalid                                expected=0 actual=0
+[PASS] optimized#3 b9736199               null (sum of 11 columns)               expected=0 actual=0
+[PASS] optimized#3 b9736199               duplicate_groups                       expected=0 actual=0
+[PASS] optimized#3 b9736199               duplicate_extra_rows                   expected=0 actual=0
+[PASS] optimized#3 b9736199               amount = 0 rows                        expected=16 actual=16
+[PASS] optimized#3 b9736199               fraud (output)                         expected=8213 actual=8213
+[PASS] optimized#3 b9736199               total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] optimized#3 b9736199               transactions (output)                  expected=6362620 actual=6362620
+[PASS] optimized#3 b9736199               groups (output)                        expected=152 actual=152
+[PASS] optimized#3 b9736199               input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] optimized#3 b9736199               dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] baseline#4 6722e467                status                                 expected=SUCCESS actual=SUCCESS
+[PASS] baseline#4 6722e467                rows input                             expected=6362620 actual=6362620
+[PASS] baseline#4 6722e467                rows valid                             expected=6362620 actual=6362620
+[PASS] baseline#4 6722e467                rows after join                        expected=6362620 actual=6362620
+[PASS] baseline#4 6722e467                unmatched                              expected=0 actual=0
+[PASS] baseline#4 6722e467                invalid                                expected=0 actual=0
+[PASS] baseline#4 6722e467                null (sum of 11 columns)               expected=0 actual=0
+[PASS] baseline#4 6722e467                duplicate_groups                       expected=0 actual=0
+[PASS] baseline#4 6722e467                duplicate_extra_rows                   expected=0 actual=0
+[PASS] baseline#4 6722e467                amount = 0 rows                        expected=16 actual=16
+[PASS] baseline#4 6722e467                fraud (output)                         expected=8213 actual=8213
+[PASS] baseline#4 6722e467                total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] baseline#4 6722e467                transactions (output)                  expected=6362620 actual=6362620
+[PASS] baseline#4 6722e467                groups (output)                        expected=152 actual=152
+[PASS] baseline#4 6722e467                input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] baseline#4 6722e467                dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] optimized#4 f3b6f273               status                                 expected=SUCCESS actual=SUCCESS
+[PASS] optimized#4 f3b6f273               rows input                             expected=6362620 actual=6362620
+[PASS] optimized#4 f3b6f273               rows valid                             expected=6362620 actual=6362620
+[PASS] optimized#4 f3b6f273               rows after join                        expected=6362620 actual=6362620
+[PASS] optimized#4 f3b6f273               unmatched                              expected=0 actual=0
+[PASS] optimized#4 f3b6f273               invalid                                expected=0 actual=0
+[PASS] optimized#4 f3b6f273               null (sum of 11 columns)               expected=0 actual=0
+[PASS] optimized#4 f3b6f273               duplicate_groups                       expected=0 actual=0
+[PASS] optimized#4 f3b6f273               duplicate_extra_rows                   expected=0 actual=0
+[PASS] optimized#4 f3b6f273               amount = 0 rows                        expected=16 actual=16
+[PASS] optimized#4 f3b6f273               fraud (output)                         expected=8213 actual=8213
+[PASS] optimized#4 f3b6f273               total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] optimized#4 f3b6f273               transactions (output)                  expected=6362620 actual=6362620
+[PASS] optimized#4 f3b6f273               groups (output)                        expected=152 actual=152
+[PASS] optimized#4 f3b6f273               input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] optimized#4 f3b6f273               dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] baseline#5 126578d1                status                                 expected=SUCCESS actual=SUCCESS
+[PASS] baseline#5 126578d1                rows input                             expected=6362620 actual=6362620
+[PASS] baseline#5 126578d1                rows valid                             expected=6362620 actual=6362620
+[PASS] baseline#5 126578d1                rows after join                        expected=6362620 actual=6362620
+[PASS] baseline#5 126578d1                unmatched                              expected=0 actual=0
+[PASS] baseline#5 126578d1                invalid                                expected=0 actual=0
+[PASS] baseline#5 126578d1                null (sum of 11 columns)               expected=0 actual=0
+[PASS] baseline#5 126578d1                duplicate_groups                       expected=0 actual=0
+[PASS] baseline#5 126578d1                duplicate_extra_rows                   expected=0 actual=0
+[PASS] baseline#5 126578d1                amount = 0 rows                        expected=16 actual=16
+[PASS] baseline#5 126578d1                fraud (output)                         expected=8213 actual=8213
+[PASS] baseline#5 126578d1                total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] baseline#5 126578d1                transactions (output)                  expected=6362620 actual=6362620
+[PASS] baseline#5 126578d1                groups (output)                        expected=152 actual=152
+[PASS] baseline#5 126578d1                input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] baseline#5 126578d1                dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] optimized#5 5f0e4b92               status                                 expected=SUCCESS actual=SUCCESS
+[PASS] optimized#5 5f0e4b92               rows input                             expected=6362620 actual=6362620
+[PASS] optimized#5 5f0e4b92               rows valid                             expected=6362620 actual=6362620
+[PASS] optimized#5 5f0e4b92               rows after join                        expected=6362620 actual=6362620
+[PASS] optimized#5 5f0e4b92               unmatched                              expected=0 actual=0
+[PASS] optimized#5 5f0e4b92               invalid                                expected=0 actual=0
+[PASS] optimized#5 5f0e4b92               null (sum of 11 columns)               expected=0 actual=0
+[PASS] optimized#5 5f0e4b92               duplicate_groups                       expected=0 actual=0
+[PASS] optimized#5 5f0e4b92               duplicate_extra_rows                   expected=0 actual=0
+[PASS] optimized#5 5f0e4b92               amount = 0 rows                        expected=16 actual=16
+[PASS] optimized#5 5f0e4b92               fraud (output)                         expected=8213 actual=8213
+[PASS] optimized#5 5f0e4b92               total amount (output)                  expected=1144392944759.77 actual=1144392944759.77
+[PASS] optimized#5 5f0e4b92               transactions (output)                  expected=6362620 actual=6362620
+[PASS] optimized#5 5f0e4b92               groups (output)                        expected=152 actual=152
+[PASS] optimized#5 5f0e4b92               input sha256 = reference               expected=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b actual=16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b
+[PASS] optimized#5 5f0e4b92               dimension sha256 = reference           expected=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d actual=9f5701058629c3f66efbe10f97b73c918fdb1aabf3e46fb0a854302573fa482d
+[PASS] baseline#0 586e9368                output columns                         expected=10 actual=10
+[PASS] baseline#0 586e9368                schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] baseline#0 586e9368                schema_output.txt = reference          expected=same actual=same
+[PASS] baseline#0 586e9368                key (day_index,type) unique            expected=0 actual=0
+[PASS] baseline#0 586e9368                values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] baseline#0 586e9368                sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] baseline#0 586e9368                exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] optimized#0 98eff953               output columns                         expected=10 actual=10
+[PASS] optimized#0 98eff953               schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] optimized#0 98eff953               schema_output.txt = reference          expected=same actual=same
+[PASS] optimized#0 98eff953               key (day_index,type) unique            expected=0 actual=0
+[PASS] optimized#0 98eff953               values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] optimized#0 98eff953               sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] optimized#0 98eff953               exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] baseline#1 c0be2d08                output columns                         expected=10 actual=10
+[PASS] baseline#1 c0be2d08                schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] baseline#1 c0be2d08                schema_output.txt = reference          expected=same actual=same
+[PASS] baseline#1 c0be2d08                key (day_index,type) unique            expected=0 actual=0
+[PASS] baseline#1 c0be2d08                values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] baseline#1 c0be2d08                sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] baseline#1 c0be2d08                exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] optimized#1 c704e241               output columns                         expected=10 actual=10
+[PASS] optimized#1 c704e241               schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] optimized#1 c704e241               schema_output.txt = reference          expected=same actual=same
+[PASS] optimized#1 c704e241               key (day_index,type) unique            expected=0 actual=0
+[PASS] optimized#1 c704e241               values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] optimized#1 c704e241               sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] optimized#1 c704e241               exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] baseline#2 a30dd096                output columns                         expected=10 actual=10
+[PASS] baseline#2 a30dd096                schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] baseline#2 a30dd096                schema_output.txt = reference          expected=same actual=same
+[PASS] baseline#2 a30dd096                key (day_index,type) unique            expected=0 actual=0
+[PASS] baseline#2 a30dd096                values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] baseline#2 a30dd096                sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] baseline#2 a30dd096                exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] optimized#2 62e87044               output columns                         expected=10 actual=10
+[PASS] optimized#2 62e87044               schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] optimized#2 62e87044               schema_output.txt = reference          expected=same actual=same
+[PASS] optimized#2 62e87044               key (day_index,type) unique            expected=0 actual=0
+[PASS] optimized#2 62e87044               values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] optimized#2 62e87044               sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] optimized#2 62e87044               exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] baseline#3 4036d808                output columns                         expected=10 actual=10
+[PASS] baseline#3 4036d808                schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] baseline#3 4036d808                schema_output.txt = reference          expected=same actual=same
+[PASS] baseline#3 4036d808                key (day_index,type) unique            expected=0 actual=0
+[PASS] baseline#3 4036d808                values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] baseline#3 4036d808                sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] baseline#3 4036d808                exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] optimized#3 b9736199               output columns                         expected=10 actual=10
+[PASS] optimized#3 b9736199               schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] optimized#3 b9736199               schema_output.txt = reference          expected=same actual=same
+[PASS] optimized#3 b9736199               key (day_index,type) unique            expected=0 actual=0
+[PASS] optimized#3 b9736199               values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] optimized#3 b9736199               sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] optimized#3 b9736199               exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] baseline#4 6722e467                output columns                         expected=10 actual=10
+[PASS] baseline#4 6722e467                schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] baseline#4 6722e467                schema_output.txt = reference          expected=same actual=same
+[PASS] baseline#4 6722e467                key (day_index,type) unique            expected=0 actual=0
+[PASS] baseline#4 6722e467                values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] baseline#4 6722e467                sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] baseline#4 6722e467                exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] optimized#4 f3b6f273               output columns                         expected=10 actual=10
+[PASS] optimized#4 f3b6f273               schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] optimized#4 f3b6f273               schema_output.txt = reference          expected=same actual=same
+[PASS] optimized#4 f3b6f273               key (day_index,type) unique            expected=0 actual=0
+[PASS] optimized#4 f3b6f273               values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] optimized#4 f3b6f273               sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] optimized#4 f3b6f273               exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] baseline#5 126578d1                output columns                         expected=10 actual=10
+[PASS] baseline#5 126578d1                schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] baseline#5 126578d1                schema_output.txt = reference          expected=same actual=same
+[PASS] baseline#5 126578d1                key (day_index,type) unique            expected=0 actual=0
+[PASS] baseline#5 126578d1                values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] baseline#5 126578d1                sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] baseline#5 126578d1                exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] optimized#5 5f0e4b92               output columns                         expected=10 actual=10
+[PASS] optimized#5 5f0e4b92               schema = reference                     expected=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double> actual=struct<day_index:int,type:string,type_name_vi:string,flow_group:string,txn_count:bigint,total_amount:decimal(30,2),avg_amount:decimal(21,2),fraud_count:bigint,fraud_amount:decimal(30,2),fraud_rate_pct:double>
+[PASS] optimized#5 5f0e4b92               schema_output.txt = reference          expected=same actual=same
+[PASS] optimized#5 5f0e4b92               key (day_index,type) unique            expected=0 actual=0
+[PASS] optimized#5 5f0e4b92               values = reference (sorted, cell by cell) expected=0 actual=0
+[PASS] optimized#5 5f0e4b92               sha256(sorted rows) = reference        expected=dfe6a12120f6e554 actual=dfe6a12120f6e554
+[PASS] optimized#5 5f0e4b92               exceptAll both ways                    expected=0/0 actual=0/0
+[PASS] tests/test_dup_check.py            exit code                              expected=0 actual=0
+OVERALL: PASS (283/283 checks) -> evidence/checkpoint4/exp1/correctness.json

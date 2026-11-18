@@ -1,0 +1,47 @@
+stage_id,attempt,job_ids,phase,description,callsite,duration_sec,num_tasks,tasks_finished,failed_tasks,task_median_sec,task_max_sec,executor_run_sum_sec,executor_cpu_sum_sec,gc_sum_sec,input_mb,input_records,shuffle_read_mb,shuffle_read_records,shuffle_write_mb,shuffle_write_records,spill_memory_mb,spill_disk_mb,peak_exec_mem_max_mb,fact_scan
+0,0,0,startup,startup | smoke,count at NativeMethodAccessorImpl.java:0,0.482,8,8,0,0.276,0.307,1.057,0.156,0.072,0.0,10,0.0,0,0.0,8,0.0,0.0,0.0,0
+2,0,1,startup,startup | smoke,count at NativeMethodAccessorImpl.java:0,0.1,1,1,0,0.1,0.1,0.058,0.031,0.002,0.0,0,0.0,8,0.0,0,0.0,0.0,0.0,0
+3,0,2,startup,startup | smoke,sum at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:191,1.979,2,2,0,1.915,1.962,3.842,0.016,0.008,0.0,0,0.0,0,0.0,0,0.0,0.0,0.0,0
+4,0,3,profile_null,"profile_null | agg(nulls,min,max,countDistinct,sum).first",first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\quality_report.py:47,11.857,8,8,0,11.639,11.856,92.381,34.75,2.878,471.396,6362620,0.0,0,0.075,750,0.0,0.0,2.25,1
+6,0,4,profile_null,"profile_null | agg(nulls,min,max,countDistinct,sum).first",first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\quality_report.py:47,0.204,1,1,0,0.204,0.204,0.183,0.016,0.0,0.0,0,0.075,750,0.0,1,0.0,0.0,2.25,0
+9,0,5,profile_null,"profile_null | agg(nulls,min,max,countDistinct,sum).first",first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\quality_report.py:47,0.063,1,1,0,0.063,0.063,0.053,0.0,0.0,0.0,0,0.0,1,0.0,0,0.0,0.0,0.0,0
+10,0,6,profile_dup,profile_dup | groupBy(11 cols).count>1 .agg.first,first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:238,29.263,8,8,0,28.567,29.263,227.328,126.672,5.455,471.396,6362620,0.0,0,413.735,6362620,1768.34,406.176,52.205,1
+12,0,7,profile_dup,profile_dup | groupBy(11 cols).count>1 .agg.first,first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:238,9.062,9,9,0,8.623,9.062,69.502,39.391,1.612,0.0,0,413.735,6362620,0.0,9,1744.413,409.028,54.204,0
+15,0,8,profile_dup,profile_dup | groupBy(11 cols).count>1 .agg.first,first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:238,0.033,1,1,0,0.031,0.031,0.031,0.016,0.0,0.0,0,0.0,9,0.0,0,0.0,0.0,0.0,0
+16,0,9,clean,clean | invalid.count,count at NativeMethodAccessorImpl.java:0,10.471,8,8,0,10.018,10.471,80.361,68.953,1.279,471.396,6362620,0.0,0,0.0,8,0.0,0.0,0.0,1
+18,0,10,clean,clean | invalid.count,count at NativeMethodAccessorImpl.java:0,0.016,1,1,0,0.016,0.016,0.008,0.0,0.0,0.0,0,0.0,8,0.0,0,0.0,0.0,0.0,0
+19,0,11,clean,clean | valid.count,count at NativeMethodAccessorImpl.java:0,9.03,8,8,0,8.866,9.014,70.378,61.047,1.201,471.396,6362620,0.0,0,0.0,8,0.0,0.0,0.0,1
+21,0,12,clean,clean | valid.count,count at NativeMethodAccessorImpl.java:0,0.032,1,1,0,0.024,0.024,0.015,0.0,0.0,0.0,0,0.0,8,0.0,0,0.0,0.0,0.0,0
+22,0,13,clean,clean | normalized.count,count at NativeMethodAccessorImpl.java:0,0.615,8,8,0,0.585,0.615,4.514,2.156,0.056,471.396,6362620,0.0,0,0.0,8,0.0,0.0,0.0,1
+24,0,14,clean,clean | normalized.count,count at NativeMethodAccessorImpl.java:0,0.024,1,1,0,0.019,0.019,0.016,0.0,0.0,0.0,0,0.0,8,0.0,0,0.0,0.0,0.0,0
+25,0,15,clean,clean | enriched.count,count at NativeMethodAccessorImpl.java:0,9.11,8,8,0,8.96,9.11,71.219,60.672,1.297,471.396,6362620,0.0,0,0.0,8,0.0,0.0,0.0,1
+27,0,16,clean,clean | enriched.count,count at NativeMethodAccessorImpl.java:0,0.033,1,1,0,0.033,0.033,0.019,0.0,0.0,0.0,0,0.0,8,0.0,0,0.0,0.0,0.0,0
+28,0,17,clean,clean | sample_transformed orderBy.limit(5).collect,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:283,10.22,8,8,0,9.985,10.22,79.123,68.594,1.295,471.396,6362620,0.0,0,0.0,0,0.0,0.0,0.0,1
+29,0,18,join,join | dim checks,count at NativeMethodAccessorImpl.java:0,0.064,1,1,0,0.064,0.064,0.047,0.0,0.0,0.0,5,0.0,0,0.0,1,0.0,0.0,0.0,0
+31,0,19,join,join | dim checks,count at NativeMethodAccessorImpl.java:0,0.015,1,1,0,0.015,0.015,0.004,0.0,0.0,0.0,0,0.0,1,0.0,0,0.0,0.0,0.0,0
+32,0,20,join,join | dim checks,count at NativeMethodAccessorImpl.java:0,0.078,1,1,0,0.078,0.078,0.072,0.016,0.0,0.0,5,0.0,0,0.0,5,0.0,0.0,0.25,0
+34,0,21,join,join | dim checks,count at NativeMethodAccessorImpl.java:0,0.043,1,1,0,0.035,0.035,0.025,0.0,0.0,0.0,0,0.0,5,0.0,1,0.0,0.0,2.25,0
+37,0,22,join,join | dim checks,count at NativeMethodAccessorImpl.java:0,0.017,1,1,0,0.016,0.016,0.011,0.0,0.0,0.0,0,0.0,1,0.0,0,0.0,0.0,0.0,0
+38,0,23,join,join | unmatched(left_anti).count,$anonfun$withThreadLocalCaptured$1 at FutureTask.java:264,0.031,1,1,0,0.016,0.016,0.019,0.0,0.0,0.0,5,0.0,0,0.0,0,0.0,0.0,0.0,0
+39,0,24,join,join | unmatched(left_anti).count,count at NativeMethodAccessorImpl.java:0,9.956,8,8,0,9.613,9.956,76.689,63.375,1.438,471.396,6362620,0.0,0,0.0,8,0.0,0.0,2.001,1
+41,0,25,join,join | unmatched(left_anti).count,count at NativeMethodAccessorImpl.java:0,0.031,1,1,0,0.015,0.015,0.016,0.0,0.0,0.0,0,0.0,8,0.0,0,0.0,0.0,0.0,0
+42,0,26,join,join | unmatched.limit(20).collect,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:301,0.013,1,1,0,0.01,0.01,0.006,0.0,0.0,0.0,5,0.0,0,0.0,0,0.0,0.0,0.0,0
+43,0,27,join,join | unmatched.limit(20).collect,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:301,4.715,1,1,0,4.7,4.7,4.689,3.828,0.03,59.438,809402,0.0,0,0.0,0,0.0,0.0,2.001,0
+44,0,28,join,join | unmatched.limit(20).collect,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:301,5.173,4,4,0,5.04,5.173,20.225,14.531,0.295,237.75,3206266,0.0,0,0.0,0,0.0,0.0,2.001,1
+45,0,29,join,join | unmatched.limit(20).collect,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:301,4.907,3,3,0,4.515,4.907,13.823,10.672,0.187,174.209,2346952,0.0,0,0.0,0,0.0,0.0,2.001,1
+46,0,30,join,join | joined.count,$anonfun$withThreadLocalCaptured$1 at FutureTask.java:264,0.016,1,1,0,0.0,0.0,0.004,0.0,0.0,0.0,5,0.0,0,0.0,0,0.0,0.0,0.0,0
+47,0,31,join,join | joined.count,count at NativeMethodAccessorImpl.java:0,8.949,8,8,0,8.783,8.949,69.67,56.062,1.431,471.396,6362620,0.0,0,0.0,8,0.0,0.0,2.001,1
+49,0,32,join,join | joined.count,count at NativeMethodAccessorImpl.java:0,0.031,1,1,0,0.031,0.031,0.013,0.0,0.0,0.0,0,0.0,8,0.0,0,0.0,0.0,0.0,0
+50,0,33,join,join | dim.count,count at NativeMethodAccessorImpl.java:0,0.016,1,1,0,0.016,0.016,0.008,0.0,0.0,0.0,5,0.0,0,0.0,1,0.0,0.0,0.0,0
+52,0,34,join,join | dim.count,count at NativeMethodAccessorImpl.java:0,0.013,1,1,0,0.013,0.013,0.005,0.0,0.002,0.0,0,0.0,1,0.0,0,0.0,0.0,0.0,0
+53,0,35,output,"output | summary groupBy(day_index,type).write.parquet",$anonfun$withThreadLocalCaptured$1 at FutureTask.java:264,0.032,1,1,0,0.032,0.032,0.019,0.0,0.0,0.0,5,0.0,0,0.0,0,0.0,0.0,0.0,0
+54,0,36,output,"output | summary groupBy(day_index,type).write.parquet",parquet at NativeMethodAccessorImpl.java:0,11.594,8,8,0,11.384,11.588,90.832,73.016,2.228,471.396,6362620,0.0,0,0.031,187,0.0,0.0,4.251,1
+56,0,37,output,"output | summary groupBy(day_index,type).write.parquet",parquet at NativeMethodAccessorImpl.java:0,1.287,1,1,0,1.24,1.24,1.145,0.188,0.0,0.0,0,0.031,187,0.0,0,0.0,0.0,2.25,0
+57,0,38,output,output | readback checks,parquet at NativeMethodAccessorImpl.java:0,0.115,1,1,0,0.109,0.109,0.07,0.0,0.0,0.0,0,0.0,0,0.0,0,0.0,0.0,0.0,0
+58,0,39,output,output | readback checks,first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:337,0.172,1,1,0,0.172,0.172,0.149,0.0,0.0,0.01,152,0.0,0,0.0,1,0.0,0.0,0.0,0
+60,0,40,output,output | readback checks,first at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:337,0.031,1,1,0,0.031,0.031,0.016,0.0,0.005,0.0,0,0.0,1,0.0,0,0.0,0.0,0.0,0
+61,0,41,output,output | readback checks,count at NativeMethodAccessorImpl.java:0,0.236,1,1,0,0.236,0.236,0.216,0.031,0.0,0.011,152,0.0,0,0.008,152,0.0,0.0,0.25,0
+63,0,42,output,output | readback checks,count at NativeMethodAccessorImpl.java:0,0.031,1,1,0,0.031,0.031,0.02,0.0,0.0,0.0,0,0.008,152,0.0,1,0.0,0.0,2.25,0
+66,0,43,output,output | readback checks,count at NativeMethodAccessorImpl.java:0,0.016,1,1,0,0.016,0.016,0.004,0.0,0.0,0.0,0,0.0,1,0.0,0,0.0,0.0,0.0,0
+67,0,44,output,output | readback checks,csv at NativeMethodAccessorImpl.java:0,0.154,1,1,0,0.084,0.084,0.06,0.0,0.0,0.011,152,0.0,0,0.0,0,0.0,0.0,0.0,0
+68,0,45,output,output | readback checks,collect at D:\BIGDATA_NHOM_3\.bench\ae845921d9ca\src\pipeline.py:350,0.032,1,1,0,0.016,0.016,0.019,0.0,0.0,0.011,152,0.0,0,0.0,0,0.0,0.0,0.0,0
