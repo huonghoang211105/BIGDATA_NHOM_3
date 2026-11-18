@@ -1,0 +1,52 @@
+== Physical Plan ==
+AdaptiveSparkPlan (8)
++- Project (7)
+   +- Filter (6)
+      +- HashAggregate (5)
+         +- Exchange (4)
+            +- HashAggregate (3)
+               +- Project (2)
+                  +- Scan csv  (1)
+
+
+(1) Scan csv 
+Output [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv]
+ReadSchema: struct<step:int,type:string,amount:decimal(20,2),nameOrig:string,oldbalanceOrg:decimal(20,2),newbalanceOrig:decimal(20,2),nameDest:string,oldbalanceDest:decimal(20,2),newbalanceDest:decimal(20,2),isFraud:int,isFlaggedFraud:int>
+
+(2) Project
+Output [1]: [xxhash64(step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18, 42) AS _groupingexpression#326L]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+
+(3) HashAggregate
+Input [1]: [_groupingexpression#326L]
+Keys [1]: [_groupingexpression#326L]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#327L]
+Results [2]: [_groupingexpression#326L, count#328L]
+
+(4) Exchange
+Input [2]: [_groupingexpression#326L, count#328L]
+Arguments: hashpartitioning(_groupingexpression#326L, 200), ENSURE_REQUIREMENTS, [plan_id=133]
+
+(5) HashAggregate
+Input [2]: [_groupingexpression#326L, count#328L]
+Keys [1]: [_groupingexpression#326L]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#321L]
+Results [2]: [_groupingexpression#326L AS _row_hash#309L, count(1)#321L AS count#322L]
+
+(6) Filter
+Input [2]: [_row_hash#309L, count#322L]
+Condition : (count#322L > 1)
+
+(7) Project
+Output [1]: [_row_hash#309L]
+Input [2]: [_row_hash#309L, count#322L]
+
+(8) AdaptiveSparkPlan
+Output [1]: [_row_hash#309L]
+Arguments: isFinalPlan=false
+
+

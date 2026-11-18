@@ -1,0 +1,9 @@
+﻿# Data-only output comparison (schema + exceptAll both ways), ignoring the dimension-hash gate of compare_runs.py.
+# Why: core.autocrlf=true makes git worktree checkouts of config/dim_transaction_type.csv CRLF (211 B, sha 9f570105...)
+# while the main checkout / CP3 use LF (205 B, sha e3061072...). All .bench worktrees (baseline and optimized) get the
+# same CRLF bytes, so A/B input is identical; this check shows CRLF vs LF does not change business output.
+# REF = CP3 run A (LF dim); 2nd = Phase-1 baseline run 4 (CRLF dim, worktree); 3rd = optimized smoke from main checkout (LF dim).
+REF output/snapshot_16910f90577b/20261112T181257Z_65a10a1a dim_sha=e3061072 rows=152
+DATA PASS vs .bench/ae845921d9ca/output/snapshot_16910f90577b/20261117T152622Z_864399ec dim_sha=9f570105 rows=152 schema_equal=True only_ref=0 only_other=0
+DATA PASS vs output/snapshot_16910f90577b/20261117T160452Z_9f52428e dim_sha=e3061072 rows=152 schema_equal=True only_ref=0 only_other=0
+exit=0
