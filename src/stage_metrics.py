@@ -1,16 +1,16 @@
-"""Per-stage / per-job / per-phase metrics from a Spark event log (CP4 benchmark evidence).
+"""Metric theo stage / job / chặng từ Spark event log (evidence cho benchmark CP4).
 
-Usage:
+Cách dùng:
     python src/stage_metrics.py --event-log logs/spark-events/local-123 --out-dir evidence/checkpoint4/baseline/<run_id>
 
-Writes into --out-dir:
-    stage_metrics.csv   one row per executed stage attempt (skipped stages are not executed)
-    job_metrics.csv     one row per Spark job (each count()/collect()/first()/write is >= 1 job)
-    phase_metrics.csv   stages/jobs grouped by phase (job description 'phase | action' set by pipeline.py)
-    sql_final_plans.txt final AQE physical plans (isFinalPlan=true) for the key SQL executions
+Ghi vào --out-dir:
+    stage_metrics.csv   mỗi stage attempt đã chạy một dòng (stage bị skip thì không chạy, không có dòng)
+    job_metrics.csv     mỗi Spark job một dòng (mỗi count()/collect()/first()/write là >= 1 job)
+    phase_metrics.csv   gom stage/job theo chặng (job description '<phase> | <action>' do pipeline.py đặt)
+    sql_final_plans.txt physical plan AQE cuối cùng (isFinalPlan=true) của các SQL execution quan trọng
 
-Units: *_mb = MiB (bytes / 2**20); *_sec = seconds. Task time = Finish - Launch (wall, as Spark UI).
-Only the standard library is used, so it runs without Spark.
+Đơn vị: *_mb = MiB (byte / 2**20); *_sec = giây. Thời gian task = Finish − Launch (wall, như Spark UI).
+Chỉ dùng thư viện chuẩn, chạy không cần Spark.
 """
 import argparse
 import csv
@@ -26,10 +26,12 @@ PLAN_PREFIXES = ('profile_null', 'profile_dup', 'join | joined.count', 'output |
 
 
 def phase_of(description):
+    """Tên chặng = phần trước " | " của job description (rỗng -> "(none)")."""
     return (description or '').split(' | ')[0].strip() or '(none)'
 
 
 def load_events(path):
+    """Đọc event log JSON-lines, yield từng sự kiện (dict)."""
     with Path(path).open(encoding='utf-8') as stream:
         for line in stream:
             line = line.strip()
@@ -38,6 +40,9 @@ def load_events(path):
 
 
 def parse(path):
+    """Duyệt event log một lần, gom: stages (submit/complete), jobs (start/end, description),
+    tasks (TaskEnd theo stage) và SQL executions (plan ban đầu, plan AQE cuối). Trả về 4 dict.
+    """
     stages, jobs, tasks, sql = {}, {}, {}, {}
     for ev in load_events(path):
         kind = ev.get('Event')
@@ -82,6 +87,7 @@ def parse(path):
 
 
 def task_numbers(ev):
+    """Rút các metric cần dùng từ một sự kiện TaskEnd (thời gian, input, shuffle, spill, GC...)."""
     info, m = ev.get('Task Info') or {}, ev.get('Task Metrics') or {}
     sr, sw, inp = (m.get('Shuffle Read Metrics') or {}, m.get('Shuffle Write Metrics') or {},
                    m.get('Input Metrics') or {})
@@ -98,10 +104,16 @@ def task_numbers(ev):
 
 
 def r(value, digits=3):
+    """Làm tròn số cho gọn trong CSV."""
     return round(value, digits)
 
 
 def build(event_log):
+    """Tính bảng stage, bảng job, bảng chặng và tóm tắt cả run từ event log.
+
+    fact_scan = 1 khi stage đọc >= 1 triệu record input (= quét toàn bộ CSV PaySim).
+    Trả về: (stage_rows, job_rows, phases, sql, summary).
+    """
     stages, jobs, tasks, sql = parse(event_log)
     stage_jobs = {}
     for job in jobs.values():
@@ -180,6 +192,7 @@ def build(event_log):
 
 
 def write_csv(path, rows):
+    """Ghi list dict ra CSV (header = hợp các khóa theo thứ tự xuất hiện)."""
     if not rows:
         path.write_text('', encoding='utf-8')
         return
@@ -193,6 +206,9 @@ def write_csv(path, rows):
 
 
 def write_outputs(event_log, out_dir):
+    """Ghi stage_metrics.csv, job_metrics.csv, phase_metrics.csv và sql_final_plans.txt
+    vào out_dir. Trả về: dict tóm tắt cả run (dùng cho benchmark.csv).
+    """
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     stage_rows, job_rows, phases, sql, summary = build(event_log)
@@ -209,6 +225,7 @@ def write_outputs(event_log, out_dir):
 
 
 def main():
+    """CLI: --event-log, --out-dir; in tóm tắt và bảng theo chặng ra màn hình."""
     parser = argparse.ArgumentParser()
     parser.add_argument('--event-log', required=True, type=Path)
     parser.add_argument('--out-dir', required=True, type=Path)

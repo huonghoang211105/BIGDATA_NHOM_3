@@ -1,24 +1,22 @@
-"""CP4 benchmark runner: run src/pipeline.py N times per label and append one row per run to benchmark.csv.
+"""Chạy benchmark CP4: chạy src/pipeline.py N lần cho mỗi nhãn, mỗi run ghi ngay 1 dòng vào benchmark.csv.
 
-Each label runs the code of a git ref (default tag checkpoint-4-<label>) from a detached git worktree
-under .bench/<commit>, so the baseline is always exactly the tagged code even while the main checkout
-changes. The raw CSV is hard-linked into the worktree (same physical file, same OS cache, no copy).
+Mỗi nhãn chạy đúng code của một git ref (mặc định tag checkpoint-4-<nhãn>) từ một git worktree tách riêng
+.bench/<commit>, nên baseline luôn đúng code đã gắn tag dù checkout chính thay đổi. File CSV input được
+hard-link vào worktree (cùng một file vật lý, cùng OS cache, không copy 493 MB).
 
-    # Phase 1: baseline only (1 warm-up run discarded + 5 measured runs)
+    # Phase 1: chỉ baseline (1 run warm-up bị loại + 5 run đo)
     python src/benchmark.py --label baseline --runs 5 --warmup 1
-    # Phase 2: interleaved B, A, B, A, ... (pairs run in the given order inside every round)
+    # Phase 2: xen kẽ B, A, B, A, ... (các cặp chạy theo thứ tự đã cho trong mỗi vòng)
     python src/benchmark.py --pair baseline=checkpoint-4-baseline optimized=checkpoint-4-optimized \
         --runs 5 --warmup 1 --session exp1
-    # Same command again = resume: (session, label, run_no) already in benchmark.csv are skipped
-    # Median / min / max per label (warm-up rows excluded); with 2 labels also before/after delta
+    # Chạy lại đúng lệnh = resume: bỏ qua (session, label, run_no) đã có trong benchmark.csv
+    # Median / min / max theo nhãn (bỏ warm-up); 2 nhãn -> thêm bảng before/after (Δ, Δ%, so với nhiễu)
     python src/benchmark.py --summary --session exp1
 
-Each finished run appends its row to benchmark.csv immediately, so an interrupted session loses at most
-the run in progress (its partial output stays in the worktree and is never counted).
-
-Per run: evidence/checkpoint4/<label>/<run_id>/ gets the pipeline evidence (run.log, metrics.json,
-explain_*.txt, ...) plus stage_metrics.csv, job_metrics.csv, phase_metrics.csv, sql_final_plans.txt
-(from the Spark event log, see src/stage_metrics.py), env.json and console.txt.
+Mỗi run xong được ghi ngay vào benchmark.csv, nên nếu bị ngắt chỉ mất run đang chạy (output dở dang nằm
+trong worktree và không bao giờ được tính). Mỗi run có evidence/checkpoint4/<label>/<run_id>/: evidence của
+pipeline (run.log, metrics.json, explain_*.txt, ...) + stage_metrics.csv, job_metrics.csv, phase_metrics.csv,
+sql_final_plans.txt (từ Spark event log, xem src/stage_metrics.py), env.json và console.txt.
 """
 import argparse
 import csv
@@ -60,6 +58,7 @@ LEGACY_SESSION = 'phase1'  # rows written before the session column existed (Pha
 
 
 def read_rows(csv_path):
+    """Đọc mọi dòng của benchmark.csv (list dict); dòng cũ chưa có session được gán "phase1"."""
     if not csv_path.exists():
         return []
     with csv_path.open(encoding='utf-8', newline='') as stream:
@@ -71,7 +70,7 @@ def read_rows(csv_path):
 
 
 def ensure_header(csv_path):
-    """Rewrite benchmark.csv with the current COLUMNS if an older header lacks some (values kept)."""
+    """Nếu header benchmark.csv cũ thiếu cột, ghi lại file theo COLUMNS hiện tại (giữ nguyên giá trị)."""
     if not csv_path.exists():
         return
     with csv_path.open(encoding='utf-8', newline='') as stream:
@@ -90,11 +89,13 @@ def ensure_header(csv_path):
 
 
 def git(*args, cwd=ROOT):
+    """Chạy một lệnh git (check=True) và trả về stdout đã strip."""
     return subprocess.run(['git', *args], cwd=cwd, check=True, capture_output=True,
                           text=True).stdout.strip()
 
 
 def free_ram_mb():
+    """RAM vật lý còn trống (MiB) lúc gọi, đọc bằng GlobalMemoryStatusEx; lỗi thì trả chuỗi rỗng."""
     try:
         import ctypes
 
@@ -113,7 +114,11 @@ def free_ram_mb():
 
 
 def prepare_worktree(ref):
-    """Detached worktree at ref; raw input hard-linked from the main checkout. Returns (dir, commit)."""
+    """Tạo (hoặc dùng lại) worktree tách rời .bench/<commit[:12]> ở đúng ref.
+
+    Kiểm worktree đúng commit và sạch; hard-link file CSV raw từ checkout chính (cùng volume NTFS)
+    và xác nhận đó là cùng một file. Trả về: (thư mục worktree, commit đầy đủ).
+    """
     commit = git('rev-parse', f'{ref}^{{commit}}')
     wt = BENCH_DIR / commit[:12]
     if not wt.exists():
@@ -134,6 +139,13 @@ def prepare_worktree(ref):
 
 
 def run_once(label, ref, wt, commit, round_no, run_no, warm, evidence_root, csv_path, session):
+    """Chạy pipeline một lần trong worktree wt rồi ghi một dòng vào benchmark.csv.
+
+    Sau khi chạy: chuyển evidence từ worktree về repo chính, lưu console.txt, đọc metrics.json,
+    xuất stage/job/phase metrics từ event log, ghi env.json, tính cột checks (PASS khi mọi bất biến
+    nghiệp vụ khớp config). Pipeline lỗi -> lưu console vào logs/benchmark_failed_*.txt và dừng.
+    Trả về: dict của dòng vừa ghi.
+    """
     started = datetime.now(timezone.utc).isoformat()
     ram = free_ram_mb()
     cmd = [sys.executable, 'src/pipeline.py', '--config', 'config/config.json',
@@ -235,10 +247,16 @@ def run_once(label, ref, wt, commit, round_no, run_no, warm, evidence_root, csv_
 
 
 def values(items, col):
+    """Lấy các giá trị số (float) của cột col, bỏ ô rỗng."""
     return [float(r[col]) for r in items if r.get(col) not in (None, '')]
 
 
 def summarize(csv_path, session=None):
+    """In bảng median/min/max/max-min/stdev theo (session, nhãn, commit), bỏ run warm-up.
+
+    Nếu một session có đúng 2 nhãn: in thêm bảng before/after (Δ, Δ%) và cột "|delta| > max-min?"
+    so Δ với biên độ nhiễu của nhãn đầu (baseline).
+    """
     rows = [r for r in read_rows(csv_path) if r['warm_or_cold'] != 'warmup'
             and (session is None or r['session'] == session)]
     groups = {}
@@ -280,6 +298,11 @@ def summarize(csv_path, session=None):
 
 
 def main():
+    """Đọc tham số, chuẩn bị worktree cho từng nhãn, rồi chạy các vòng xen kẽ (warm-up trước).
+
+    Resume: các (session, nhãn, run_no) đã có trong benchmark.csv được bỏ qua; nếu session đã có dòng
+    của một nhãn ở commit khác thì dừng (phải dùng session mới).
+    """
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--pair', nargs='+', metavar='LABEL=REF',
                         help='Labels with their git refs, interleaved in this order inside every round '

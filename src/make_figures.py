@@ -25,10 +25,12 @@ PHASES = [('sec_spark_startup', 'Khởi động Spark'), ('sec_profile_null', 'P
 
 
 def vn(value, digits=1):
+    """Định dạng số kiểu Việt Nam: dấu chấm ngăn nghìn, dấu phẩy thập phân."""
     return f'{value:,.{digits}f}'.replace(',', ' ').replace('.', ',').replace(' ', '.')
 
 
 def style(ax):
+    """Áp kiểu chung cho trục: nền sáng, bỏ viền trên/phải, chữ màu phụ."""
     ax.set_facecolor(SURFACE)
     for side in ('top', 'right'):
         ax.spines[side].set_visible(False)
@@ -40,6 +42,7 @@ def style(ax):
 
 
 def load(csv_path, session):
+    """Đọc các run đo (bỏ warm-up) của session, gom theo nhãn: {label: [rows]}."""
     with csv_path.open(encoding='utf-8', newline='') as stream:
         rows = [r for r in csv.DictReader(stream)
                 if r.get('session') == session and r['warm_or_cold'] != 'warmup']
@@ -50,6 +53,7 @@ def load(csv_path, session):
 
 
 def col(rows, name):
+    """Giá trị float của một cột qua các run."""
     return [float(r[name]) for r in rows]
 
 
@@ -62,6 +66,7 @@ def dup_stages(row):
 
 
 def fig_runtime(by, out, phase1_median):
+    """Hình 1: runtime median trước/sau, thanh min–max, chấm từng run, đường tham chiếu Phase 1."""
     fig, ax = plt.subplots(figsize=(7.2, 4.6), dpi=150, facecolor=SURFACE)
     style(ax)
     labels = ['baseline', 'optimized']
@@ -93,6 +98,7 @@ def fig_runtime(by, out, phase1_median):
 
 
 def fig_phases(by, out):
+    """Hình 2: thanh chồng thời gian median theo chặng (từ mốc [TIMING]) của hai bản."""
     fig, ax = plt.subplots(figsize=(10, 4.2), dpi=150, facecolor=SURFACE)
     style(ax)
     labels = ['baseline', 'optimized']
@@ -126,6 +132,7 @@ def fig_phases(by, out):
 
 
 def fig_dup(by, out):
+    """Hình 3: shuffle/spill (MiB) và thời gian (giây) của chặng profile_dup, hai panel cùng đơn vị. Trả về số liệu đã vẽ."""
     labels = ['baseline', 'optimized']
     data = {}
     for label in labels:
@@ -164,6 +171,7 @@ def fig_dup(by, out):
 
 
 def main():
+    """CLI: --session, --csv, --out-dir; vẽ 3 hình vào reports/figures/."""
     parser = argparse.ArgumentParser()
     parser.add_argument('--session', default='exp1')
     parser.add_argument('--csv', type=Path, default=ROOT / 'benchmark.csv')

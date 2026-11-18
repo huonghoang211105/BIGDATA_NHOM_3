@@ -1,16 +1,16 @@
-"""CP4 correctness gate: optimized output vs baseline output for one benchmark session.
+"""Cổng correctness CP4: so output bản tối ưu với baseline cho một session benchmark.
 
     python src/check_correctness.py --session exp1
-    -> evidence/checkpoint4/<session>/correctness.json, prints PASS/FAIL per check, exit 0 = all PASS.
+    -> evidence/checkpoint4/<session>/correctness.json, in PASS/FAIL từng kiểm tra, exit 0 = tất cả PASS.
 
-Checks (every run of the session, warm-up included, for both labels):
-  * metrics.json invariants: rows raw = valid = joined = expected_rows, unmatched 0, invalid 0, null 0,
-    duplicate_groups 0, duplicate_extra_rows 0, amount = 0 rows = 16, fraud, total amount, 152 groups;
-  * persisted Parquet output: schema = baseline schema (10 columns, same text as schema_output.txt),
-    (day_index, type) unique, totals, and every value equal to the reference run after sorting by
-    (day_index, type) + SHA-256 checksum of the sorted rows + exceptAll both ways;
-  * tests/test_dup_check.py (old vs new duplicate check, injected duplicate) exits 0.
-Reference = first measured baseline run of the session.
+Kiểm (mọi run của session, kể cả warm-up, cả hai nhãn):
+  * bất biến trong metrics.json: rows raw = valid = joined = expected_rows, unmatched 0, invalid 0, null 0,
+    duplicate_groups 0, duplicate_extra_rows 0, 16 dòng amount = 0, fraud, tổng tiền, 152 nhóm;
+  * Parquet output đã ghi: schema = baseline (10 cột, cùng nội dung schema_output.txt), khóa (day_index, type)
+    duy nhất, và TỪNG giá trị bằng run tham chiếu sau khi sort theo (day_index, type) + checksum SHA-256
+    của các dòng đã sort + exceptAll hai chiều;
+  * tests/test_dup_check.py (kiểm trùng cũ vs mới, chèn dòng trùng) trả exit 0.
+Run tham chiếu = run baseline đo đầu tiên của session.
 """
 import argparse
 import csv
@@ -28,6 +28,7 @@ EXPECTED_ZERO_AMOUNT = 16
 
 
 def spark_session():
+    """Khởi động SparkSession local[*] (đặt PYSPARK_PYTHON, HADOOP_HOME như pipeline)."""
     os.environ['PYSPARK_PYTHON'] = sys.executable
     os.environ['PYSPARK_DRIVER_PYTHON'] = sys.executable
     if 'HADOOP_HOME' not in os.environ:
@@ -45,9 +46,14 @@ def spark_session():
 
 class Report:
     def __init__(self):
+        """Danh sách các kiểm tra đã thực hiện (mỗi phần tử là một dict)."""
         self.checks = []
 
     def add(self, scope, name, expected, actual, ok=None):
+        """Ghi một kiểm tra và in một dòng PASS/FAIL.
+
+        ok mặc định = (expected == actual); truyền ok để dùng điều kiện khác (ví dụ >=). Trả về: bool.
+        """
         ok = (expected == actual) if ok is None else ok
         self.checks.append({'scope': scope, 'check': name, 'expected': str(expected),
                             'actual': str(actual), 'status': 'PASS' if ok else 'FAIL'})
@@ -56,6 +62,7 @@ class Report:
 
 
 def session_runs(csv_path, session):
+    """Các dòng benchmark.csv thuộc session (cả warm-up); không có thì dừng."""
     with csv_path.open(encoding='utf-8', newline='') as stream:
         rows = [r for r in csv.DictReader(stream) if r.get('session') == session]
     if not rows:
@@ -64,18 +71,19 @@ def session_runs(csv_path, session):
 
 
 def output_dir(row, metrics):
-    """Parquet output lives in the worktree that ran the commit: .bench/<commit[:12]>/<run_dir>."""
+    """Thư mục Parquet output nằm trong worktree đã chạy commit đó: .bench/<commit[:12]>/<run_dir>."""
     return ROOT / '.bench' / row['git_commit'][:12] / metrics['run_dir'] / 'daily_type_summary'
 
 
 def canonical(rows):
-    """Deterministic text of sorted output rows (Decimal kept exact) for the checksum."""
+    """Chuỗi xác định của các dòng output đã sort (Decimal giữ chính xác), dùng để tính checksum."""
     def fmt(v):
         return format(v, 'f') if isinstance(v, Decimal) else repr(v)
     return '\n'.join('|'.join(fmt(v) for v in r) for r in rows)
 
 
 def main():
+    """Chạy toàn bộ kiểm tra cho session, ghi correctness.json. Trả về exit code 0 (PASS) / 1 (FAIL)."""
     parser = argparse.ArgumentParser()
     parser.add_argument('--session', default='exp1')
     parser.add_argument('--csv', type=Path, default=ROOT / 'benchmark.csv')

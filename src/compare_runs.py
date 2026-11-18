@@ -1,9 +1,8 @@
-"""Compare persisted business results of two successful runs, ignoring file layout.
+"""So sánh kết quả nghiệp vụ đã lưu (Parquet daily_type_summary) của hai run SUCCESS, bỏ qua bố cục file.
 
-Exit code: 0 = RERUN PASS (identical schema and rows both ways), 1 = different / not comparable.
-Run dirs may be repo-relative (output/snapshot_.../<run_id>) or absolute. Only input_sha256,
-dimension_sha256 and run_id are read from metrics.json, so older runs that stored absolute
-paths in metrics remain comparable.
+Exit code: 0 = RERUN PASS (schema giống hệt, mọi dòng giống nhau theo cả hai chiều), 1 = khác / không so được.
+Thư mục run có thể là tương đối theo gốc repo (output/snapshot_.../<run_id>) hoặc tuyệt đối. Chỉ đọc
+input_sha256, dimension_sha256 và run_id trong metrics.json: hai run phải cùng snapshot input và dimension.
 """
 import argparse
 import json
@@ -15,11 +14,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def resolve_run(value):
+    """Đường dẫn run tương đối theo gốc repo hoặc tuyệt đối -> Path tuyệt đối."""
     path = Path(value)
     return (path if path.is_absolute() else ROOT / path).resolve()
 
 
 def rel(path):
+    """Đường dẫn hiển thị tương đối theo gốc repo nếu được."""
     try:
         return path.relative_to(ROOT).as_posix()
     except ValueError:
@@ -27,11 +28,15 @@ def rel(path):
 
 
 def fail(message):
+    """In "RERUN FAIL: ..." và trả exit code 1."""
     print(f'RERUN FAIL: {message}')
     return 1
 
 
 def main():
+    """So hai run: cùng snapshot input/dimension, cùng schema, và exceptAll hai chiều = 0 dòng.
+    Trả về exit code 0 (RERUN PASS) hoặc 1.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('first', help='Run dir A (repo-relative or absolute)')
     parser.add_argument('second', help='Run dir B (repo-relative or absolute)')
