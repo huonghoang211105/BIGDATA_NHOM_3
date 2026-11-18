@@ -1,0 +1,87 @@
+== Physical Plan ==
+AdaptiveSparkPlan (14)
++- Project (13)
+   +- HashAggregate (12)
+      +- Exchange (11)
+         +- HashAggregate (10)
+            +- Project (9)
+               +- BroadcastHashJoin LeftOuter BuildRight (8)
+                  :- Project (3)
+                  :  +- Filter (2)
+                  :     +- Scan csv  (1)
+                  +- BroadcastExchange (7)
+                     +- Project (6)
+                        +- Filter (5)
+                           +- Scan csv  (4)
+
+
+(1) Scan csv 
+Output [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/.bench/d77a54b75ee1/data/raw/paysim/ingest_date=2026-11-12/run_20261112T175026Z_822219b0/paysim_data.csv]
+PushedFilters: [IsNotNull(step), IsNotNull(amount), IsNotNull(oldbalanceOrg), IsNotNull(newbalanceOrig), IsNotNull(oldbalanceDest), IsNotNull(newbalanceDest), IsNotNull(isFraud), IsNotNull(isFlaggedFraud), GreaterThanOrEqual(step,1), GreaterThanOrEqual(amount,0.00), In(isFraud, [0,1]), In(isFlaggedFraud, [0,1])]
+ReadSchema: struct<step:int,type:string,amount:decimal(20,2),nameOrig:string,oldbalanceOrg:decimal(20,2),newbalanceOrig:decimal(20,2),nameDest:string,oldbalanceDest:decimal(20,2),newbalanceDest:decimal(20,2),isFraud:int,isFlaggedFraud:int>
+
+(2) Filter
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+Condition : (((((((((((((((((isnotnull(step#8) AND isnotnull(upper(trim(type#9, None)))) AND isnotnull(amount#10)) AND isnotnull(trim(nameOrig#11, None))) AND isnotnull(oldbalanceOrg#12)) AND isnotnull(newbalanceOrig#13)) AND isnotnull(trim(nameDest#14, None))) AND isnotnull(oldbalanceDest#15)) AND isnotnull(newbalanceDest#16)) AND isnotnull(isFraud#17)) AND isnotnull(isFlaggedFraud#18)) AND (step#8 >= 1)) AND (amount#10 >= 0.00)) AND isFraud#17 IN (0,1)) AND isFlaggedFraud#18 IN (0,1)) AND NOT (trim(nameOrig#11, None) = )) AND NOT (trim(nameDest#14, None) = )) AND NOT (upper(trim(type#9, None)) = ))
+
+(3) Project
+Output [4]: [upper(trim(type#9, None)) AS type#360, amount#10, isFraud#17, cast((FLOOR((cast((step#8 - 1) as double) / 24.0)) + 1) as int) AS day_index#501]
+Input [11]: [step#8, type#9, amount#10, nameOrig#11, oldbalanceOrg#12, newbalanceOrig#13, nameDest#14, oldbalanceDest#15, newbalanceDest#16, isFraud#17, isFlaggedFraud#18]
+
+(4) Scan csv 
+Output [3]: [type#598, type_name_vi#599, flow_group#600]
+Batched: false
+Location: InMemoryFileIndex [file:/D:/BIGDATA_NHOM_3/.bench/d77a54b75ee1/config/dim_transaction_type.csv]
+ReadSchema: struct<type:string,type_name_vi:string,flow_group:string>
+
+(5) Filter
+Input [3]: [type#598, type_name_vi#599, flow_group#600]
+Condition : (NOT (upper(trim(type#598, None)) = ) AND isnotnull(upper(trim(type#598, None))))
+
+(6) Project
+Output [3]: [upper(trim(type#598, None)) AS type#604, type_name_vi#599, flow_group#600]
+Input [3]: [type#598, type_name_vi#599, flow_group#600]
+
+(7) BroadcastExchange
+Input [3]: [type#604, type_name_vi#599, flow_group#600]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=965]
+
+(8) BroadcastHashJoin
+Left keys [1]: [type#360]
+Right keys [1]: [type#604]
+Join type: LeftOuter
+Join condition: None
+
+(9) Project
+Output [6]: [type#360, amount#10, isFraud#17, day_index#501, type_name_vi#599, flow_group#600]
+Input [7]: [type#360, amount#10, isFraud#17, day_index#501, type#604, type_name_vi#599, flow_group#600]
+
+(10) HashAggregate
+Input [6]: [type#360, amount#10, isFraud#17, day_index#501, type_name_vi#599, flow_group#600]
+Keys [4]: [day_index#501, type#360, type_name_vi#599, flow_group#600]
+Functions [5]: [partial_count(1), partial_sum(amount#10), partial_avg(amount#10), partial_sum(isFraud#17), partial_sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)]
+Aggregate Attributes [8]: [count#798L, sum#799, isEmpty#800, sum#801, count#802L, sum#803L, sum#804, isEmpty#805]
+Results [12]: [day_index#501, type#360, type_name_vi#599, flow_group#600, count#806L, sum#807, isEmpty#808, sum#809, count#810L, sum#811L, sum#812, isEmpty#813]
+
+(11) Exchange
+Input [12]: [day_index#501, type#360, type_name_vi#599, flow_group#600, count#806L, sum#807, isEmpty#808, sum#809, count#810L, sum#811L, sum#812, isEmpty#813]
+Arguments: hashpartitioning(day_index#501, type#360, type_name_vi#599, flow_group#600, 200), ENSURE_REQUIREMENTS, [plan_id=970]
+
+(12) HashAggregate
+Input [12]: [day_index#501, type#360, type_name_vi#599, flow_group#600, count#806L, sum#807, isEmpty#808, sum#809, count#810L, sum#811L, sum#812, isEmpty#813]
+Keys [4]: [day_index#501, type#360, type_name_vi#599, flow_group#600]
+Functions [5]: [count(1), sum(amount#10), avg(amount#10), sum(isFraud#17), sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)]
+Aggregate Attributes [5]: [count(1)#768L, sum(amount#10)#770, avg(amount#10)#772, sum(isFraud#17)#774L, sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)#776]
+Results [9]: [day_index#501, type#360, type_name_vi#599, flow_group#600, count(1)#768L AS txn_count#769L, sum(amount#10)#770 AS total_amount#771, round(avg(amount#10)#772, 2) AS avg_amount#773, sum(isFraud#17)#774L AS fraud_count#775L, sum(CASE WHEN (isFraud#17 = 1) THEN amount#10 ELSE 0.00 END)#776 AS fraud_amount#777]
+
+(13) Project
+Output [10]: [day_index#501, type#360, type_name_vi#599, flow_group#600, txn_count#769L, total_amount#771, avg_amount#773, fraud_count#775L, fraud_amount#777, round(((cast(fraud_count#775L as double) * 100.0) / cast(txn_count#769L as double)), 6) AS fraud_rate_pct#787]
+Input [9]: [day_index#501, type#360, type_name_vi#599, flow_group#600, txn_count#769L, total_amount#771, avg_amount#773, fraud_count#775L, fraud_amount#777]
+
+(14) AdaptiveSparkPlan
+Output [10]: [day_index#501, type#360, type_name_vi#599, flow_group#600, txn_count#769L, total_amount#771, avg_amount#773, fraud_count#775L, fraud_amount#777, fraud_rate_pct#787]
+Arguments: isFinalPlan=false
+
+

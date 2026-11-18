@@ -1,0 +1,13 @@
+root
+ |-- step: integer (nullable = true)
+ |-- type: string (nullable = true)
+ |-- amount: decimal(20,2) (nullable = true)
+ |-- nameOrig: string (nullable = true)
+ |-- oldbalanceOrg: decimal(20,2) (nullable = true)
+ |-- newbalanceOrig: decimal(20,2) (nullable = true)
+ |-- nameDest: string (nullable = true)
+ |-- oldbalanceDest: decimal(20,2) (nullable = true)
+ |-- newbalanceDest: decimal(20,2) (nullable = true)
+ |-- isFraud: integer (nullable = true)
+ |-- isFlaggedFraud: integer (nullable = true)
+

@@ -15,7 +15,7 @@
 
 ```text
 BIGDATA_NHOM_3/
-├── README.md                           # Tài liệu tổng thể hướng dẫn đồ án (CP2 & CP3)
+├── README.md                           # Tài liệu tổng thể hướng dẫn đồ án (CP2, CP3 & CP4)
 ├── requirements.txt                    # Thư viện phụ thuộc (pyspark==3.5.9, ghim cứng)
 ├── .gitignore                          # Cấu hình loại trừ raw lớn, venv, output
 │
@@ -62,6 +62,11 @@ BIGDATA_NHOM_3/
 │       │   ├── schema_output.txt       # Schema kết quả tổng hợp Parquet
 │       │   └── unmatched_sample.json   # Mẫu các dòng unmatched (rỗng = 0 lỗi)
 │       └── 20261112T181605Z_058d2196/  # Run B — cùng cấu trúc với run A
+│   └── checkpoint4/
+│       ├── baseline/<run_id>/          # Mỗi run baseline: run.log, metrics.json, stage/job/phase metrics, explain, env
+│       ├── optimized/<run_id>/         # Mỗi run optimized (cùng bộ file); _smoke/, _test_dup_check.txt
+│       ├── exp1/                       # summary_exp1.md, correctness.json, compare_runs, console benchmark
+│       └── docs_vi/                    # AST check + smoke sau khi thêm chú thích tiếng Việt
 │
 ├── output/                             # [Ngoài Git] Kết quả pipeline CP3
 │   ├── latest_success.json             # Con trỏ run SUCCESS mới nhất (run_dir tương đối, raw_run_id)
@@ -75,7 +80,12 @@ BIGDATA_NHOM_3/
 ├── reports/
 │   ├── checkpoint2.md                  # Báo cáo Checkpoint 2 (brief, exit ticket, nội dung 6 slide)
 │   ├── checkpoint3_template.md         # Template báo cáo Checkpoint 3 theo yêu cầu
-│   └── checkpoint3.md                  # Báo cáo kết quả chính thức Checkpoint 3 (Run PASS)
+│   ├── checkpoint3.md                  # Báo cáo kết quả chính thức Checkpoint 3 (Run PASS)
+│   ├── checkpoint4.md                  # Báo cáo Checkpoint 4 (mục A–F)
+│   ├── figures/                        # Hình CP4: runtime trước/sau, thời gian theo chặng, shuffle/spill
+│   ├── BigData_DoAn4_Checkpoint4_Report_Template.pptx  # Template slide của môn
+│   ├── BigData_DoAn4_Checkpoint4_Report_Nhom3.pptx     # Slide CP4 đã điền số liệu thật
+│   └── build_checkpoint4_pptx.py       # Điền slide từ template, số liệu đọc từ evidence
 │
 ├── src/
 │   ├── env_check.py                    # [CP2] Kiểm tra OS/Java/JAVA_HOME/HADOOP_HOME/Python/PySpark + smoke test
@@ -86,7 +96,16 @@ BIGDATA_NHOM_3/
 │   ├── pipeline.py                     # [CP3] Entry point Spark batch pipeline, đọc raw qua metadata/manifest.json
 │   ├── compare_runs.py                 # [CP3] So sánh 2 run (exceptAll 2 chiều), exit 0 PASS / 1 FAIL
 │   ├── stage_metrics.py                # [CP4] Đọc Spark event log → stage/job/phase metrics + plan AQE cuối
-│   └── benchmark.py                    # [CP4] Chạy pipeline N lần theo git tag (worktree), ghi benchmark.csv
+│   ├── benchmark.py                    # [CP4] Chạy pipeline N lần theo git tag (worktree), --pair xen kẽ, ghi benchmark.csv
+│   ├── check_correctness.py            # [CP4] Cổng correctness của một session → evidence/checkpoint4/<session>/correctness.json
+│   └── make_figures.py                 # [CP4] Hình báo cáo (reports/figures/*.png) từ benchmark.csv + stage metrics
+│
+├── tests/
+│   ├── test_dup_check.py               # [CP4] Kiểm trùng mới (hash-prefilter) == cách cũ, kể cả va chạm hash
+│   └── check_ast_unchanged.py          # [CP4] Chứng minh commit chỉ đổi comment/docstring (so AST)
+│
+├── benchmark.csv                       # [CP4] Mọi run benchmark (session phase1, exp1)
+├── experiment-log.md                   # [CP4] Baseline → evidence → hypothesis → change → before/after → decision
 │
 └── notebooks/
     ├── 01_Checkpoint_Buoi6_Kaggle_v2.ipynb    # Notebook ingestion & environment trên Kaggle
@@ -424,4 +443,60 @@ Dữ liệu được trích xuất từ `metrics.json` của run A `20261112T181
   Cột `checks` = PASS khi mọi bất biến nghiệp vụ (số dòng, null, trùng, invalid, unmatched, 16 dòng amount = 0,
   fraud 8.213, tổng tiền, 152 nhóm) khớp `config/config.json`.
 
-Kết quả và quyết định: `experiment-log.md`, `reports/checkpoint4.md`.
+### 8.2. Experiment 1: kiểm trùng bằng hash-prefilter (tag `checkpoint-4-optimized`)
+
+**Thay đổi duy nhất** (`src/quality_report.py` + chỗ gọi trong `src/pipeline.py`; config Spark không đổi):
+đếm dòng trùng toàn bộ 11 cột không còn `groupBy(11 cột)`.
+
+- **Bước 1:** `groupBy(xxhash64(11 cột)).count() > 1` cho ra các hash ứng viên.
+- **Nếu rỗng:** 0 trùng. Kết quả chính xác, vì dòng trùng luôn cùng hash.
+- **Nếu khác rỗng (bước 2):** broadcast các hash, lọc input, rồi groupBy đủ 11 cột trên tập con.
+
+| Session `exp1` (xen kẽ, 5 run/bên) | Baseline `ae84592` | Optimized `d2b15a5` | Δ |
+|---|---:|---:|---:|
+| Runtime median (min–max) | 154,751 s (149,459–162,640) | 135,565 s (130,144–138,536) | −19,186 s (−12,4 %), vượt max−min baseline 13,181 s |
+| Chặng profile_dup | 38,364 s | 17,366 s | −54,7 % |
+| Shuffle write / spill disk (cả run) | 413,8 / 815,2 MiB | 67,6 / 217,0 MiB | −83,7 % / −73,4 % |
+| Correctness | | | PASS 283/283, output giống hệt từng ô |
+
+Quyết định: **KEEP**. Chi tiết: [`experiment-log.md`](experiment-log.md), [`reports/checkpoint4.md`](reports/checkpoint4.md).
+
+### 8.3. Kiểm tra correctness, test, hình và slide
+
+```powershell
+# Cổng correctness cho một session: row count, profile, business metric, schema, so từng ô + SHA-256 output
+# đã sort với run baseline tham chiếu, và chạy tests/test_dup_check.py -> evidence/checkpoint4/<session>/correctness.json
+python src/check_correctness.py --session exp1
+# So output 2 run bất kỳ (exceptAll 2 chiều); output của run benchmark nằm trong .bench/<commit12>/output/...
+python src/compare_runs.py <run_dir_A> <run_dir_B>
+# Test kiểm trùng mới == cách cũ (cặp trùng, gần trùng, lặp 3 lần, va chạm xxhash64 thật, chèn dòng trùng vào mẫu)
+python tests/test_dup_check.py
+# Chứng minh một commit chỉ đổi comment/docstring: AST (bỏ docstring) giống hệt ref
+python tests/check_ast_unchanged.py <git-ref> src/pipeline.py src/quality_report.py
+# Hình báo cáo (reports/figures/*.png) và slide điền từ template (số liệu đọc từ evidence)
+python src/make_figures.py --session exp1
+python reports/build_checkpoint4_pptx.py   # cần: pip install python-pptx
+```
+
+### 8.4. Tag và commit
+
+| Tag | Commit | Ý nghĩa |
+|---|---|---|
+| `checkpoint-4-baseline` | `ae84592` | Baseline: tooling đo + logic CP3 (mọi run baseline chạy từ tag này) |
+| `checkpoint-4-optimized` | `d2b15a5` | Đúng một thay đổi: kiểm trùng hash-prefilter |
+| `checkpoint-4` | commit nộp cuối (nhánh `opt/hash-dedup-check`) | Optimized + evidence + báo cáo + chú thích tiếng Việt; code thực thi giống hệt `checkpoint-4-optimized` (AST check, smoke RERUN PASS: `evidence/checkpoint4/docs_vi/`) |
+
+Hai tag `checkpoint-4-baseline` / `checkpoint-4-optimized` không bao giờ bị di chuyển. Muốn chạy lại before/after:
+`python src/benchmark.py --pair baseline=checkpoint-4-baseline optimized=checkpoint-4-optimized --runs 5 --warmup 1 --session <tên mới>`.
+
+**Lưu ý Windows:** repo bật `core.autocrlf=true` nên worktree `.bench/` check-out `config/dim_transaction_type.csv`
+dạng CRLF (SHA `9f570105…`), khác bản LF ở checkout chính (`e3061072…`). Hai phía benchmark nhận cùng byte;
+output không đổi (`evidence/checkpoint4/optimized/_smoke/dim_crlf_data_check.txt`).
+
+**Xem lại Spark UI sau khi run kết thúc** (để chụp ảnh stage): mở Spark History Server trên thư mục event log:
+
+```powershell
+$env:SPARK_HOME = (python -c "import pyspark,os;print(os.path.dirname(pyspark.__file__))")
+$env:SPARK_HISTORY_OPTS = "-Dspark.history.fs.logDirectory=file:///D:/BIGDATA_NHOM_3/logs/spark-events"
+& "$env:SPARK_HOME\bin\spark-class.cmd" org.apache.spark.deploy.history.HistoryServer   # rồi mở http://localhost:18080
+```
